@@ -184,14 +184,26 @@
   .chip:hover .del-btn, .chip:focus-within .del-btn { opacity: 0.7; }
 
   .notify-rule {
-    display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;
-    padding-bottom: 8px; border-bottom: 1px dashed var(--line); font-size: 12.5px; color: var(--ink-dim);
+    margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px dashed var(--line);
+    font-size: 12.5px; color: var(--ink-dim);
   }
-  .notify-toggle { display: flex; align-items: center; gap: 5px; cursor: pointer; user-select: none; }
-  .notify-toggle input[type="checkbox"] { width: 14px; height: 14px; accent-color: var(--crystal); }
+  .reminder-chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+  .reminder-empty { font-size: 12px; color: var(--ink-dim); opacity: 0.7; }
+  .reminder-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(44, 125, 118, 0.14); border: 1px solid var(--crystal); color: var(--crystal-ink);
+    border-radius: 999px; padding: 3px 8px 3px 10px; font-size: 12px; font-variant-numeric: tabular-nums;
+  }
+  .reminder-chip .del-btn { width: 16px; height: 16px; font-size: 11px; opacity: 0.6; }
+  .reminder-chip .del-btn:hover { opacity: 1; }
+  .reminder-add-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   .notify-rule select, .notify-rule input[type="time"] {
     background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; color: var(--ink);
     padding: 3px 6px; font-size: 12px; font-family: inherit;
+  }
+  .reminder-add-btn {
+    background: var(--crystal); color: #fff; border: none; border-radius: 6px;
+    padding: 4px 10px; font-size: 12px; font-weight: 600; cursor: pointer;
   }
 
   .target-edit-wrap {
@@ -516,11 +528,13 @@
 
   function ensureNotifyDefaults(cfg) {
     cfg.groups.forEach(function (g) {
-      if (!g.notifyRule) {
-        g.notifyRule = g.kind === "weekly"
-          ? { enabled: false, weekday: g.weekday, hour: 20, minute: 0 }
-          : { enabled: false, hour: 20, minute: 0 };
+      if (!Array.isArray(g.notifyRules)) {
+        // migrate the old single-rule shape if present, otherwise start with none
+        g.notifyRules = (g.notifyRule && g.notifyRule.enabled)
+          ? [{ id: "r_" + Date.now().toString(36), hour: g.notifyRule.hour, minute: g.notifyRule.minute, weekday: g.notifyRule.weekday }]
+          : [];
       }
+      delete g.notifyRule;
     });
     return cfg;
   }
@@ -706,21 +720,31 @@
       '</div>';
   }
 
+  function weekdayOptionsHtml(selected) {
+    return ["日", "一", "二", "三", "四", "五", "六"].map(function (lbl, idx) {
+      return '<option value="' + idx + '"' + (selected === idx ? " selected" : "") + '>週' + lbl + '</option>';
+    }).join("");
+  }
+
   function notifyRuleHtml(group) {
-    var rule = group.notifyRule || { enabled: false, hour: 20, minute: 0 };
-    var hh = pad2(rule.hour), mm = pad2(rule.minute);
-    var weekdaySelect = "";
-    if (group.kind === "weekly") {
-      var opts = ["日", "一", "二", "三", "四", "五", "六"].map(function (lbl, idx) {
-        return '<option value="' + idx + '"' + (rule.weekday === idx ? " selected" : "") + '>週' + lbl + '</option>';
-      }).join("");
-      weekdaySelect = '<select class="notify-weekday" data-group="' + group.id + '">' + opts + '</select>';
-    }
+    var rules = group.notifyRules || [];
+    var chips = rules.map(function (r) {
+      var label = (group.kind === "weekly" ? "週" + weekdayLabel(r.weekday) + " " : "") + pad2(r.hour) + ":" + pad2(r.minute);
+      return '<span class="reminder-chip">🔔 ' + label +
+        '<button type="button" class="del-btn" data-del-reminder="' + r.id + '" data-group="' + group.id + '" title="刪除這則提醒">×</button></span>';
+    }).join("");
+
+    var weekdaySelect = group.kind === "weekly"
+      ? '<select class="new-reminder-weekday" data-group="' + group.id + '">' + weekdayOptionsHtml(group.weekday) + '</select>'
+      : "";
+
     return '<div class="notify-rule" data-group="' + group.id + '">' +
-      '<label class="notify-toggle"><input type="checkbox" class="notify-enable" data-group="' + group.id + '"' + (rule.enabled ? " checked" : "") + '> 🔔 提醒</label>' +
+      '<div class="reminder-chip-row">' + (chips || '<span class="reminder-empty">尚未設定提醒</span>') + '</div>' +
+      '<div class="reminder-add-row">' +
       weekdaySelect +
-      '<input type="time" class="notify-time" data-group="' + group.id + '" value="' + hh + ':' + mm + '">' +
-      '</div>';
+      '<input type="time" class="new-reminder-time" data-group="' + group.id + '" value="20:00">' +
+      '<button type="button" class="reminder-add-btn" data-add-reminder="' + group.id + '">+ 新增提醒</button>' +
+      '</div></div>';
   }
 
   function groupCardHtml(group, b, doneCount, total, rows, shiftedNow) {
@@ -846,30 +870,36 @@
 
   // ---- event binding ----
   function bindRowEvents() {
-    mainEl.querySelectorAll(".notify-enable").forEach(function (cb) {
-      cb.addEventListener("change", function () {
-        var group = config.groups.find(function (g) { return g.id === cb.getAttribute("data-group"); });
+    mainEl.querySelectorAll("[data-add-reminder]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var groupId = btn.getAttribute("data-add-reminder");
+        var group = config.groups.find(function (g) { return g.id === groupId; });
         if (!group) return;
-        group.notifyRule.enabled = cb.checked;
+        var row = btn.closest(".reminder-add-row");
+        var timeInput = row.querySelector(".new-reminder-time");
+        var weekdaySelect = row.querySelector(".new-reminder-weekday");
+        var parts = (timeInput.value || "20:00").split(":");
+        var rule = {
+          id: "r_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+          hour: Number(parts[0]) || 0,
+          minute: Number(parts[1]) || 0
+        };
+        if (weekdaySelect) rule.weekday = Number(weekdaySelect.value);
+        if (!Array.isArray(group.notifyRules)) group.notifyRules = [];
+        group.notifyRules.push(rule);
         saveConfig();
+        render();
       });
     });
-    mainEl.querySelectorAll(".notify-time").forEach(function (input) {
-      input.addEventListener("change", function () {
-        var group = config.groups.find(function (g) { return g.id === input.getAttribute("data-group"); });
+    mainEl.querySelectorAll("[data-del-reminder]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var groupId = btn.getAttribute("data-group");
+        var ruleId = btn.getAttribute("data-del-reminder");
+        var group = config.groups.find(function (g) { return g.id === groupId; });
         if (!group) return;
-        var parts = input.value.split(":");
-        group.notifyRule.hour = Number(parts[0]) || 0;
-        group.notifyRule.minute = Number(parts[1]) || 0;
+        group.notifyRules = (group.notifyRules || []).filter(function (r) { return r.id !== ruleId; });
         saveConfig();
-      });
-    });
-    mainEl.querySelectorAll(".notify-weekday").forEach(function (sel) {
-      sel.addEventListener("change", function () {
-        var group = config.groups.find(function (g) { return g.id === sel.getAttribute("data-group"); });
-        if (!group) return;
-        group.notifyRule.weekday = Number(sel.value);
-        saveConfig();
+        render();
       });
     });
     mainEl.querySelectorAll("[data-week-view]").forEach(function (d) {
@@ -1030,34 +1060,34 @@
   });
 
   // ---- browser notifications: only usable when NOT embedded in an iframe (e.g. claude.ai Artifact) ----
-  // each group has its own notifyRule (enabled, hour, minute, and weekday for weekly groups) set by the user
+  // each group has a list of user-added reminder rules (hour, minute, and weekday for weekly groups)
   // fires once per (group, period, configured alarm time). Changing the alarm time creates a
   // new key, so it can fire again even within the same period; leaving it unchanged fires once.
   function checkNotifications(shiftedNow) {
     if (typeof Notification === "undefined" || Notification.permission !== "granted") return;
     config.groups.forEach(function (group) {
-      var rule = group.notifyRule;
-      if (!rule || !rule.enabled) return;
-      if (group.kind === "weekly" && shiftedNow.getUTCDay() !== rule.weekday) return;
-      var targetMin = rule.hour * 60 + rule.minute;
-      var nowMin = shiftedNow.getUTCHours() * 60 + shiftedNow.getUTCMinutes();
-      var diffMin = nowMin - targetMin;
-      // tolerate up to 10 minutes late in case background-tab timer throttling delayed this check
-      if (diffMin < 0 || diffMin > 10) return;
-      var b = groupBoundaries(group, shiftedNow);
-      var key = "notify@" + group.id + "@" + b.last.getTime() + "@" + rule.hour + ":" + rule.minute;
-      if (notified[key]) return;
-      notified[key] = true;
-      saveNotified();
-      var pending = group.items.filter(function (item) {
-        if (item.type === "flag") return false;
-        var val = getProgress(item.id, b.last.getTime());
-        return !isItemDone(item, val);
+      (group.notifyRules || []).forEach(function (rule) {
+        if (group.kind === "weekly" && shiftedNow.getUTCDay() !== rule.weekday) return;
+        var targetMin = rule.hour * 60 + rule.minute;
+        var nowMin = shiftedNow.getUTCHours() * 60 + shiftedNow.getUTCMinutes();
+        var diffMin = nowMin - targetMin;
+        // tolerate up to 10 minutes late in case background-tab timer throttling delayed this check
+        if (diffMin < 0 || diffMin > 10) return;
+        var b = groupBoundaries(group, shiftedNow);
+        var key = "notify@" + group.id + "@" + rule.id + "@" + b.last.getTime();
+        if (notified[key]) return;
+        notified[key] = true;
+        saveNotified();
+        var pending = group.items.filter(function (item) {
+          if (item.type === "flag") return false;
+          var val = getProgress(item.id, b.last.getTime());
+          return !isItemDone(item, val);
+        });
+        if (!pending.length) return;
+        try {
+          new Notification("FF14 提醒：" + group.title, { body: "還沒完成：" + pending.map(function (it) { return it.name; }).join("、"), tag: key });
+        } catch (e) {}
       });
-      if (!pending.length) return;
-      try {
-        new Notification("FF14 提醒：" + group.title, { body: "還沒完成：" + pending.map(function (it) { return it.name; }).join("、"), tag: key });
-      } catch (e) {}
     });
   }
 
