@@ -593,6 +593,7 @@
       <div class="diy-notify-body">
         <p class="last-updated" id="lastUpdatedLine">最後更新：載入中…</p>
         <ul id="changelogList">
+          <li><strong>日隨項目調整</strong>：「行會令」改名為「高難」。</li>
           <li><strong>簡化頂部與倒數顯示</strong>：拿掉跟各卡片內容重複的「一週總覽」大區塊；倒數超過1天不再顯示秒數（只有快到期才需要精確到秒）；所有提醒總覽現在可以直接刪除單則提醒，不用跑回對應卡片；修正水晶游標蓋掉文字輸入框游標的問題。</li>
           <li><strong>新增全部收合與提醒總覽</strong>：頂部多一顆「全部收合/展開」一次切換所有組別；footer 新增「所有提醒總覽」，集中列出目前設定的所有提醒時間，不用逐張卡片找。</li>
           <li><strong>美感細節加強</strong>：標題下加了斜切角風格的分隔線、台灣時間改成會走動的類比時鐘圖示、滑鼠游標換成水晶造型、友好部族標記依版本分行、修正深色模式下卡片邊框對比度、更新日誌只保留最新3則。</li>
@@ -699,7 +700,7 @@
           { id: "roulette_leveling", name: "練級", type: "check" },
           { id: "roulette_trials", name: "討伐殲滅戰", type: "check" },
           { id: "roulette_msq", name: "主線任務", type: "check" },
-          { id: "roulette_guildhest", name: "行會令", type: "check" },
+          { id: "roulette_guildhest", name: "高難", type: "check" },
           { id: "roulette_raid", name: "團隊任務", type: "check" },
           { id: "roulette_alliance", name: "大型任務", type: "check" },
           { id: "roulette_frontline", name: "紛爭前線", type: "check" }
@@ -809,7 +810,8 @@
     prep_culinarian: ["烹調", "烹調師"],
     prep_miner: ["採礦", "採掘師"],
     prep_botanist: ["園藝", "園藝師"],
-    prep_fisher: ["捕魚", "漁師"]
+    prep_fisher: ["捕魚", "漁師"],
+    roulette_guildhest: ["行會令", "高難"]
   };
   function applyJobNameFix(cfg) {
     cfg.groups.forEach(function (g) {
@@ -1585,7 +1587,7 @@
     });
   }
 
-  var LAST_UPDATED_TEXT = "2026/07/20 (週一) 06:49";
+  var LAST_UPDATED_TEXT = "2026/07/20 (週一) 06:58";
   var lastUpdatedEl = document.getElementById("lastUpdatedLine");
   if (lastUpdatedEl) lastUpdatedEl.textContent = "最後更新：" + LAST_UPDATED_TEXT;
 
