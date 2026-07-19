@@ -92,6 +92,20 @@
     background: var(--panel-2); color: var(--ink); border: 1px solid var(--line);
     font-variant-numeric: tabular-nums;
   }
+  .clock-row-right { display: flex; align-items: center; gap: 8px; }
+  .theme-toggle {
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink-dim); border-radius: 999px;
+    padding: 5px 10px; font-size: 12px; cursor: pointer;
+  }
+  .theme-toggle:hover { border-color: var(--crystal); color: var(--ink); }
+
+  .progress-bar-track {
+    height: 6px; border-radius: 999px; background: var(--panel-2); margin-top: 12px; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%; width: 0%; background: var(--crystal); border-radius: 999px;
+    transition: width 0.4s ease;
+  }
 
   .countdown-strip {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -118,6 +132,13 @@
     padding-bottom: 10px; margin-bottom: 8px; border-bottom: 1px solid var(--line);
   }
   .card-head h2 { font-size: 18px; font-weight: 700; }
+  .collapse-toggle {
+    background: none; border: none; color: var(--ink-dim); cursor: pointer; font-size: 13px;
+    padding: 0 0 0 2px; vertical-align: middle;
+  }
+  .collapse-toggle:hover { color: var(--crystal-ink); }
+  .card.collapsed { padding-bottom: 12px; }
+  .card.collapsed .card-head { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
   .card-head .reset-label { font-size: 12.5px; color: var(--ink-dim); margin-top: 2px; }
   .card-status { text-align: right; flex-shrink: 0; }
   .card-status .progress-frac {
@@ -360,8 +381,12 @@
         <span class="clock-label">台灣時間</span>
         <span class="clock-value" id="clockNow">--:--:--</span>
       </div>
-      <div class="summary-pill" id="summaryPill">載入中…</div>
+      <div class="clock-row-right">
+        <button type="button" id="themeToggleBtn" class="theme-toggle" title="切換主題">🌓 自動</button>
+        <div class="summary-pill" id="summaryPill">載入中…</div>
+      </div>
     </div>
+    <div class="progress-bar-track"><div class="progress-bar-fill" id="progressBarFill"></div></div>
     <div class="countdown-strip" id="countdownStrip"></div>
   </header>
 
@@ -588,6 +613,19 @@
   var openWeekViews = {};
   var weekOffsets = {};
 
+  // ---- theme toggle: auto (follows system) -> light -> dark -> auto ----
+  var THEME_KEY = "ff14weekly.theme.v1";
+  var THEME_CYCLE = ["auto", "light", "dark"];
+  var THEME_LABEL = { auto: "🌓 自動", light: "☀️ 淺色", dark: "🌙 深色" };
+  function applyTheme(mode) {
+    if (mode === "auto") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", mode);
+    var btn = document.getElementById("themeToggleBtn");
+    if (btn) btn.textContent = THEME_LABEL[mode];
+  }
+  var currentTheme = localStorage.getItem(THEME_KEY) || "auto";
+  applyTheme(currentTheme);
+
   // ---- Taipei time helpers ----
   function taipeiShift(date) {
     return new Date(date.getTime() + TAIPEI_OFFSET_MS);
@@ -700,6 +738,9 @@
     stripEl.innerHTML = stripHtml;
     mainEl.innerHTML = mainHtml;
     summaryEl.textContent = "本輪進度 " + totalDone + " / " + totalItems + " 已完成";
+    var pct = totalItems ? Math.round((totalDone / totalItems) * 100) : 0;
+    var barEl = document.getElementById("progressBarFill");
+    if (barEl) barEl.style.width = pct + "%";
 
     bindRowEvents();
   }
@@ -771,13 +812,20 @@
       '</div></div>';
   }
 
+  function cardHeadHtml(group, doneCount, total, untilPrefix, untilMs) {
+    var collapsed = !!group.collapsed;
+    return '<div class="card-head">' +
+      '<div><h2>' + escapeHtml(group.title) +
+      ' <button type="button" class="collapse-toggle" data-collapse="' + group.id + '" title="' + (collapsed ? "展開這組" : "暫時隱藏這組") + '">' + (collapsed ? "▸" : "▾") + '</button>' +
+      '</h2><div class="reset-label">' + escapeHtml(group.resetLabel) + '</div></div>' +
+      '<div class="card-status"><div class="progress-frac">' + doneCount + ' / ' + total + '</div><div class="until">' + untilPrefix + fmtDuration(untilMs) + '</div></div></div>';
+  }
+
   function groupCardHtml(group, b, doneCount, total, rows, shiftedNow) {
-    return '<section class="card" data-group-card="' + group.id + '">' +
-      '<div class="card-head"><div><h2>' + escapeHtml(group.title) + '</h2><div class="reset-label">' + escapeHtml(group.resetLabel) + '</div></div>' +
-      '<div class="card-status"><div class="progress-frac">' + doneCount + ' / ' + total + '</div><div class="until">剩 ' + fmtDuration(b.next.getTime() - shiftedNow.getTime()) + '</div></div></div>' +
-      notifyRuleHtml(group) +
-      rows +
-      addRowHtml(group.id) +
+    var collapsed = !!group.collapsed;
+    return '<section class="card' + (collapsed ? ' collapsed' : '') + '" data-group-card="' + group.id + '">' +
+      cardHeadHtml(group, doneCount, total, "剩 ", b.next.getTime() - shiftedNow.getTime()) +
+      (collapsed ? "" : notifyRuleHtml(group) + rows + addRowHtml(group.id)) +
       '</section>';
   }
 
@@ -869,14 +917,10 @@
       : "";
 
     var b2 = groupBoundaries(group, shiftedNow);
-    return '<section class="card" data-group-card="' + group.id + '">' +
-      '<div class="card-head"><div><h2>' + escapeHtml(group.title) + '</h2><div class="reset-label">' + escapeHtml(group.resetLabel) + '</div></div>' +
-      '<div class="card-status"><div class="progress-frac">' + doneCount + ' / ' + total + '</div><div class="until">今日剩 ' + fmtDuration(b2.next.getTime() - shiftedNow.getTime()) + '</div></div></div>' +
-      notifyRuleHtml(group) +
-      todayRows +
-      gridHtml +
-      flagHtml +
-      addRowHtml(group.id) +
+    var collapsed = !!group.collapsed;
+    return '<section class="card' + (collapsed ? ' collapsed' : '') + '" data-group-card="' + group.id + '">' +
+      cardHeadHtml(group, doneCount, total, "今日剩 ", b2.next.getTime() - shiftedNow.getTime()) +
+      (collapsed ? "" : notifyRuleHtml(group) + todayRows + gridHtml + flagHtml + addRowHtml(group.id)) +
       '</section>';
   }
 
@@ -929,6 +973,15 @@
     mainEl.querySelectorAll("[data-week-view]").forEach(function (d) {
       var groupId = d.getAttribute("data-week-view");
       d.addEventListener("toggle", function () { openWeekViews[groupId] = d.open; });
+    });
+    mainEl.querySelectorAll("[data-collapse]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var group = config.groups.find(function (g) { return g.id === btn.getAttribute("data-collapse"); });
+        if (!group) return;
+        group.collapsed = !group.collapsed;
+        saveConfig();
+        render();
+      });
     });
     mainEl.querySelectorAll("[data-week-nav]").forEach(function (btn) {
       btn.addEventListener("click", function () {
@@ -1081,6 +1134,13 @@
     config = ensureNotifyDefaults(JSON.parse(JSON.stringify(DEFAULT_CONFIG)));
     saveConfig();
     render();
+  });
+
+  document.getElementById("themeToggleBtn").addEventListener("click", function () {
+    var idx = THEME_CYCLE.indexOf(currentTheme);
+    currentTheme = THEME_CYCLE[(idx + 1) % THEME_CYCLE.length];
+    localStorage.setItem(THEME_KEY, currentTheme);
+    applyTheme(currentTheme);
   });
 
   // ---- browser notifications: only usable when NOT embedded in an iframe (e.g. claude.ai Artifact) ----
