@@ -309,13 +309,14 @@
 
   <footer>
     <div class="footer-row">
+      <button id="notifyBtn" type="button" style="display:none">啟用瀏覽器提醒</button>
       <button id="exportBtn" type="button">匯出備份</button>
       <button id="importBtn" type="button">匯入備份</button>
       <button id="resetBtn" type="button">還原預設清單</button>
     </div>
     <p class="footnote">
       所有勾選狀態與清單內容只會儲存在「這個瀏覽器」裡（localStorage），換裝置、換瀏覽器或清除資料都會遺失，請定期使用「匯出備份」。
-      到期前的主動推播提醒需要另外設定排程（目前用 Discord 通知），網站本身不支援瀏覽器推播通知。
+      到期前的主動推播提醒需要另外設定排程（目前用 Discord 通知）；瀏覽器提醒僅在獨立開啟本頁時可用（嵌在 claude.ai 對話裡不支援）。
     </p>
   </footer>
 </div>
@@ -351,6 +352,7 @@
   "use strict";
 
   var STORAGE_KEY = "ff14weekly.config.v4";
+  var NOTIFIED_KEY = "ff14weekly.notified.v4";
   var TAIPEI_OFFSET_MS = 8 * 3600 * 1000;
   var NOTIFY_WINDOW_MS = 3 * 3600 * 1000;
 
@@ -461,6 +463,11 @@
   }
   function saveConfig() { localStorage.setItem(STORAGE_KEY, JSON.stringify(config)); }
 
+  function loadNotified() {
+    try { return JSON.parse(localStorage.getItem(NOTIFIED_KEY) || "{}"); } catch (e) { return {}; }
+  }
+  function saveNotified() { localStorage.setItem(NOTIFIED_KEY, JSON.stringify(notified)); }
+
   var GROUP_ORDER = ["tue1600", "sat2100", "roulette", "prep", "tribe"];
   function sortGroups(cfg) {
     cfg.groups.sort(function (a, b) {
@@ -472,6 +479,7 @@
   }
 
   var config = sortGroups(loadConfig());
+  var notified = loadNotified();
   var openWeekViews = {};
   var weekOffsets = {};
 
@@ -589,6 +597,7 @@
     summaryEl.textContent = "本輪進度 " + totalDone + " / " + totalItems + " 已完成";
 
     bindRowEvents();
+    checkNotifications(shiftedNow);
   }
 
   function statusTag(item, val, msLeft) {
@@ -907,6 +916,39 @@
     saveConfig();
     render();
   });
+
+  // ---- browser notifications: only usable when NOT embedded in an iframe (e.g. claude.ai Artifact) ----
+  function checkNotifications(shiftedNow) {
+    if (typeof Notification === "undefined" || Notification.permission !== "granted") return;
+    config.groups.forEach(function (group) {
+      var b = groupBoundaries(group, shiftedNow);
+      var msLeft = b.next.getTime() - shiftedNow.getTime();
+      if (msLeft > NOTIFY_WINDOW_MS) return;
+      group.items.forEach(function (item) {
+        if (item.type === "flag") return;
+        var val = getProgress(item.id, b.last.getTime());
+        if (isItemDone(item, val)) return;
+        var key = item.id + "@" + b.last.getTime();
+        if (notified[key]) return;
+        notified[key] = true;
+        saveNotified();
+        try {
+          new Notification("FF14 週常提醒", { body: item.name + "（" + group.resetLabel + "）還有 " + fmtDuration(msLeft) + "，尚未完成", tag: key });
+        } catch (e) {}
+      });
+    });
+  }
+
+  var notifyBtn = document.getElementById("notifyBtn");
+  if (window.self === window.top) {
+    notifyBtn.style.display = "";
+    notifyBtn.addEventListener("click", function () {
+      if (typeof Notification === "undefined") { showToast("此瀏覽器不支援通知功能"); return; }
+      Notification.requestPermission().then(function (perm) {
+        showToast(perm === "granted" ? "已啟用瀏覽器提醒（需保持分頁開啟）" : "未取得通知權限");
+      });
+    });
+  }
 
   var toastEl = document.getElementById("toast");
   var toastTimer = null;
