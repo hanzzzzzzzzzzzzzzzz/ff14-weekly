@@ -334,6 +334,7 @@
   <footer>
     <div class="footer-row">
       <button id="notifyBtn" type="button" style="display:none">啟用瀏覽器提醒</button>
+      <button id="testNotifyBtn" type="button" style="display:none">立即測試通知</button>
       <button id="exportBtn" type="button">匯出備份</button>
       <button id="importBtn" type="button">匯入備份</button>
       <button id="resetBtn" type="button">還原預設清單</button>
@@ -1061,13 +1062,25 @@
   }
 
   var notifyBtn = document.getElementById("notifyBtn");
+  var testNotifyBtn = document.getElementById("testNotifyBtn");
   if (window.self === window.top) {
     notifyBtn.style.display = "";
+    testNotifyBtn.style.display = "";
     notifyBtn.addEventListener("click", function () {
       if (typeof Notification === "undefined") { showToast("此瀏覽器不支援通知功能"); return; }
       Notification.requestPermission().then(function (perm) {
         showToast(perm === "granted" ? "已啟用瀏覽器提醒（需保持分頁開啟）" : "未取得通知權限");
       });
+    });
+    testNotifyBtn.addEventListener("click", function () {
+      if (typeof Notification === "undefined") { showToast("此瀏覽器不支援通知功能"); return; }
+      if (Notification.permission !== "granted") { showToast("請先按左邊「啟用瀏覽器提醒」並允許權限"); return; }
+      try {
+        new Notification("FF14 測試通知", { body: "如果你看到這則，代表通知本身沒問題。" });
+        showToast("已送出，看看電腦右下角有沒有跳出來");
+      } catch (e) {
+        showToast("失敗：" + e.message);
+      }
     });
   }
 
