@@ -1,0 +1,927 @@
+<title>FF14 週常清單</title>
+<style>
+  :root {
+    --paper: #eef1ec;
+    --panel: #ffffff;
+    --panel-2: #e5e9e2;
+    --ink: #1c2420;
+    --ink-dim: #5b6560;
+    --line: rgba(28, 36, 32, 0.12);
+    --accent: #a9762c;
+    --accent-ink: #5c3f14;
+    --crystal: #2c7d76;
+    --crystal-ink: #12433f;
+    --good: #3d7a41;
+    --good-bg: rgba(61, 122, 65, 0.14);
+    --warn: #a86a13;
+    --warn-bg: rgba(168, 106, 19, 0.14);
+    --bad: #ad4444;
+    --bad-bg: rgba(173, 68, 68, 0.14);
+    --shadow: 0 1px 2px rgba(28, 36, 32, 0.06), 0 8px 24px -12px rgba(28, 36, 32, 0.18);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #12161c;
+      --panel: #1b212a;
+      --panel-2: #232b35;
+      --ink: #e6ebe6;
+      --ink-dim: #97a29b;
+      --line: rgba(230, 235, 230, 0.12);
+      --accent: #dcac5c;
+      --accent-ink: #f4dba8;
+      --crystal: #59b3a9;
+      --crystal-ink: #a8ddd5;
+      --good: #6fbb72;
+      --good-bg: rgba(111, 187, 114, 0.16);
+      --warn: #d9a44b;
+      --warn-bg: rgba(217, 164, 75, 0.16);
+      --bad: #e08080;
+      --bad-bg: rgba(224, 128, 128, 0.16);
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="light"] {
+    --paper: #eef1ec; --panel: #ffffff; --panel-2: #e5e9e2; --ink: #1c2420; --ink-dim: #5b6560;
+    --line: rgba(28, 36, 32, 0.12); --accent: #a9762c; --accent-ink: #5c3f14; --crystal: #2c7d76; --crystal-ink: #12433f;
+    --good: #3d7a41; --good-bg: rgba(61, 122, 65, 0.14); --warn: #a86a13; --warn-bg: rgba(168, 106, 19, 0.14);
+    --bad: #ad4444; --bad-bg: rgba(173, 68, 68, 0.14); color-scheme: light;
+  }
+  :root[data-theme="dark"] {
+    --paper: #12161c; --panel: #1b212a; --panel-2: #232b35; --ink: #e6ebe6; --ink-dim: #97a29b;
+    --line: rgba(230, 235, 230, 0.12); --accent: #dcac5c; --accent-ink: #f4dba8; --crystal: #59b3a9; --crystal-ink: #a8ddd5;
+    --good: #6fbb72; --good-bg: rgba(111, 187, 114, 0.16); --warn: #d9a44b; --warn-bg: rgba(217, 164, 75, 0.16);
+    --bad: #e08080; --bad-bg: rgba(224, 128, 128, 0.16); color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 880px; margin: 0 auto; padding: 28px 20px 64px; }
+
+  h1, h2, h3 { font-family: Georgia, "Iowan Old Style", "Noto Serif TC", serif; text-wrap: balance; margin: 0; }
+
+  .eyebrow {
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--crystal-ink); margin: 0 0 6px; font-weight: 600;
+  }
+  header.hero { margin-bottom: 22px; }
+  header.hero h1 { font-size: 28px; font-weight: 700; color: var(--ink); }
+
+  .clock-row {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+    margin-top: 14px;
+  }
+  .clock { display: flex; align-items: baseline; gap: 8px; }
+  .clock-label { font-size: 12px; color: var(--ink-dim); }
+  .clock-value {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-variant-numeric: tabular-nums;
+    font-size: 18px; font-weight: 600; letter-spacing: 0.02em;
+  }
+  .summary-pill {
+    font-size: 13px; font-weight: 600; padding: 5px 12px; border-radius: 999px;
+    background: var(--panel-2); color: var(--ink); border: 1px solid var(--line);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .countdown-strip {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px; margin-top: 16px;
+  }
+  .countdown-chip {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 10px 12px; box-shadow: var(--shadow);
+  }
+  .countdown-chip .cc-label { font-size: 11.5px; color: var(--ink-dim); margin-bottom: 3px; }
+  .countdown-chip .cc-value {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-variant-numeric: tabular-nums;
+    font-size: 17px; font-weight: 700; color: var(--crystal-ink);
+  }
+
+  main { display: flex; flex-direction: column; gap: 16px; }
+
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px 18px 14px; box-shadow: var(--shadow);
+  }
+  .card-head {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+    padding-bottom: 10px; margin-bottom: 8px; border-bottom: 1px solid var(--line);
+  }
+  .card-head h2 { font-size: 18px; font-weight: 700; }
+  .card-head .reset-label { font-size: 12.5px; color: var(--ink-dim); margin-top: 2px; }
+  .card-status { text-align: right; flex-shrink: 0; }
+  .card-status .progress-frac {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-variant-numeric: tabular-nums;
+    font-weight: 700; font-size: 15px;
+  }
+  .card-status .until { font-size: 11.5px; color: var(--ink-dim); margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+  .item-row {
+    display: flex; align-items: center; gap: 10px; padding: 8px 2px;
+    border-bottom: 1px solid var(--line);
+  }
+  .item-row:last-of-type { border-bottom: none; }
+
+  .chk {
+    width: 22px; height: 22px; border-radius: 7px; border: 1.6px solid var(--ink-dim);
+    background: transparent; cursor: pointer; flex-shrink: 0; position: relative; padding: 0;
+  }
+  .chk[aria-checked="true"] { background: var(--good); border-color: var(--good); }
+  .chk[aria-checked="true"]::after {
+    content: ""; position: absolute; left: 6px; top: 2px; width: 6px; height: 11px;
+    border-right: 2.5px solid var(--panel); border-bottom: 2.5px solid var(--panel); transform: rotate(40deg);
+  }
+  .chk:focus-visible { outline: 2px solid var(--crystal); outline-offset: 2px; }
+
+  .item-name {
+    flex: 1; min-width: 0; font-size: 14.5px; background: none; border: none; color: var(--ink);
+    font-family: inherit; padding: 4px 2px; border-radius: 6px;
+  }
+  .item-name:focus { outline: 1.5px solid var(--crystal); background: var(--panel-2); }
+
+  .status-tag {
+    font-size: 11.5px; font-weight: 600; padding: 3px 9px; border-radius: 999px; flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .status-tag.done { color: var(--good); background: var(--good-bg); }
+  .status-tag.soon { color: var(--warn); background: var(--warn-bg); }
+  .status-tag.pending { color: var(--ink-dim); background: var(--panel-2); }
+
+  .counter { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .counter button {
+    width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--line);
+    background: var(--panel-2); color: var(--ink); cursor: pointer; font-size: 14px; line-height: 1;
+  }
+  .counter .count-val {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-variant-numeric: tabular-nums;
+    font-size: 14px; min-width: 42px; text-align: center;
+  }
+
+  .status-tag.track { color: var(--crystal-ink); background: rgba(44, 125, 118, 0.16); }
+
+  .chip-grid { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; position: relative;
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px;
+    padding: 5px 22px 5px 8px;
+  }
+  .chip.done { background: var(--good-bg); border-color: var(--good); }
+  .chip .chk { width: 18px; height: 18px; border-radius: 5px; }
+  .chip .chk[aria-checked="true"]::after { left: 5px; top: 1px; width: 5px; height: 9px; }
+  .chip .item-name { width: auto; max-width: 120px; font-size: 13px; padding: 0; }
+  .chip .del-btn {
+    position: absolute; top: 2px; right: 2px; width: 16px; height: 16px; font-size: 11px;
+    opacity: 0; transition: opacity 0.15s;
+  }
+  .chip:hover .del-btn, .chip:focus-within .del-btn { opacity: 0.7; }
+
+  .target-edit-wrap {
+    display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--ink-dim);
+    margin-left: 6px; flex-shrink: 0; white-space: nowrap;
+  }
+  .target-edit {
+    width: 42px; font-size: 12.5px; font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 5px; color: var(--ink);
+    padding: 2px 4px;
+  }
+
+  .del-btn {
+    width: 22px; height: 22px; border-radius: 6px; border: none; background: none; color: var(--ink-dim);
+    cursor: pointer; font-size: 15px; flex-shrink: 0; opacity: 0.55;
+  }
+  .del-btn:hover { opacity: 1; color: var(--bad); }
+
+  .add-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .add-row input[type="text"], .add-row select, .add-row input[type="number"] {
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; color: var(--ink);
+    padding: 6px 9px; font-size: 13.5px; font-family: inherit;
+  }
+  .add-row input[type="text"] { flex: 1; min-width: 120px; }
+  .add-row input[type="number"] { width: 64px; }
+  .add-row button {
+    background: var(--crystal); color: #fff; border: none; border-radius: 8px; padding: 6px 14px;
+    font-size: 13.5px; font-weight: 600; cursor: pointer;
+  }
+
+  .week-view { margin-top: 10px; border-top: 1px solid var(--line); padding-top: 8px; }
+  .week-view summary {
+    cursor: pointer; font-size: 12.5px; font-weight: 600; color: var(--crystal-ink);
+    list-style: none; user-select: none;
+  }
+  .week-view summary::-webkit-details-marker { display: none; }
+  .week-view summary::before { content: "▸ "; }
+  .week-view[open] summary::before { content: "▾ "; }
+  .week-view .grid-wrap { margin-top: 8px; }
+  .week-nav {
+    display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 8px;
+    font-size: 12px; color: var(--ink-dim); font-variant-numeric: tabular-nums;
+  }
+  .week-nav button[data-week-nav] {
+    width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--line);
+    background: var(--panel-2); color: var(--ink); cursor: pointer; font-size: 12px; line-height: 1; padding: 0;
+  }
+  .week-nav button[data-week-nav]:disabled { opacity: 0.35; cursor: not-allowed; }
+  .week-back {
+    border: none; background: none; color: var(--crystal-ink); font-size: 11px; cursor: pointer;
+    text-decoration: underline; padding: 0; margin-left: 4px;
+  }
+
+  .grid-wrap { overflow-x: auto; }
+  .day-grid { width: 100%; border-collapse: collapse; min-width: 480px; }
+  .day-grid th { font-size: 11.5px; color: var(--ink-dim); font-weight: 600; padding: 4px 6px; text-align: center; }
+  .day-grid th.item-col, .day-grid td.item-col { text-align: left; padding-left: 2px; }
+  .day-grid td { padding: 6px; text-align: center; vertical-align: middle; }
+  .day-grid td.item-col { font-size: 14px; max-width: 220px; }
+  .day-grid td.item-col { display: table-cell; }
+  .day-grid .item-col-inner { display: flex; align-items: center; flex-wrap: wrap; gap: 2px; }
+  .day-grid tr { border-bottom: 1px solid var(--line); }
+  .day-grid tr:last-child { border-bottom: none; }
+  .day-col-today th { color: var(--crystal-ink); }
+  .day-cell-future { opacity: 0.35; }
+  .day-cell-future .chk, .day-cell-future button { cursor: not-allowed; }
+
+  footer { margin-top: 28px; }
+  .footer-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .footer-row button {
+    background: var(--panel); border: 1px solid var(--line); color: var(--ink); border-radius: 9px;
+    padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: var(--shadow);
+  }
+  .footer-row button:hover { border-color: var(--crystal); }
+  .footnote { font-size: 12px; color: var(--ink-dim); margin-top: 12px; max-width: 60ch; }
+
+  .toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: var(--ink); color: var(--paper); padding: 9px 18px; border-radius: 999px;
+    font-size: 13px; box-shadow: var(--shadow); opacity: 0; pointer-events: none; transition: opacity 0.25s;
+    z-index: 20;
+  }
+  .toast.show { opacity: 1; }
+
+  @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(10, 12, 15, 0.55);
+    display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 30;
+  }
+  .modal-overlay[hidden] { display: none; }
+  .modal-box {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 20px; max-width: 520px; width: 100%; box-shadow: var(--shadow);
+  }
+  .modal-box h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .modal-hint { font-size: 12.5px; color: var(--ink-dim); margin: 0 0 10px; }
+  .modal-box textarea {
+    width: 100%; height: 220px; resize: vertical; background: var(--panel-2); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 8px; padding: 10px; font-size: 12px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+  }
+  .modal-actions { display: flex; gap: 8px; margin-top: 12px; justify-content: flex-end; }
+  .modal-actions button {
+    border-radius: 8px; padding: 7px 16px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--line);
+  }
+  #copyExportBtn { background: var(--crystal); color: #fff; border: none; }
+  #closeExportBtn { background: var(--panel-2); color: var(--ink); }
+</style>
+
+<div class="page">
+  <header class="hero">
+    <p class="eyebrow">艾歐傑亞・繁中服週常事務表</p>
+    <h1>本週待辦清單</h1>
+    <div class="clock-row">
+      <div class="clock">
+        <span class="clock-label">台灣時間</span>
+        <span class="clock-value" id="clockNow">--:--:--</span>
+      </div>
+      <div class="summary-pill" id="summaryPill">載入中…</div>
+    </div>
+    <div class="countdown-strip" id="countdownStrip"></div>
+  </header>
+
+  <main id="main"></main>
+
+  <footer>
+    <div class="footer-row">
+      <button id="exportBtn" type="button">匯出備份</button>
+      <button id="importBtn" type="button">匯入備份</button>
+      <button id="resetBtn" type="button">還原預設清單</button>
+    </div>
+    <p class="footnote">
+      所有勾選狀態與清單內容只會儲存在「這個瀏覽器」裡（localStorage），換裝置、換瀏覽器或清除資料都會遺失，請定期使用「匯出備份」。
+      到期前的主動推播提醒需要另外設定排程（目前用 Discord 通知），網站本身不支援瀏覽器推播通知。
+    </p>
+  </footer>
+</div>
+
+<div class="modal-overlay" id="exportModal" hidden>
+  <div class="modal-box">
+    <h3>匯出備份</h3>
+    <p class="modal-hint">複製下面的內容，貼到一個文字檔存成 .json 檔即可備份；之後用「匯入備份」把整份內容貼回來就能還原。</p>
+    <textarea id="exportText" readonly></textarea>
+    <div class="modal-actions">
+      <button type="button" id="copyExportBtn">複製到剪貼簿</button>
+      <button type="button" id="closeExportBtn">關閉</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="importModal" hidden>
+  <div class="modal-box">
+    <h3>匯入備份</h3>
+    <p class="modal-hint">把之前匯出的備份 JSON 內容整段貼到下面，再按「確認匯入」。這會覆蓋目前的清單設定（勾選紀錄不受影響）。</p>
+    <textarea id="importText" placeholder="貼上備份 JSON 內容…"></textarea>
+    <div class="modal-actions">
+      <button type="button" id="confirmImportBtn">確認匯入</button>
+      <button type="button" id="closeImportBtn">關閉</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var STORAGE_KEY = "ff14weekly.config.v4";
+  var TAIPEI_OFFSET_MS = 8 * 3600 * 1000;
+  var NOTIFY_WINDOW_MS = 3 * 3600 * 1000;
+
+  var DEFAULT_CONFIG = {
+    groups: [
+      {
+        id: "tue1600",
+        title: "週間事項",
+        kind: "weekly",
+        weekday: 2,
+        hour: 16,
+        resetLabel: "每週二 16:00 重置",
+        items: [
+          { id: "hunt", name: "天書（討伐指令書）", type: "check" },
+          { id: "wondrous", name: "幻巧戰", type: "check" },
+          { id: "customer", name: "老主顧", type: "check" },
+          { id: "fashion", name: "時尚評鑑", type: "check" }
+        ]
+      },
+      {
+        id: "sat2100",
+        title: "仙人彩",
+        kind: "weekly",
+        weekday: 6,
+        hour: 21,
+        resetLabel: "每週六 21:00 重置",
+        items: [
+          { id: "cactpot", name: "仙人彩（大型彩票）", type: "check" }
+        ]
+      },
+      {
+        id: "roulette",
+        title: "日隨",
+        kind: "daily",
+        hour: 23,
+        resetLabel: "每日 23:00 重置",
+        items: [
+          { id: "roulette_leveling_dungeon", name: "拾級迷宮", type: "check" },
+          { id: "roulette_leveling", name: "練級", type: "check" },
+          { id: "roulette_trials", name: "討伐殲滅戰", type: "check" },
+          { id: "roulette_msq", name: "主線任務", type: "check" },
+          { id: "roulette_guildhest", name: "行會令", type: "check" },
+          { id: "roulette_raid", name: "團隊任務", type: "check" },
+          { id: "roulette_alliance", name: "大型任務", type: "check" },
+          { id: "roulette_frontline", name: "紛爭前線", type: "check" }
+        ]
+      },
+      {
+        id: "prep",
+        title: "籌備任務",
+        kind: "daily",
+        hour: 4,
+        resetLabel: "每日 04:00 重置",
+        items: [
+          { id: "prep_carpenter", name: "木工", type: "check" },
+          { id: "prep_blacksmith", name: "鍛冶", type: "check" },
+          { id: "prep_armorer", name: "鎧甲", type: "check" },
+          { id: "prep_goldsmith", name: "雕金", type: "check" },
+          { id: "prep_leatherworker", name: "皮革", type: "check" },
+          { id: "prep_weaver", name: "裁縫", type: "check" },
+          { id: "prep_alchemist", name: "煉金", type: "check" },
+          { id: "prep_culinarian", name: "烹調", type: "check" },
+          { id: "prep_miner", name: "採礦", type: "check" },
+          { id: "prep_botanist", name: "園藝", type: "check" },
+          { id: "prep_fisher", name: "捕魚", type: "check" }
+        ]
+      },
+      {
+        id: "tribe",
+        title: "友好部族",
+        kind: "daily",
+        hour: 23,
+        resetLabel: "每日 23:00 重置",
+        items: [
+          { id: "tribe_progress", name: "今日部族任務進度", type: "counter", target: 12 },
+          { id: "tribe_amaljaa", name: "2.0 蜥蜴人族", type: "flag" },
+          { id: "tribe_sylph", name: "2.0 妖精族", type: "flag" },
+          { id: "tribe_ixal", name: "2.0 鳥人族", type: "flag" },
+          { id: "tribe_kobold", name: "2.0 地靈族", type: "flag" },
+          { id: "tribe_sahagin", name: "2.0 魚人族", type: "flag" },
+          { id: "tribe_vanu", name: "3.0 瓦努族", type: "flag" },
+          { id: "tribe_vath", name: "3.0 骨頜族", type: "flag" },
+          { id: "tribe_moogle", name: "3.0 莫古力族", type: "flag" },
+          { id: "tribe_kojin", name: "4.0 甲人族", type: "flag" },
+          { id: "tribe_ananta", name: "4.0 阿難陀族", type: "flag" },
+          { id: "tribe_namazu", name: "4.0 鯰魚精族", type: "flag" },
+          { id: "tribe_pixie", name: "5.0 仙子族", type: "flag" },
+          { id: "tribe_qitari", name: "5.0 奇塔利族", type: "flag" },
+          { id: "tribe_dwarf", name: "5.0 矮人族", type: "flag" },
+          { id: "tribe_arkasodara", name: "6.0 悌陽象族", type: "flag" },
+          { id: "tribe_omicron", name: "6.0 奧密克戎族", type: "flag" },
+          { id: "tribe_pelupelu", name: "6.0 兔兔族", type: "flag" }
+        ]
+      }
+    ]
+  };
+
+  function loadConfig() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+      var parsed = JSON.parse(raw);
+      if (!parsed || !Array.isArray(parsed.groups)) return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+      return parsed;
+    } catch (e) {
+      return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+    }
+  }
+  function saveConfig() { localStorage.setItem(STORAGE_KEY, JSON.stringify(config)); }
+
+  var GROUP_ORDER = ["tue1600", "sat2100", "roulette", "prep", "tribe"];
+  function sortGroups(cfg) {
+    cfg.groups.sort(function (a, b) {
+      var ia = GROUP_ORDER.indexOf(a.id); if (ia < 0) ia = 999;
+      var ib = GROUP_ORDER.indexOf(b.id); if (ib < 0) ib = 999;
+      return ia - ib;
+    });
+    return cfg;
+  }
+
+  var config = sortGroups(loadConfig());
+  var openWeekViews = {};
+  var weekOffsets = {};
+
+  // ---- Taipei time helpers ----
+  function taipeiShift(date) {
+    return new Date(date.getTime() + TAIPEI_OFFSET_MS);
+  }
+  function makeShifted(y, mo, d, h, mi, s) {
+    return new Date(Date.UTC(y, mo, d, h, mi || 0, s || 0));
+  }
+  function lastWeeklyBoundary(shiftedNow, weekday, hour) {
+    var d = makeShifted(shiftedNow.getUTCFullYear(), shiftedNow.getUTCMonth(), shiftedNow.getUTCDate(), hour, 0, 0);
+    var diffDays = (d.getUTCDay() - weekday + 7) % 7;
+    d = new Date(d.getTime() - diffDays * 86400000);
+    if (d.getTime() > shiftedNow.getTime()) d = new Date(d.getTime() - 7 * 86400000);
+    return d;
+  }
+  function lastDailyBoundary(shiftedNow, hour) {
+    var d = makeShifted(shiftedNow.getUTCFullYear(), shiftedNow.getUTCMonth(), shiftedNow.getUTCDate(), hour, 0, 0);
+    if (d.getTime() > shiftedNow.getTime()) d = new Date(d.getTime() - 86400000);
+    return d;
+  }
+  function groupBoundaries(group, shiftedNow) {
+    var last = group.kind === "weekly"
+      ? lastWeeklyBoundary(shiftedNow, group.weekday, group.hour)
+      : lastDailyBoundary(shiftedNow, group.hour);
+    var stepMs = group.kind === "weekly" ? 7 * 86400000 : 86400000;
+    var next = new Date(last.getTime() + stepMs);
+    return { last: last, next: next };
+  }
+  function fmtDuration(ms) {
+    if (ms < 0) ms = 0;
+    var totalSec = Math.floor(ms / 1000);
+    var d = Math.floor(totalSec / 86400);
+    var h = Math.floor((totalSec % 86400) / 3600);
+    var m = Math.floor((totalSec % 3600) / 60);
+    var s = totalSec % 60;
+    if (d > 0) return d + "天 " + h + "時" + pad2(m) + "分" + pad2(s) + "秒";
+    return pad2(h) + "時" + pad2(m) + "分" + pad2(s) + "秒";
+  }
+  function pad2(n) { return n < 10 ? "0" + n : "" + n; }
+  function taipeiDateKey(shiftedDate) {
+    return shiftedDate.getUTCFullYear() + "-" + pad2(shiftedDate.getUTCMonth() + 1) + "-" + pad2(shiftedDate.getUTCDate());
+  }
+  function weekdayLabel(n) { return ["日", "一", "二", "三", "四", "五", "六"][n]; }
+  function mondayOfYMD(y, mo, d) {
+    var base = makeShifted(y, mo, d, 0, 0, 0);
+    var wd = base.getUTCDay();
+    var sinceMonday = (wd + 6) % 7;
+    return new Date(base.getTime() - sinceMonday * 86400000);
+  }
+
+  // ---- progress storage: per item, per period key ----
+  function progressKey(itemId, periodTs) { return itemId + "@" + periodTs; }
+  function getProgress(itemId, periodTs) {
+    var raw = localStorage.getItem("ff14weekly.p." + progressKey(itemId, periodTs));
+    return raw === null ? null : JSON.parse(raw);
+  }
+  function setProgress(itemId, periodTs, value) {
+    localStorage.setItem("ff14weekly.p." + progressKey(itemId, periodTs), JSON.stringify(value));
+  }
+
+  function isItemDone(item, value) {
+    if (item.type === "flag") return false;
+    if (item.type === "counter") return typeof value === "number" && value >= item.target;
+    return value === true;
+  }
+
+  // ---- rendering ----
+  var mainEl = document.getElementById("main");
+  var clockEl = document.getElementById("clockNow");
+  var summaryEl = document.getElementById("summaryPill");
+  var stripEl = document.getElementById("countdownStrip");
+
+  function render() {
+    var now = new Date();
+    var shiftedNow = taipeiShift(now);
+    clockEl.textContent = shiftedNow.getUTCFullYear() + "/" + pad2(shiftedNow.getUTCMonth() + 1) + "/" + pad2(shiftedNow.getUTCDate()) + " (" + weekdayLabel(shiftedNow.getUTCDay()) + ") " +
+      pad2(shiftedNow.getUTCHours()) + ":" + pad2(shiftedNow.getUTCMinutes()) + ":" + pad2(shiftedNow.getUTCSeconds());
+
+    var totalDone = 0, totalItems = 0;
+    var stripHtml = "";
+    var mainHtml = "";
+
+    config.groups.forEach(function (group) {
+      var b = groupBoundaries(group, shiftedNow);
+      stripHtml += '<div class="countdown-chip"><div class="cc-label">' + escapeHtml(group.title) + ' 倒數</div><div class="cc-value">' + fmtDuration(b.next.getTime() - shiftedNow.getTime()) + '</div></div>';
+
+      if (group.kind === "weekly") {
+        var doneCount = 0;
+        var rows = group.items.map(function (item) {
+          var val = getProgress(item.id, b.last.getTime());
+          var done = isItemDone(item, val);
+          if (done) doneCount++;
+          totalItems++; if (done) totalDone++;
+          return itemRowHtml(group, item, b, val, done);
+        }).join("");
+        totalItems -= 0;
+        mainHtml += groupCardHtml(group, b, doneCount, group.items.length, rows, shiftedNow);
+      } else {
+        var dailyDone = 0, dailyTotal = 0;
+        group.items.forEach(function (item) {
+          if (item.type === "flag") return;
+          var val = getProgress(item.id, b.last.getTime());
+          dailyTotal++;
+          if (isItemDone(item, val)) dailyDone++;
+        });
+        totalItems += dailyTotal; totalDone += dailyDone;
+        mainHtml += dailyGroupCardHtml(group, b, shiftedNow, dailyDone, dailyTotal);
+      }
+    });
+
+    stripEl.innerHTML = stripHtml;
+    mainEl.innerHTML = mainHtml;
+    summaryEl.textContent = "本輪進度 " + totalDone + " / " + totalItems + " 已完成";
+
+    bindRowEvents();
+  }
+
+  function statusTag(item, val, msLeft) {
+    var done = isItemDone(item, val);
+    if (done) return '<span class="status-tag done">已完成</span>';
+    if (msLeft <= NOTIFY_WINDOW_MS) return '<span class="status-tag soon">即將到期</span>';
+    return '<span class="status-tag pending">未完成</span>';
+  }
+
+  function itemRowHtml(group, item, b, val, done, dateOverrideTs) {
+    var periodTs = dateOverrideTs !== undefined ? dateOverrideTs : b.last.getTime();
+    var msLeft = b.next.getTime() - Date.now();
+    var control;
+    var targetEdit = "";
+    if (item.type === "counter") {
+      var count = typeof val === "number" ? val : 0;
+      control = '<div class="counter" data-item="' + item.id + '" data-period="' + periodTs + '" data-target="' + item.target + '">' +
+        '<button type="button" data-act="dec">–</button>' +
+        '<span class="count-val">' + count + ' / ' + item.target + '</span>' +
+        '<button type="button" data-act="inc">+</button></div>';
+      targetEdit = '<span class="target-edit-wrap">上限 <input type="number" class="target-edit" min="1" data-target-item="' + item.id + '" data-group="' + group.id + '" value="' + item.target + '"></span>';
+    } else {
+      control = '<button type="button" class="chk" aria-checked="' + (done ? "true" : "false") + '" data-item="' + item.id + '" data-period="' + periodTs + '"></button>';
+    }
+    return '<div class="item-row" data-group="' + group.id + '" data-item-id="' + item.id + '">' +
+      control +
+      '<input class="item-name" data-rename="' + item.id + '" data-group="' + group.id + '" value="' + escapeAttr(item.name) + '">' +
+      targetEdit +
+      statusTag(item, val, msLeft) +
+      '<button type="button" class="del-btn" data-del="' + item.id + '" data-group="' + group.id + '" title="刪除項目">×</button>' +
+      '</div>';
+  }
+
+  function chipHtml(group, item, val, periodTs) {
+    var done = isItemDone(item, val) || val === true;
+    return '<div class="chip' + (done ? ' done' : '') + '" data-group="' + group.id + '" data-item-id="' + item.id + '">' +
+      '<button type="button" class="chk" aria-checked="' + (done ? "true" : "false") + '" data-item="' + item.id + '" data-period="' + periodTs + '"></button>' +
+      '<input class="item-name" data-rename="' + item.id + '" data-group="' + group.id + '" value="' + escapeAttr(item.name) + '">' +
+      '<button type="button" class="del-btn" data-del="' + item.id + '" data-group="' + group.id + '" title="刪除項目">×</button>' +
+      '</div>';
+  }
+
+  function groupCardHtml(group, b, doneCount, total, rows, shiftedNow) {
+    return '<section class="card" data-group-card="' + group.id + '">' +
+      '<div class="card-head"><div><h2>' + escapeHtml(group.title) + '</h2><div class="reset-label">' + escapeHtml(group.resetLabel) + '</div></div>' +
+      '<div class="card-status"><div class="progress-frac">' + doneCount + ' / ' + total + '</div><div class="until">剩 ' + fmtDuration(b.next.getTime() - shiftedNow.getTime()) + '</div></div></div>' +
+      rows +
+      addRowHtml(group.id) +
+      '</section>';
+  }
+
+  function dailyGroupCardHtml(group, b, shiftedNow, doneCount, total) {
+    var gridItems = group.items.filter(function (it) { return it.type !== "flag"; });
+    var flagItems = group.items.filter(function (it) { return it.type === "flag"; });
+
+    var allCheckSimple = gridItems.length > 0 && gridItems.every(function (it) { return it.type === "check"; });
+    var todayRows;
+    if (allCheckSimple && gridItems.length > 4) {
+      todayRows = '<div class="chip-grid">' + gridItems.map(function (item) {
+        var val = getProgress(item.id, b.last.getTime());
+        return chipHtml(group, item, val, b.last.getTime());
+      }).join("") + '</div>';
+    } else {
+      todayRows = gridItems.map(function (item) {
+        var val = getProgress(item.id, b.last.getTime());
+        var done = isItemDone(item, val);
+        return itemRowHtml(group, item, b, val, done);
+      }).join("");
+    }
+
+    // Monday..Sunday of the displayed Taipei week (navigable, clamped to current month)
+    var todayMonday = mondayOfYMD(shiftedNow.getUTCFullYear(), shiftedNow.getUTCMonth(), shiftedNow.getUTCDate());
+    var monthFirstMonday = mondayOfYMD(shiftedNow.getUTCFullYear(), shiftedNow.getUTCMonth(), 1);
+    var lastDom = new Date(Date.UTC(shiftedNow.getUTCFullYear(), shiftedNow.getUTCMonth() + 1, 0));
+    var monthLastMonday = mondayOfYMD(lastDom.getUTCFullYear(), lastDom.getUTCMonth(), lastDom.getUTCDate());
+    var minOffset = Math.round((monthFirstMonday.getTime() - todayMonday.getTime()) / 604800000);
+    var maxOffset = Math.round((monthLastMonday.getTime() - todayMonday.getTime()) / 604800000);
+    var offset = weekOffsets[group.id] || 0;
+    offset = Math.max(minOffset, Math.min(maxOffset, offset));
+    var monday = new Date(todayMonday.getTime() + offset * 604800000);
+    var days = [];
+    for (var i = 0; i < 7; i++) days.push(new Date(monday.getTime() + i * 86400000));
+    var todayKey = taipeiDateKey(shiftedNow);
+
+    var gridHtml = "";
+    if (gridItems.length) {
+      var rangeLabel = pad2(days[0].getUTCMonth() + 1) + "/" + pad2(days[0].getUTCDate()) + " – " + pad2(days[6].getUTCMonth() + 1) + "/" + pad2(days[6].getUTCDate());
+      var navHtml = '<div class="week-nav">' +
+        '<button type="button" data-week-nav="prev" data-group="' + group.id + '"' + (offset <= minOffset ? " disabled" : "") + '>◀</button>' +
+        '<span class="week-range">' + rangeLabel + (offset !== 0 ? ' <button type="button" class="week-back" data-week-nav="reset" data-group="' + group.id + '">回本週</button>' : '') + '</span>' +
+        '<button type="button" data-week-nav="next" data-group="' + group.id + '"' + (offset >= maxOffset ? " disabled" : "") + '>▶</button>' +
+        '</div>';
+
+      var head = '<tr><th class="item-col">項目</th>' + days.map(function (d) {
+        var isToday = taipeiDateKey(d) === todayKey;
+        return '<th class="' + (isToday ? "day-col-today" : "") + '">' + weekdayLabel(d.getUTCDay()) + '<br>' + pad2(d.getUTCMonth() + 1) + '/' + pad2(d.getUTCDate()) + '</th>';
+      }).join("") + '</tr>';
+
+      var rows = gridItems.map(function (item) {
+        var cells = days.map(function (d) {
+          var boundaryTs = makeShifted(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), group.hour, 0, 0).getTime() - 86400000;
+          var isFuture = taipeiDateKey(d) > todayKey;
+          var val = getProgress(item.id, boundaryTs);
+          var cellClass = isFuture ? "day-cell-future" : "";
+          var inner;
+          if (item.type === "counter") {
+            var count = typeof val === "number" ? val : 0;
+            inner = '<div class="counter" data-item="' + item.id + '" data-period="' + boundaryTs + '" data-target="' + item.target + '" data-future="' + isFuture + '">' +
+              '<button type="button" data-act="dec"' + (isFuture ? " disabled" : "") + '>–</button>' +
+              '<span class="count-val">' + count + '</span>' +
+              '<button type="button" data-act="inc"' + (isFuture ? " disabled" : "") + '>+</button></div>';
+          } else {
+            var done = val === true;
+            inner = '<button type="button" class="chk" aria-checked="' + (done ? "true" : "false") + '" data-item="' + item.id + '" data-period="' + boundaryTs + '"' + (isFuture ? " disabled" : "") + '></button>';
+          }
+          return '<td class="' + cellClass + '">' + inner + '</td>';
+        }).join("");
+        var targetEdit = item.type === "counter"
+          ? '<span class="target-edit-wrap">上限 <input type="number" class="target-edit" min="1" data-target-item="' + item.id + '" data-group="' + group.id + '" value="' + item.target + '"></span>'
+          : "";
+        return '<tr><td class="item-col"><div class="item-col-inner">' +
+          '<input class="item-name" data-rename="' + item.id + '" data-group="' + group.id + '" value="' + escapeAttr(item.name) + '">' +
+          targetEdit +
+          '</div></td>' + cells +
+          '<td><button type="button" class="del-btn" data-del="' + item.id + '" data-group="' + group.id + '" title="刪除項目">×</button></td></tr>';
+      }).join("");
+
+      var isOpen = !!openWeekViews[group.id];
+      gridHtml = '<details class="week-view" data-week-view="' + group.id + '"' + (isOpen ? " open" : "") + '><summary>本週紀錄與完成度</summary>' + navHtml + '<div class="grid-wrap"><table class="day-grid"><thead>' + head + '</thead><tbody>' + rows + '</tbody></table></div></details>';
+    }
+
+    var flagHtml = flagItems.length
+      ? '<div class="chip-grid">' + flagItems.map(function (item) {
+          var val = getProgress(item.id, "sticky");
+          return chipHtml(group, item, val, "sticky");
+        }).join("") + '</div>'
+      : "";
+
+    var b2 = groupBoundaries(group, shiftedNow);
+    return '<section class="card" data-group-card="' + group.id + '">' +
+      '<div class="card-head"><div><h2>' + escapeHtml(group.title) + '</h2><div class="reset-label">' + escapeHtml(group.resetLabel) + '</div></div>' +
+      '<div class="card-status"><div class="progress-frac">' + doneCount + ' / ' + total + '</div><div class="until">今日剩 ' + fmtDuration(b2.next.getTime() - shiftedNow.getTime()) + '</div></div></div>' +
+      todayRows +
+      gridHtml +
+      flagHtml +
+      addRowHtml(group.id) +
+      '</section>';
+  }
+
+  function addRowHtml(groupId) {
+    return '<div class="add-row" data-add-for="' + groupId + '">' +
+      '<input type="text" placeholder="新增項目名稱" data-new-name>' +
+      '<select data-new-type><option value="check">勾選</option><option value="counter">次數</option><option value="flag">追蹤標記（不重置）</option></select>' +
+      '<input type="number" data-new-target placeholder="上限" min="1" style="display:none">' +
+      '<button type="button" data-add-btn="' + groupId + '">新增</button>' +
+      '</div>';
+  }
+
+  function escapeHtml(s) { return String(s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); }
+  function escapeAttr(s) { return escapeHtml(s); }
+
+  // ---- event binding ----
+  function bindRowEvents() {
+    mainEl.querySelectorAll("[data-week-view]").forEach(function (d) {
+      var groupId = d.getAttribute("data-week-view");
+      d.addEventListener("toggle", function () { openWeekViews[groupId] = d.open; });
+    });
+    mainEl.querySelectorAll("[data-week-nav]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        if (btn.disabled) return;
+        var groupId = btn.getAttribute("data-group");
+        var act = btn.getAttribute("data-week-nav");
+        if (act === "reset") weekOffsets[groupId] = 0;
+        else weekOffsets[groupId] = (weekOffsets[groupId] || 0) + (act === "next" ? 1 : -1);
+        render();
+      });
+    });
+    mainEl.querySelectorAll(".chk").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        if (btn.disabled) return;
+        var itemId = btn.getAttribute("data-item");
+        var periodTs = btn.getAttribute("data-period");
+        var cur = getProgress(itemId, periodTs) === true;
+        setProgress(itemId, periodTs, !cur);
+        render();
+      });
+    });
+    mainEl.querySelectorAll(".target-edit").forEach(function (input) {
+      input.addEventListener("change", function () {
+        var itemId = input.getAttribute("data-target-item");
+        var groupId = input.getAttribute("data-group");
+        var group = config.groups.find(function (g) { return g.id === groupId; });
+        var item = group && group.items.find(function (it) { return it.id === itemId; });
+        if (!item) return;
+        item.target = Math.max(1, Number(input.value) || 1);
+        saveConfig(); render();
+      });
+    });
+    mainEl.querySelectorAll(".counter").forEach(function (c) {
+      var itemId = c.getAttribute("data-item");
+      var periodTs = c.getAttribute("data-period");
+      var target = Number(c.getAttribute("data-target"));
+      c.querySelectorAll("button").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          if (btn.disabled) return;
+          var cur = getProgress(itemId, periodTs);
+          cur = typeof cur === "number" ? cur : 0;
+          var delta = btn.getAttribute("data-act") === "inc" ? 1 : -1;
+          var next = Math.max(0, Math.min(target, cur + delta));
+          setProgress(itemId, periodTs, next);
+          render();
+        });
+      });
+    });
+    mainEl.querySelectorAll("[data-rename]").forEach(function (input) {
+      input.addEventListener("change", function () {
+        var itemId = input.getAttribute("data-rename");
+        var groupId = input.getAttribute("data-group");
+        var group = config.groups.find(function (g) { return g.id === groupId; });
+        var item = group && group.items.find(function (it) { return it.id === itemId; });
+        if (item) { item.name = input.value.trim() || item.name; saveConfig(); render(); }
+      });
+    });
+    mainEl.querySelectorAll("[data-del]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var itemId = btn.getAttribute("data-del");
+        var groupId = btn.getAttribute("data-group");
+        var group = config.groups.find(function (g) { return g.id === groupId; });
+        if (!group) return;
+        if (!confirm("確定要刪除「" + (group.items.find(function(it){return it.id===itemId;}) || {}).name + "」嗎？")) return;
+        group.items = group.items.filter(function (it) { return it.id !== itemId; });
+        saveConfig(); render();
+      });
+    });
+    mainEl.querySelectorAll("[data-add-for]").forEach(function (row) {
+      var groupId = row.getAttribute("data-add-for");
+      var typeSelect = row.querySelector("select[data-new-type], select");
+      var targetInput = row.querySelector("[data-new-target]");
+      if (typeSelect) {
+        typeSelect.addEventListener("change", function () {
+          targetInput.style.display = typeSelect.value === "counter" ? "" : "none";
+        });
+      }
+      var addBtn = row.querySelector("[data-add-btn]");
+      addBtn.addEventListener("click", function () {
+        var nameInput = row.querySelector("[data-new-name]");
+        var name = nameInput.value.trim();
+        if (!name) { nameInput.focus(); return; }
+        var type = typeSelect ? typeSelect.value : "check";
+        var target = type === "counter" ? Math.max(1, Number(targetInput.value) || 1) : undefined;
+        var group = config.groups.find(function (g) { return g.id === groupId; });
+        var id = "custom_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        var newItem = { id: id, name: name, type: type };
+        if (type === "counter") newItem.target = target;
+        group.items.push(newItem);
+        saveConfig(); render();
+      });
+    });
+  }
+
+
+  var exportModal = document.getElementById("exportModal");
+  var exportText = document.getElementById("exportText");
+
+  document.getElementById("exportBtn").addEventListener("click", function () {
+    var payload = { config: config, exportedAt: new Date().toISOString() };
+    exportText.value = JSON.stringify(payload, null, 2);
+    exportModal.hidden = false;
+    exportText.focus();
+    exportText.select();
+  });
+  document.getElementById("copyExportBtn").addEventListener("click", function () {
+    exportText.select();
+    var done = false;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(exportText.value).then(function () { showToast("已複製到剪貼簿"); }).catch(function () {
+        try { done = document.execCommand("copy"); } catch (e) {}
+        showToast(done ? "已複製到剪貼簿" : "複製失敗，已幫你選取內容，請手動 Ctrl+C");
+      });
+    } else {
+      try { done = document.execCommand("copy"); } catch (e) {}
+      showToast(done ? "已複製到剪貼簿" : "複製失敗，已幫你選取內容，請手動 Ctrl+C");
+    }
+  });
+  document.getElementById("closeExportBtn").addEventListener("click", function () { exportModal.hidden = true; });
+  exportModal.addEventListener("click", function (e) { if (e.target === exportModal) exportModal.hidden = true; });
+
+  var importModal = document.getElementById("importModal");
+  var importText = document.getElementById("importText");
+
+  document.getElementById("importBtn").addEventListener("click", function () {
+    importText.value = "";
+    importModal.hidden = false;
+    importText.focus();
+  });
+  document.getElementById("confirmImportBtn").addEventListener("click", function () {
+    try {
+      var parsed = JSON.parse(importText.value);
+      var cfg = parsed && parsed.config ? parsed.config : parsed;
+      if (!cfg || !Array.isArray(cfg.groups)) throw new Error("bad format");
+      config = sortGroups(cfg);
+      saveConfig();
+      render();
+      importModal.hidden = true;
+      showToast("已匯入備份");
+    } catch (err) {
+      showToast("匯入失敗：內容格式不正確");
+    }
+  });
+  document.getElementById("closeImportBtn").addEventListener("click", function () { importModal.hidden = true; });
+  importModal.addEventListener("click", function (e) { if (e.target === importModal) importModal.hidden = true; });
+
+  document.getElementById("resetBtn").addEventListener("click", function () {
+    if (!confirm("確定要還原成預設清單嗎？自訂項目與名稱修改都會被覆蓋（勾選紀錄不受影響）。")) return;
+    config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+    saveConfig();
+    render();
+  });
+
+  var toastEl = document.getElementById("toast");
+  var toastTimer = null;
+  function showToast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove("show"); }, 2600);
+  }
+
+  render();
+  setInterval(function () {
+    var active = document.activeElement;
+    if (active && mainEl.contains(active) && /^(INPUT|SELECT|TEXTAREA)$/.test(active.tagName)) return;
+    render();
+  }, 1000);
+})();
+</script>
