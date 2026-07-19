@@ -268,6 +268,19 @@
   .footer-row button:hover { border-color: var(--crystal); }
   .footnote { font-size: 12px; color: var(--ink-dim); margin-top: 12px; max-width: 60ch; }
 
+  .diy-notify { margin-top: 10px; max-width: 60ch; }
+  .diy-notify summary {
+    cursor: pointer; font-size: 12px; font-weight: 600; color: var(--crystal-ink);
+    list-style: none; user-select: none;
+  }
+  .diy-notify summary::-webkit-details-marker { display: none; }
+  .diy-notify summary::before { content: "▸ "; }
+  .diy-notify[open] summary::before { content: "▾ "; }
+  .diy-notify-body { font-size: 12px; color: var(--ink-dim); margin-top: 8px; }
+  .diy-notify-body ul { margin: 6px 0 0; padding-left: 18px; }
+  .diy-notify-body li { margin-bottom: 6px; }
+  .diy-notify-body strong { color: var(--ink); }
+
   .toast {
     position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
     background: var(--ink); color: var(--paper); padding: 9px 18px; border-radius: 999px;
@@ -327,8 +340,19 @@
     </div>
     <p class="footnote">
       所有勾選狀態與清單內容只會儲存在「這個瀏覽器」裡（localStorage），換裝置、換瀏覽器或清除資料都會遺失，請定期使用「匯出備份」。
-      到期前的主動推播提醒需要另外設定排程（目前用 Discord 通知）；瀏覽器提醒僅在獨立開啟本頁時可用（嵌在 claude.ai 對話裡不支援）。
+      瀏覽器提醒僅在獨立開啟本頁時可用（嵌在 claude.ai 對話裡不支援）。
     </p>
+    <details class="diy-notify">
+      <summary>想要主動推播提醒（不用開著網頁也會通知）？</summary>
+      <div class="diy-notify-body">
+        <p>這個網站本身只能存在你自己瀏覽器裡，沒辦法幫「所有使用者」統一發送推播——每個人要主動提醒，得各自架設。如果你想自己動手，方向大概有：</p>
+        <ul>
+          <li><strong>Zapier / Make 之類的自動化平台</strong>：用排程（Schedule）觸發，接一個 Discord／LINE／Email 的動作，時間到就發訊息。免寫程式，但要自己設定重置時間。</li>
+          <li><strong>自己寫一個小 Discord Bot</strong>（discord.js 或 discord.py），排程檢查時間並發訊息到頻道，架在一個常駐主機上（例如 Railway、Render、Fly.io 的免費額度）。</li>
+          <li><strong>手機/電腦內建的提醒事項、行事曆 App</strong>：依照上面各組的重置時間，手動建立重複提醒，最省事但沒有自動化。</li>
+        </ul>
+      </div>
+    </details>
   </footer>
 </div>
 
@@ -639,7 +663,6 @@
     summaryEl.textContent = "本輪進度 " + totalDone + " / " + totalItems + " 已完成";
 
     bindRowEvents();
-    checkNotifications(shiftedNow);
   }
 
   function statusTag(item, val, msLeft) {
@@ -1056,6 +1079,10 @@
     var active = document.activeElement;
     if (active && mainEl.contains(active) && /^(INPUT|SELECT|TEXTAREA)$/.test(active.tagName)) return;
     render();
+  }, 1000);
+  // runs independently of the render-skip guard above, so it isn't starved while a settings field has focus
+  setInterval(function () {
+    checkNotifications(taipeiShift(new Date()));
   }, 1000);
 })();
 </script>
