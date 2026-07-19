@@ -1085,7 +1085,7 @@
         });
         if (!pending.length) return;
         try {
-          new Notification("FF14 提醒：" + group.title, { body: "還沒完成：" + pending.map(function (it) { return it.name; }).join("、"), tag: key });
+          new Notification("FF14 提醒：" + group.title, { body: "還沒完成：" + pending.map(function (it) { return it.name; }).join("、"), tag: key, requireInteraction: true });
         } catch (e) {}
       });
     });
@@ -1106,7 +1106,7 @@
       if (typeof Notification === "undefined") { showToast("此瀏覽器不支援通知功能"); return; }
       if (Notification.permission !== "granted") { showToast("請先按左邊「啟用瀏覽器提醒」並允許權限"); return; }
       try {
-        new Notification("FF14 測試通知", { body: "如果你看到這則，代表通知本身沒問題。" });
+        new Notification("FF14 測試通知", { body: "如果你看到這則，代表通知本身沒問題。", requireInteraction: true });
         showToast("已送出，看看電腦右下角有沒有跳出來");
       } catch (e) {
         showToast("失敗：" + e.message);
