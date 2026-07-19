@@ -340,7 +340,7 @@
     </div>
     <p class="footnote">
       所有勾選狀態與清單內容只會儲存在「這個瀏覽器」裡（localStorage），換裝置、換瀏覽器或清除資料都會遺失，請定期使用「匯出備份」。
-      瀏覽器提醒僅在獨立開啟本頁時可用（嵌在 claude.ai 對話裡不支援）。
+      瀏覽器提醒僅在獨立開啟本頁時可用（嵌在 claude.ai 對話裡不支援），且必須讓這個分頁保持在「前景」才會準時跳出——切到其他分頁或視窗後，瀏覽器可能會暫停背景分頁的運作，導致提醒延遲或完全不會跳出。真正不用開著網頁也會準時到的提醒，請用 Discord 排程。
     </p>
     <details class="diy-notify">
       <summary>想要主動推播提醒（不用開著網頁也會通知）？</summary>
@@ -1030,6 +1030,8 @@
 
   // ---- browser notifications: only usable when NOT embedded in an iframe (e.g. claude.ai Artifact) ----
   // each group has its own notifyRule (enabled, hour, minute, and weekday for weekly groups) set by the user
+  // fires once per (group, period, configured alarm time). Changing the alarm time creates a
+  // new key, so it can fire again even within the same period; leaving it unchanged fires once.
   function checkNotifications(shiftedNow) {
     if (typeof Notification === "undefined" || Notification.permission !== "granted") return;
     config.groups.forEach(function (group) {
@@ -1042,7 +1044,7 @@
       // tolerate up to 10 minutes late in case background-tab timer throttling delayed this check
       if (diffMin < 0 || diffMin > 10) return;
       var b = groupBoundaries(group, shiftedNow);
-      var key = "notify@" + group.id + "@" + b.last.getTime();
+      var key = "notify@" + group.id + "@" + b.last.getTime() + "@" + rule.hour + ":" + rule.minute;
       if (notified[key]) return;
       notified[key] = true;
       saveNotified();
