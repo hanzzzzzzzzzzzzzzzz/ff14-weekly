@@ -1,3 +1,5 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FF14 週常清單</title>
 <style>
   :root {
@@ -325,6 +327,28 @@
   }
   #copyExportBtn { background: var(--crystal); color: #fff; border: none; }
   #closeExportBtn { background: var(--panel-2); color: var(--ink); }
+
+  /* mobile-only tweaks — everything above this stays exactly as-is on desktop */
+  @media (max-width: 600px) {
+    .page { padding: 20px 14px 48px; }
+    header.hero h1 { font-size: 23px; }
+    .clock-value { font-size: 16px; }
+    .summary-pill { font-size: 12.5px; }
+    .card { padding: 14px 14px 12px; }
+    .card-head h2 { font-size: 16.5px; }
+    .item-name { font-size: 15.5px; }
+    .status-tag { font-size: 12px; padding: 4px 10px; }
+    .chip .item-name { font-size: 14px; max-width: 100px; }
+    .del-btn { width: 26px; height: 26px; }
+    .chk { width: 24px; height: 24px; }
+    .footer-row { flex-direction: column; align-items: stretch; }
+    .footer-row button { width: 100%; }
+    .add-row { flex-direction: column; align-items: stretch; }
+    .add-row input[type="text"] { width: 100%; }
+    .reminder-add-row { flex-direction: column; align-items: stretch; }
+    .reminder-add-row select, .reminder-add-row input[type="time"] { width: 100%; }
+    .modal-box { padding: 16px; }
+  }
 </style>
 
 <div class="page">
