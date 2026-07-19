@@ -183,6 +183,17 @@
   }
   .chip:hover .del-btn, .chip:focus-within .del-btn { opacity: 0.7; }
 
+  .notify-rule {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;
+    padding-bottom: 8px; border-bottom: 1px dashed var(--line); font-size: 12.5px; color: var(--ink-dim);
+  }
+  .notify-toggle { display: flex; align-items: center; gap: 5px; cursor: pointer; user-select: none; }
+  .notify-toggle input[type="checkbox"] { width: 14px; height: 14px; accent-color: var(--crystal); }
+  .notify-rule select, .notify-rule input[type="time"] {
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; color: var(--ink);
+    padding: 3px 6px; font-size: 12px; font-family: inherit;
+  }
+
   .target-edit-wrap {
     display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--ink-dim);
     margin-left: 6px; flex-shrink: 0; white-space: nowrap;
@@ -478,7 +489,38 @@
     return cfg;
   }
 
-  var config = sortGroups(loadConfig());
+  function ensureNotifyDefaults(cfg) {
+    cfg.groups.forEach(function (g) {
+      if (!g.notifyRule) {
+        g.notifyRule = g.kind === "weekly"
+          ? { enabled: false, weekday: g.weekday, hour: 20, minute: 0 }
+          : { enabled: false, hour: 20, minute: 0 };
+      }
+    });
+    return cfg;
+  }
+
+  function dumpProgress() {
+    var out = {};
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k.indexOf("ff14weekly.p.") === 0) out[k] = localStorage.getItem(k);
+    }
+    return out;
+  }
+  function restoreProgress(dump) {
+    var toRemove = [];
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k.indexOf("ff14weekly.p.") === 0) toRemove.push(k);
+    }
+    toRemove.forEach(function (k) { localStorage.removeItem(k); });
+    if (dump && typeof dump === "object") {
+      Object.keys(dump).forEach(function (k) { localStorage.setItem(k, dump[k]); });
+    }
+  }
+
+  var config = ensureNotifyDefaults(sortGroups(loadConfig()));
   var notified = loadNotified();
   var openWeekViews = {};
   var weekOffsets = {};
@@ -640,10 +682,28 @@
       '</div>';
   }
 
+  function notifyRuleHtml(group) {
+    var rule = group.notifyRule || { enabled: false, hour: 20, minute: 0 };
+    var hh = pad2(rule.hour), mm = pad2(rule.minute);
+    var weekdaySelect = "";
+    if (group.kind === "weekly") {
+      var opts = ["日", "一", "二", "三", "四", "五", "六"].map(function (lbl, idx) {
+        return '<option value="' + idx + '"' + (rule.weekday === idx ? " selected" : "") + '>週' + lbl + '</option>';
+      }).join("");
+      weekdaySelect = '<select class="notify-weekday" data-group="' + group.id + '">' + opts + '</select>';
+    }
+    return '<div class="notify-rule" data-group="' + group.id + '">' +
+      '<label class="notify-toggle"><input type="checkbox" class="notify-enable" data-group="' + group.id + '"' + (rule.enabled ? " checked" : "") + '> 🔔 提醒</label>' +
+      weekdaySelect +
+      '<input type="time" class="notify-time" data-group="' + group.id + '" value="' + hh + ':' + mm + '">' +
+      '</div>';
+  }
+
   function groupCardHtml(group, b, doneCount, total, rows, shiftedNow) {
     return '<section class="card" data-group-card="' + group.id + '">' +
       '<div class="card-head"><div><h2>' + escapeHtml(group.title) + '</h2><div class="reset-label">' + escapeHtml(group.resetLabel) + '</div></div>' +
       '<div class="card-status"><div class="progress-frac">' + doneCount + ' / ' + total + '</div><div class="until">剩 ' + fmtDuration(b.next.getTime() - shiftedNow.getTime()) + '</div></div></div>' +
+      notifyRuleHtml(group) +
       rows +
       addRowHtml(group.id) +
       '</section>';
@@ -740,6 +800,7 @@
     return '<section class="card" data-group-card="' + group.id + '">' +
       '<div class="card-head"><div><h2>' + escapeHtml(group.title) + '</h2><div class="reset-label">' + escapeHtml(group.resetLabel) + '</div></div>' +
       '<div class="card-status"><div class="progress-frac">' + doneCount + ' / ' + total + '</div><div class="until">今日剩 ' + fmtDuration(b2.next.getTime() - shiftedNow.getTime()) + '</div></div></div>' +
+      notifyRuleHtml(group) +
       todayRows +
       gridHtml +
       flagHtml +
@@ -761,6 +822,32 @@
 
   // ---- event binding ----
   function bindRowEvents() {
+    mainEl.querySelectorAll(".notify-enable").forEach(function (cb) {
+      cb.addEventListener("change", function () {
+        var group = config.groups.find(function (g) { return g.id === cb.getAttribute("data-group"); });
+        if (!group) return;
+        group.notifyRule.enabled = cb.checked;
+        saveConfig();
+      });
+    });
+    mainEl.querySelectorAll(".notify-time").forEach(function (input) {
+      input.addEventListener("change", function () {
+        var group = config.groups.find(function (g) { return g.id === input.getAttribute("data-group"); });
+        if (!group) return;
+        var parts = input.value.split(":");
+        group.notifyRule.hour = Number(parts[0]) || 0;
+        group.notifyRule.minute = Number(parts[1]) || 0;
+        saveConfig();
+      });
+    });
+    mainEl.querySelectorAll(".notify-weekday").forEach(function (sel) {
+      sel.addEventListener("change", function () {
+        var group = config.groups.find(function (g) { return g.id === sel.getAttribute("data-group"); });
+        if (!group) return;
+        group.notifyRule.weekday = Number(sel.value);
+        saveConfig();
+      });
+    });
     mainEl.querySelectorAll("[data-week-view]").forEach(function (d) {
       var groupId = d.getAttribute("data-week-view");
       d.addEventListener("toggle", function () { openWeekViews[groupId] = d.open; });
@@ -863,7 +950,7 @@
   var exportText = document.getElementById("exportText");
 
   document.getElementById("exportBtn").addEventListener("click", function () {
-    var payload = { config: config, exportedAt: new Date().toISOString() };
+    var payload = { config: config, progress: dumpProgress(), exportedAt: new Date().toISOString() };
     exportText.value = JSON.stringify(payload, null, 2);
     exportModal.hidden = false;
     exportText.focus();
@@ -898,8 +985,9 @@
       var parsed = JSON.parse(importText.value);
       var cfg = parsed && parsed.config ? parsed.config : parsed;
       if (!cfg || !Array.isArray(cfg.groups)) throw new Error("bad format");
-      config = sortGroups(cfg);
+      config = ensureNotifyDefaults(sortGroups(cfg));
       saveConfig();
+      if (parsed && parsed.progress) restoreProgress(parsed.progress);
       render();
       importModal.hidden = true;
       showToast("已匯入備份");
@@ -912,30 +1000,34 @@
 
   document.getElementById("resetBtn").addEventListener("click", function () {
     if (!confirm("確定要還原成預設清單嗎？自訂項目與名稱修改都會被覆蓋（勾選紀錄不受影響）。")) return;
-    config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+    config = ensureNotifyDefaults(JSON.parse(JSON.stringify(DEFAULT_CONFIG)));
     saveConfig();
     render();
   });
 
   // ---- browser notifications: only usable when NOT embedded in an iframe (e.g. claude.ai Artifact) ----
+  // each group has its own notifyRule (enabled, hour, minute, and weekday for weekly groups) set by the user
   function checkNotifications(shiftedNow) {
     if (typeof Notification === "undefined" || Notification.permission !== "granted") return;
     config.groups.forEach(function (group) {
+      var rule = group.notifyRule;
+      if (!rule || !rule.enabled) return;
+      if (shiftedNow.getUTCHours() !== rule.hour || shiftedNow.getUTCMinutes() !== rule.minute) return;
+      if (group.kind === "weekly" && shiftedNow.getUTCDay() !== rule.weekday) return;
       var b = groupBoundaries(group, shiftedNow);
-      var msLeft = b.next.getTime() - shiftedNow.getTime();
-      if (msLeft > NOTIFY_WINDOW_MS) return;
-      group.items.forEach(function (item) {
-        if (item.type === "flag") return;
+      var key = "notify@" + group.id + "@" + b.last.getTime();
+      if (notified[key]) return;
+      notified[key] = true;
+      saveNotified();
+      var pending = group.items.filter(function (item) {
+        if (item.type === "flag") return false;
         var val = getProgress(item.id, b.last.getTime());
-        if (isItemDone(item, val)) return;
-        var key = item.id + "@" + b.last.getTime();
-        if (notified[key]) return;
-        notified[key] = true;
-        saveNotified();
-        try {
-          new Notification("FF14 週常提醒", { body: item.name + "（" + group.resetLabel + "）還有 " + fmtDuration(msLeft) + "，尚未完成", tag: key });
-        } catch (e) {}
+        return !isItemDone(item, val);
       });
+      if (!pending.length) return;
+      try {
+        new Notification("FF14 提醒：" + group.title, { body: "還沒完成：" + pending.map(function (it) { return it.name; }).join("、"), tag: key });
+      } catch (e) {}
     });
   }
 
