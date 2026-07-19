@@ -1035,8 +1035,12 @@
     config.groups.forEach(function (group) {
       var rule = group.notifyRule;
       if (!rule || !rule.enabled) return;
-      if (shiftedNow.getUTCHours() !== rule.hour || shiftedNow.getUTCMinutes() !== rule.minute) return;
       if (group.kind === "weekly" && shiftedNow.getUTCDay() !== rule.weekday) return;
+      var targetMin = rule.hour * 60 + rule.minute;
+      var nowMin = shiftedNow.getUTCHours() * 60 + shiftedNow.getUTCMinutes();
+      var diffMin = nowMin - targetMin;
+      // tolerate up to 10 minutes late in case background-tab timer throttling delayed this check
+      if (diffMin < 0 || diffMin > 10) return;
       var b = groupBoundaries(group, shiftedNow);
       var key = "notify@" + group.id + "@" + b.last.getTime();
       if (notified[key]) return;
