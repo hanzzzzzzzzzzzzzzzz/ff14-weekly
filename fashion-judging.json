@@ -1,5 +1,6 @@
 {
-  "theme": "",
-  "description": "",
-  "imageUrl": ""
+  "content": "測試建議",
+  "notes": "測試備註",
+  "hakkaIndex": 5,
+  "imageUrl": "https://example.com/test.jpg"
 }
