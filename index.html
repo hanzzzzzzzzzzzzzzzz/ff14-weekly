@@ -265,6 +265,10 @@
     width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--line);
     background: var(--panel-2); color: var(--ink); cursor: pointer; font-size: 14px; line-height: 1;
   }
+  .counter-max-btn {
+    width: auto !important; padding: 0 7px; font-size: 10px !important; font-weight: 700;
+    color: var(--crystal-ink) !important; letter-spacing: 0.02em;
+  }
   .counter .count-val {
     font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-variant-numeric: tabular-nums;
     font-size: 14px; min-width: 42px; text-align: center;
@@ -272,6 +276,12 @@
 
   .status-tag.track { color: var(--crystal-ink); background: rgba(44, 125, 118, 0.16); }
 
+  .bulk-actions { display: flex; gap: 8px; margin-bottom: 6px; }
+  .bulk-btn {
+    background: none; border: 1px solid var(--line); color: var(--ink-dim); clip-path: var(--chamfer-sm);
+    padding: 3px 9px; font-size: 11.5px; cursor: pointer;
+  }
+  .bulk-btn:hover { border-color: var(--crystal); color: var(--ink); }
   .chip-grid { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 6px 0; }
   .version-label {
     flex-basis: 100%; font-size: 11px; font-weight: 700; color: var(--ink-dim);
@@ -306,6 +316,21 @@
   }
   .reminder-chip .del-btn { width: 16px; height: 16px; font-size: 11px; opacity: 0.6; }
   .reminder-chip .del-btn:hover { opacity: 1; }
+  .reminder-chip-label { cursor: pointer; }
+  .reminder-chip-label:hover { text-decoration: underline; }
+  .reminder-edit-form {
+    display: inline-flex; align-items: center; gap: 5px; background: var(--panel-2);
+    border: 1px solid var(--accent); clip-path: var(--chamfer-sm); padding: 3px 8px;
+  }
+  .reminder-edit-form select, .reminder-edit-form input {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 4px; color: var(--ink);
+    padding: 2px 4px; font-size: 11.5px; font-family: inherit;
+  }
+  .reminder-edit-save, .reminder-edit-cancel {
+    border: none; border-radius: 4px; cursor: pointer; font-size: 12px; width: 20px; height: 20px;
+  }
+  .reminder-edit-save { background: var(--good); color: #fff; }
+  .reminder-edit-cancel { background: var(--panel); color: var(--ink-dim); border: 1px solid var(--line); }
   .reminder-add-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   .notify-rule select, .notify-rule input[type="time"], .notify-rule input[type="date"] {
     background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; color: var(--ink);
@@ -593,6 +618,7 @@
       <div class="diy-notify-body">
         <p class="last-updated" id="lastUpdatedLine">最後更新：載入中…</p>
         <ul id="changelogList">
+          <li><strong>三個操作捷徑</strong>：點提醒標籤可直接改時間/日期（不用刪掉重建）；計數項目多一顆「MAX」一鍵設成上限；籌備任務、友好部族等多項組加上「全部勾選/全部清空」。</li>
           <li><strong>日隨項目調整</strong>：「行會令」改名為「高難」。</li>
           <li><strong>簡化頂部與倒數顯示</strong>：拿掉跟各卡片內容重複的「一週總覽」大區塊；倒數超過1天不再顯示秒數（只有快到期才需要精確到秒）；所有提醒總覽現在可以直接刪除單則提醒，不用跑回對應卡片；修正水晶游標蓋掉文字輸入框游標的問題。</li>
           <li><strong>新增全部收合與提醒總覽</strong>：頂部多一顆「全部收合/展開」一次切換所有組別；footer 新增「所有提醒總覽」，集中列出目前設定的所有提醒時間，不用逐張卡片找。</li>
@@ -850,6 +876,7 @@
   var weekOffsets = {};
   var expandedDay = {};
   var inlineToggles = {};
+  var editingReminderId = null;
 
   // ---- theme toggle: auto (follows system) -> light -> dark -> auto ----
   var THEME_KEY = "ff14weekly.theme.v1";
@@ -1037,7 +1064,8 @@
       control = '<div class="counter" data-item="' + item.id + '" data-period="' + periodTs + '" data-target="' + item.target + '">' +
         '<button type="button" data-act="dec">–</button>' +
         '<span class="count-val">' + count + ' / ' + item.target + '</span>' +
-        '<button type="button" data-act="inc">+</button></div>';
+        '<button type="button" data-act="inc">+</button>' +
+        '<button type="button" class="counter-max-btn" data-act="max" title="設成上限">MAX</button></div>';
       targetEdit = '<span class="target-edit-wrap">上限 <input type="number" class="target-edit" min="1" data-target-item="' + item.id + '" data-group="' + group.id + '" value="' + item.target + '"></span>';
     } else {
       control = '<button type="button" class="chk" aria-checked="' + (done ? "true" : "false") + '" data-item="' + item.id + '" data-period="' + periodTs + '"></button>';
@@ -1066,12 +1094,31 @@
     }).join("");
   }
 
+  function bulkActionsHtml(groupId, scope) {
+    return '<div class="bulk-actions">' +
+      '<button type="button" class="bulk-btn" data-bulk-group="' + groupId + '" data-bulk-scope="' + scope + '" data-bulk-value="on">全部勾選</button>' +
+      '<button type="button" class="bulk-btn" data-bulk-group="' + groupId + '" data-bulk-scope="' + scope + '" data-bulk-value="off">全部清空</button>' +
+      '</div>';
+  }
+
   function notifyRuleHtml(group) {
     var rules = group.notifyRules || [];
     var chips = rules.map(function (r) {
+      if (r.id === editingReminderId) {
+        var weekdaySelectEdit = group.kind === "weekly"
+          ? '<select class="edit-reminder-weekday">' + weekdayOptionsHtml(r.weekday) + '</select>'
+          : "";
+        return '<span class="reminder-edit-form" data-group="' + group.id + '" data-rule="' + r.id + '">' +
+          weekdaySelectEdit +
+          '<input type="time" class="edit-reminder-time" value="' + pad2(r.hour) + ':' + pad2(r.minute) + '">' +
+          '<input type="date" class="edit-reminder-date" value="' + (r.date || "") + '" title="指定日期（選填）">' +
+          '<button type="button" class="reminder-edit-save" data-group="' + group.id + '" data-rule="' + r.id + '">✓</button>' +
+          '<button type="button" class="reminder-edit-cancel">×</button>' +
+          '</span>';
+      }
       var whenLabel = r.date ? r.date.replace(/-/g, "/") : (group.kind === "weekly" ? "週" + weekdayLabel(r.weekday) : "每次");
       var label = whenLabel + " " + pad2(r.hour) + ":" + pad2(r.minute);
-      return '<span class="reminder-chip">🔔 ' + label +
+      return '<span class="reminder-chip"><span class="reminder-chip-label" data-edit-reminder="' + r.id + '" title="點擊編輯時間">🔔 ' + label + '</span>' +
         '<button type="button" class="del-btn" data-del-reminder="' + r.id + '" data-group="' + group.id + '" title="刪除這則提醒">×</button></span>';
     }).join("");
 
@@ -1116,7 +1163,7 @@
     var allCheckSimple = gridItems.length > 0 && gridItems.every(function (it) { return it.type === "check"; });
     var todayRows;
     if (allCheckSimple && gridItems.length > 4) {
-      todayRows = '<div class="chip-grid">' + gridItems.map(function (item) {
+      todayRows = bulkActionsHtml(group.id, "today") + '<div class="chip-grid">' + gridItems.map(function (item) {
         var val = getProgress(item.id, b.last.getTime());
         return chipHtml(group, item, val, b.last.getTime());
       }).join("") + '</div>';
@@ -1208,7 +1255,7 @@
         var val = getProgress(item.id, "sticky");
         flagChipsHtml += chipHtml(group, item, val, "sticky");
       });
-      flagHtml = '<div class="chip-grid">' + flagChipsHtml + '</div>';
+      flagHtml = bulkActionsHtml(group.id, "flag") + '<div class="chip-grid">' + flagChipsHtml + '</div>';
     }
 
     var b2 = groupBoundaries(group, shiftedNow);
@@ -1236,6 +1283,29 @@
 
   // ---- event binding ----
   function bindRowEvents() {
+    mainEl.querySelectorAll("[data-bulk-group]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var group = config.groups.find(function (g) { return g.id === btn.getAttribute("data-bulk-group"); });
+        if (!group) return;
+        var scope = btn.getAttribute("data-bulk-scope");
+        var value = btn.getAttribute("data-bulk-value") === "on";
+        if (scope === "flag") {
+          group.items.forEach(function (item) {
+            if (item.type !== "flag") return;
+            setProgress(item.id, "sticky", value);
+          });
+        } else {
+          var shiftedNow = taipeiShift(new Date());
+          var b = groupBoundaries(group, shiftedNow);
+          group.items.forEach(function (item) {
+            if (item.type === "flag") return;
+            if (item.type === "counter") setProgress(item.id, b.last.getTime(), value ? item.target : 0);
+            else setProgress(item.id, b.last.getTime(), value);
+          });
+        }
+        render();
+      });
+    });
     mainEl.querySelectorAll("[data-add-reminder]").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var groupId = btn.getAttribute("data-add-reminder");
@@ -1270,6 +1340,43 @@
         if (!group) return;
         group.notifyRules = (group.notifyRules || []).filter(function (r) { return r.id !== ruleId; });
         saveConfig();
+        render();
+      });
+    });
+    mainEl.querySelectorAll("[data-edit-reminder]").forEach(function (el) {
+      el.addEventListener("click", function () {
+        editingReminderId = el.getAttribute("data-edit-reminder");
+        render();
+      });
+    });
+    mainEl.querySelectorAll(".reminder-edit-cancel").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        editingReminderId = null;
+        render();
+      });
+    });
+    mainEl.querySelectorAll(".reminder-edit-save").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var group = config.groups.find(function (g) { return g.id === btn.getAttribute("data-group"); });
+        var ruleId = btn.getAttribute("data-rule");
+        var rule = group && (group.notifyRules || []).find(function (r) { return r.id === ruleId; });
+        if (!rule) { editingReminderId = null; render(); return; }
+        var form = btn.closest(".reminder-edit-form");
+        var timeInput = form.querySelector(".edit-reminder-time");
+        var dateInput = form.querySelector(".edit-reminder-date");
+        var weekdaySelect = form.querySelector(".edit-reminder-weekday");
+        var parts = (timeInput.value || "20:00").split(":");
+        rule.hour = Number(parts[0]) || 0;
+        rule.minute = Number(parts[1]) || 0;
+        if (dateInput && dateInput.value) {
+          rule.date = dateInput.value;
+          delete rule.weekday;
+        } else {
+          delete rule.date;
+          if (weekdaySelect) rule.weekday = Number(weekdaySelect.value);
+        }
+        saveConfig();
+        editingReminderId = null;
         render();
       });
     });
@@ -1336,10 +1443,16 @@
       c.querySelectorAll("button").forEach(function (btn) {
         btn.addEventListener("click", function () {
           if (btn.disabled) return;
-          var cur = getProgress(itemId, periodTs);
-          cur = typeof cur === "number" ? cur : 0;
-          var delta = btn.getAttribute("data-act") === "inc" ? 1 : -1;
-          var next = Math.max(0, Math.min(target, cur + delta));
+          var act = btn.getAttribute("data-act");
+          var next;
+          if (act === "max") {
+            next = target;
+          } else {
+            var cur = getProgress(itemId, periodTs);
+            cur = typeof cur === "number" ? cur : 0;
+            var delta = act === "inc" ? 1 : -1;
+            next = Math.max(0, Math.min(target, cur + delta));
+          }
           setProgress(itemId, periodTs, next);
           render();
         });
@@ -1587,7 +1700,7 @@
     });
   }
 
-  var LAST_UPDATED_TEXT = "2026/07/20 (週一) 06:58";
+  var LAST_UPDATED_TEXT = "2026/07/20 (週一) 07:50";
   var lastUpdatedEl = document.getElementById("lastUpdatedLine");
   if (lastUpdatedEl) lastUpdatedEl.textContent = "最後更新：" + LAST_UPDATED_TEXT;
 
