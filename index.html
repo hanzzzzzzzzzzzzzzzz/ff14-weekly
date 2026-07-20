@@ -979,6 +979,8 @@
   .fashion-move-btn:hover { color: var(--crystal-ink); }
   .fashion-content { padding: 12px 0; }
   .fashion-stars { font-size: 20px; letter-spacing: 2px; margin: 8px 0 12px; }
+  .fashion-star { color: var(--line); }
+  .fashion-star.filled { color: var(--accent); }
   .fashion-items { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
   .fashion-item { flex: 1; min-width: 180px; background: var(--panel-2); border: 1px solid var(--line); clip-path: var(--chamfer-sm); padding: 10px 12px; }
   .fashion-item strong { color: var(--accent-ink); font-size: 12px; display: block; margin-bottom: 4px; }
@@ -986,7 +988,14 @@
   .fashion-meta { font-size: 12px; color: var(--ink-dim); margin-top: 12px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
   .fashion-link { color: var(--crystal-ink); text-decoration: none; border-bottom: 1px dashed var(--crystal); }
   .fashion-link:hover { border-color: transparent; color: var(--accent); }
-  .fashion-image { max-width: 100%; border-radius: 4px; max-height: 300px; margin-top: 12px; }
+  .fashion-images { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+  .fashion-image { flex: 1; min-width: 220px; max-width: 320px; width: 100%; border-radius: 4px; display: block; cursor: zoom-in; }
+  .fashion-image-lightbox {
+    position: fixed; inset: 0; background: rgba(10, 12, 15, 0.85); z-index: 40;
+    display: flex; align-items: center; justify-content: center; padding: 24px; cursor: zoom-out;
+  }
+  .fashion-image-lightbox[hidden] { display: none; }
+  .fashion-image-lightbox img { max-width: 100%; max-height: 100%; border-radius: 4px; }
 </style>
 
 <div class="page">
@@ -1199,9 +1208,9 @@
       <div class="diy-notify-body">
         <p class="last-updated" id="lastUpdatedLine">最後更新：載入中…</p>
         <ul id="changelogList">
+          <li><strong>修好時尚評鑑的日期範圍算錯的問題</strong>：卡片標題旁邊的週期範圍（例如 2026/07/14 16:00-2026/07/21 15:59）原本是用瀏覽器本地時區直接算，跟網站其他地方統一換算成台灣時區的邏輯不一致，導致還沒到週二 16:00 就被算成下一週的範圍。現在改成套用跟其他清單卡片完全一樣的台灣時區換算，範圍跟倒數都會正確對齊每週二 16:00 的重置點。</li>
           <li><strong>修好擲骰器＋鬧鐘的並排兩欄會自動散開的問題</strong>：這兩個原本各自有一顆獨立的上下移動按鈕，跟頁面載入時自動排序的機制互相打架，導致每次一開頁面就會被拆開變成上下疊放。現在把「擲骰器＋鬧鐘」當成一整組來移動順序（合併成一顆共用的上下移動鈕），兩欄並排會穩定維持，不會再自己散開。</li>
-          <li><strong>修復時尚評鑑抓不到朋友提交內容的問題</strong>：卡片原本沒有真的去 GitHub 抓資料，不管朋友透過 Discord Bot 提交什麼，畫面永遠只顯示「內容還在路上」的預設樣子。現在改成真的會去抓最新資料，並且每 5 分鐘自動重新抓一次，網頁開著不用重新整理也會看到朋友剛提交的內容；順便修掉「By.」後面多一槓的小錯字。</li>
-          <li><strong>小工具區塊改成單一卡片</strong>：「小工具」原本是收合標題跟底下的今日運勢／擲骰器等各自獨立一塊，中間留白怎麼調都很大；現在整併成一張跟其他清單卡片一樣的卡片，標題跟內容黏在一起，不會再有奇怪的大空隙。收合按鈕跟上下移動的位置不變。</li>
+          <li><strong>修復時尚評鑑抓不到朋友提交內容的問題</strong>：卡片原本沒有真的去 GitHub 抓資料，不管朋友透過 Discord Bot 提交什麼，畫面永遠只顯示「內容還在路上」的預設樣子。現在改成真的會去抓最新資料，並且每 5 分鐘自動重新抓一次，網頁開著不用重新整理也會看到朋友剛提交的內容。</li>
         </ul>
       </div>
     </details>
@@ -1306,6 +1315,10 @@
       <button type="button" id="closeCharManageBtn">關閉</button>
     </div>
   </div>
+</div>
+
+<div class="fashion-image-lightbox" id="fashionImageLightbox" hidden>
+  <img src="" alt="">
 </div>
 
 <div class="sticky-note" id="stickyNote">
@@ -3157,7 +3170,7 @@
 
   // 手動維護：每次修改網站程式碼時手動更新這個時間點，不要用 new Date() 抓「現在」——
   // 那樣不管有沒有真的改版，每次載入頁面都會顯示成剛更新過，等於騙人。
-  var LAST_UPDATED_TEXT = "2026/07/21 (週二) 01:48";
+  var LAST_UPDATED_TEXT = "2026/07/21 (週二) 03:18";
   var lastUpdatedEl = document.getElementById("lastUpdatedLine");
   if (lastUpdatedEl) lastUpdatedEl.textContent = "最後更新：" + LAST_UPDATED_TEXT;
 
@@ -3222,7 +3235,8 @@
     var hakkaIndex = data.hakkaIndex || 0;
     var stars = '';
     for (var i = 1; i <= 5; i++) {
-      stars += i <= hakkaIndex ? '⭐' : '☆';
+      var filled = i <= hakkaIndex;
+      stars += '<span class="fashion-star' + (filled ? ' filled' : '') + '">' + (filled ? '★' : '☆') + '</span>';
     }
     var placeholderText = '<span style="color: var(--ink-dim);">您的時尚評鑑內容還在路上</span>';
     var html = '<div style="margin-bottom: 8px;"><strong style="color: var(--accent-ink);">客家指數</strong><span class="fashion-stars"> ' + stars + '</span></div>' +
@@ -3243,8 +3257,11 @@
     }
     html += '<span style="margin-left: auto; text-align: right; font-size: 11px; color: var(--ink-dim);" data-fashion-date>最後更新：--/--/-- --:--</span>';
     html += '</div>';
-    if (data.imageUrl) {
-      html += '<img src="' + escapeAttr(data.imageUrl) + '" class="fashion-image" loading="lazy">';
+    var images = [data.imageUrl, data.imageUrl2].filter(Boolean);
+    if (images.length) {
+      html += '<div class="fashion-images">' + images.map(function (src) {
+        return '<img src="' + escapeAttr(src) + '" class="fashion-image" loading="lazy">';
+      }).join('') + '</div>';
     }
     document.getElementById('fashion-content').innerHTML = html;
     var dateEl = document.querySelector('[data-fashion-date]');
@@ -3257,6 +3274,19 @@
         dateEl.textContent = '最後更新：未知';
       }
     }
+    document.querySelectorAll('#fashion-content .fashion-image').forEach(function (img) {
+      img.addEventListener('click', function () { openFashionLightbox(img.src); });
+    });
+  }
+
+  var fashionLightboxEl = document.getElementById('fashionImageLightbox');
+  function openFashionLightbox(src) {
+    if (!fashionLightboxEl) return;
+    fashionLightboxEl.querySelector('img').src = src;
+    fashionLightboxEl.hidden = false;
+  }
+  if (fashionLightboxEl) {
+    fashionLightboxEl.addEventListener('click', function () { fashionLightboxEl.hidden = true; });
   }
 
   function loadFashionJudging() {
@@ -3275,26 +3305,13 @@
   }
 
   function updateFashionCountdown() {
-    var now = new Date();
-    var start = new Date(now);
-    var dayOfWeek = start.getDay();
-    var daysUntilTuesday = (2 - dayOfWeek + 7) % 7;
-    if (daysUntilTuesday === 0 && now.getHours() < 16) {
-      daysUntilTuesday = 0;
-    } else if (daysUntilTuesday === 0) {
-      daysUntilTuesday = 7;
-    }
-    start.setDate(start.getDate() - daysUntilTuesday + (daysUntilTuesday === 0 && now.getHours() >= 16 ? 0 : 7));
-    start.setHours(16, 0, 0, 0);
-    if (start > now) {
-      start.setDate(start.getDate() - 7);
-    }
-    var end = new Date(start);
-    end.setDate(end.getDate() + 7);
-    end.setSeconds(end.getSeconds() - 1);
-    var next = new Date(start);
-    next.setDate(next.getDate() + 7);
-    var diff = Math.max(0, next - now);
+    // 用跟其他卡片完全一樣的台灣時區換算邏輯（lastWeeklyBoundary，週二 16:00），
+    // 不要用瀏覽器本地時區的 new Date() 直接算，不然使用者時區不是台灣就會整個算錯。
+    var shiftedNow = taipeiShift(new Date());
+    var start = lastWeeklyBoundary(shiftedNow, 2, 16);
+    var next = new Date(start.getTime() + 7 * 86400000);
+    var end = new Date(next.getTime() - 60000);
+    var diff = Math.max(0, next.getTime() - shiftedNow.getTime());
     var days = Math.floor(diff / 86400000);
     var hrs = Math.floor((diff % 86400000) / 3600000);
     var mins = Math.floor((diff % 3600000) / 60000);
@@ -3303,14 +3320,13 @@
     if (countdownEl) {
       countdownEl.className = 'progress-frac';
       if (days === 0) {
-        countdownEl.textContent = '今日剩 ' + String(hrs).padStart(2, '0') + '時' + String(mins).padStart(2, '0') + '分' + String(secs).padStart(2, '0') + '秒';
+        countdownEl.textContent = '今日剩 ' + pad2(hrs) + '時' + pad2(mins) + '分' + pad2(secs) + '秒';
       } else {
-        countdownEl.textContent = '剩' + days + '天' + String(hrs).padStart(2, '0') + '時' + String(mins).padStart(2, '0') + '分' + String(secs).padStart(2, '0') + '秒';
+        countdownEl.textContent = '剩' + days + '天' + pad2(hrs) + '時' + pad2(mins) + '分' + pad2(secs) + '秒';
       }
     }
-    var pad = function(n) { return String(n).padStart(2, '0'); };
-    var startStr = start.getFullYear() + '/' + pad(start.getMonth() + 1) + '/' + pad(start.getDate()) + ' ' + pad(start.getHours()) + ':00';
-    var endStr = end.getFullYear() + '/' + pad(end.getMonth() + 1) + '/' + pad(end.getDate()) + ' ' + pad(end.getHours()) + ':' + pad(end.getMinutes());
+    var startStr = start.getUTCFullYear() + '/' + pad2(start.getUTCMonth() + 1) + '/' + pad2(start.getUTCDate()) + ' ' + pad2(start.getUTCHours()) + ':00';
+    var endStr = end.getUTCFullYear() + '/' + pad2(end.getUTCMonth() + 1) + '/' + pad2(end.getUTCDate()) + ' ' + pad2(end.getUTCHours()) + ':' + pad2(end.getUTCMinutes());
     var rangeEl = document.querySelector('[data-fashion-range]');
     if (rangeEl) {
       rangeEl.textContent = startStr + '-' + endStr;
