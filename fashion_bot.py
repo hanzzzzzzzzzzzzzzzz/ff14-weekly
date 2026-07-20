@@ -105,7 +105,10 @@ async def fashion_judging(
                 f"客家指數：{star_emoji}\n"
                 f"By. {data['author'] or '（未填）'}\n"
                 f"建議：{data['content'] or '（未填）'}\n"
-                f"備註：{data['notes'] or '（未填）'}"
+                f"備註：{data['notes'] or '（未填）'}\n"
+                f"貼文連結：{data['threadsLink'] or '（未填）'}\n"
+                f"圖片1：{data['imageUrl'] or '（未填）'}\n"
+                f"圖片2：{data['imageUrl2'] or '（未填）'}"
             )
         else:
             error_msg = response.json().get('message', response.text)
