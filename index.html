@@ -548,7 +548,6 @@
   .tool-block[data-tool-key="toolbox"] {
     width: 100%;
   }
-  .tools-row-move { display: flex; justify-content: flex-end; gap: 2px; margin-bottom: 6px; }
   .tools-row {
     display: flex;
     gap: 16px;
@@ -571,13 +570,18 @@
     display: flex; align-items: center; justify-content: space-between; gap: 8px;
     padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--line);
   }
-  .fun-pair-card { position: relative; }
-  .fun-pair-card .card-move { position: absolute; top: 0; right: 0; }
+  .fun-pair-card, .dice-card, .alarm-card, .toolbox-card {
+    position: relative;
+    background: var(--panel-2); border: 1px solid var(--line); clip-path: var(--chamfer-sm);
+    padding: 14px 16px;
+  }
+  .fun-pair-titles { display: flex; gap: 16px; flex: 1; }
+  .fun-pair-titles h3 {
+    flex: 1; min-width: 200px; text-align: center; margin: 0;
+    font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--crystal-ink);
+  }
   .fun-pair-grid { display: flex; gap: 16px; flex-wrap: wrap; }
   .fun-card-mini { flex: 1; min-width: 200px; text-align: center; }
-  .fun-card-mini h3 {
-    font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--crystal-ink); margin-bottom: 10px;
-  }
   .fun-result {
     min-height: 44px; display: flex; align-items: center; justify-content: center;
     font-size: 13.5px; color: var(--ink); line-height: 1.55; margin-bottom: 12px; padding: 0 4px;
@@ -588,7 +592,6 @@
   }
   .fun-card-mini > button:hover { filter: brightness(1.12); }
 
-  .dice-card { position: relative; }
   .dice-card h3 { font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--crystal-ink); margin: 0; }
   .dice-hint { font-size: 12px; color: var(--ink-dim); margin: 0 0 10px; max-width: 68ch; }
   .dice-config-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; font-size: 12.5px; color: var(--ink-dim); }
@@ -609,7 +612,7 @@
   .dice-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
   .dice-empty { font-size: 12.5px; color: var(--ink-dim); opacity: 0.75; margin: 0 0 12px; }
   .dice-item {
-    display: inline-flex; align-items: center; gap: 8px; background: var(--panel-2); border: 1px solid var(--line);
+    display: inline-flex; align-items: center; gap: 8px; background: var(--panel); border: 1px solid var(--line);
     clip-path: var(--chamfer-sm); padding: 6px 10px;
   }
   .dice-item.dice-winner { border-color: var(--accent); background: rgba(169, 118, 44, 0.16); }
@@ -643,12 +646,11 @@
   }
   .dice-roll-btn:hover { filter: brightness(1.12); }
 
-  .toolbox-card { position: relative; }
   .toolbox-card h3 { font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--crystal-ink); margin: 0; }
   .toolbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin: 10px 0; }
   .toolbox-empty { font-size: 12.5px; color: var(--ink-dim); opacity: 0.75; margin: 10px 0; grid-column: 1 / -1; }
   .toolbox-item {
-    position: relative; background: var(--panel-2); border: 1px solid var(--line); clip-path: var(--chamfer-sm);
+    position: relative; background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-sm);
     padding: 10px 12px; display: flex; flex-direction: column; gap: 4px;
     cursor: grab; transition: border-color 0.15s ease, opacity 0.15s ease;
   }
@@ -689,12 +691,11 @@
   }
   .toolbox-add-row button:hover { filter: brightness(1.12); }
 
-  .alarm-card { position: relative; }
   .alarm-card h3 { font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--crystal-ink); margin: 0; }
-  .alarm-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
-  .alarm-empty { font-size: 12.5px; color: var(--ink-dim); opacity: 0.75; margin: 10px 0; }
+  .alarm-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .alarm-empty { font-size: 12.5px; color: var(--ink-dim); opacity: 0.75; margin: 0 0 12px; }
   .alarm-item {
-    position: relative; display: inline-flex; align-items: center; gap: 8px; background: var(--panel-2);
+    position: relative; display: inline-flex; align-items: center; gap: 8px; background: var(--panel);
     border: 1px solid var(--line); clip-path: var(--chamfer-sm); padding: 6px 24px 6px 10px;
   }
   .alarm-time {
@@ -721,7 +722,7 @@
   .alarm-edit-save:hover { filter: brightness(1.12); }
   .alarm-edit-cancel { background: var(--panel); color: var(--ink-dim); border: 1px solid var(--line); }
   .alarm-edit-cancel:hover { border-color: var(--crystal); }
-  .alarm-add-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .alarm-add-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
   .alarm-add-row input[type="time"] {
     background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; color: var(--ink);
     padding: 5px 8px; font-size: 12.5px; font-family: inherit;
@@ -731,11 +732,6 @@
     color: var(--ink); padding: 5px 9px; font-size: 12.5px; font-family: inherit;
   }
   .alarm-once-label { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--ink-dim); white-space: nowrap; }
-  .alarm-add-row button {
-    background: var(--crystal); color: #fff; border: none; clip-path: var(--chamfer-sm); padding: 6px 14px;
-    font-size: 12.5px; font-weight: 600; transition: filter 0.15s ease;
-  }
-  .alarm-add-row button:hover { filter: brightness(1.12); }
 
   footer { margin-top: 28px; }
   .footer-row { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -974,7 +970,7 @@
   .fashion-card.collapsed .fashion-content { display: none; }
   .fashion-card.collapsed .fashion-head { margin-bottom: 0; padding-bottom: 0; }
   .fashion-card.collapsed .fashion-head::after { display: none; }
-  .fashion-move { display: flex; gap: 2px; }
+  .fashion-move { display: flex; flex-direction: column; gap: 2px; }
   .fashion-move-btn { background: none; border: none; color: var(--ink-dim); font-size: 9px; padding: 0 1px; transition: color 0.15s; }
   .fashion-move-btn:hover { color: var(--crystal-ink); }
   .fashion-content { padding: 12px 0; }
@@ -989,7 +985,7 @@
   .fashion-link { color: var(--crystal-ink); text-decoration: none; border-bottom: 1px dashed var(--crystal); }
   .fashion-link:hover { border-color: transparent; color: var(--accent); }
   .fashion-images { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
-  .fashion-image { flex: 1; min-width: 220px; max-width: 320px; width: 100%; border-radius: 4px; display: block; cursor: zoom-in; }
+  .fashion-image { flex: 1 1 0; min-width: 160px; width: 100%; height: auto; border-radius: 4px; display: block; cursor: zoom-in; }
   .fashion-image-lightbox {
     position: fixed; inset: 0; background: rgba(10, 12, 15, 0.85); z-index: 40;
     display: flex; align-items: center; justify-content: center; padding: 24px; cursor: zoom-out;
@@ -1092,18 +1088,16 @@
     <div class="extra-tools-body" id="extraToolsBody">
       <div class="tool-block" data-tool-key="fortuneAnswer">
         <div class="fun-pair-card">
-          <div class="card-move">
+          <div class="tool-card-head"><div class="fun-pair-titles"><h3>今日運勢</h3><h3>解答之書</h3></div><div class="card-move">
             <button type="button" class="card-move-btn" data-tool-move="up" data-tool="fortuneAnswer" title="上移">▲</button>
             <button type="button" class="card-move-btn" data-tool-move="down" data-tool="fortuneAnswer" title="下移">▼</button>
-          </div>
+          </div></div>
           <div class="fun-pair-grid">
             <div class="fun-card-mini">
-              <h3>今日運勢</h3>
               <div class="fun-result" id="fortuneResult">今天過得如何，抽一支籤看看吧。</div>
               <button type="button" id="fortuneBtn">抽今日運勢</button>
             </div>
             <div class="fun-card-mini">
-              <h3>解答之書</h3>
               <div class="fun-result" id="answerResult">心裡想著一個問題，翻開書頁看看答案。</div>
               <button type="button" id="answerBtn">翻開解答之書</button>
             </div>
@@ -1112,10 +1106,6 @@
       </div>
 
       <div class="tools-row-wrap" data-tool-key="dice-alarm">
-        <div class="tools-row-move">
-          <button type="button" class="card-move-btn" data-tool-move="up" data-tool="dice-alarm" title="上移">▲</button>
-          <button type="button" class="card-move-btn" data-tool-move="down" data-tool="dice-alarm" title="下移">▼</button>
-        </div>
         <div class="tools-row">
         <div class="tool-block">
           <div class="dice-card">
@@ -1133,15 +1123,18 @@
 
         <div class="tool-block">
           <div class="alarm-card">
-            <div class="tool-card-head"><h3>鬧鐘</h3></div>
+            <div class="tool-card-head"><h3>鬧鐘</h3><div class="card-move">
+              <button type="button" class="card-move-btn" data-tool-move="up" data-tool="dice-alarm" title="上移">▲</button>
+              <button type="button" class="card-move-btn" data-tool-move="down" data-tool="dice-alarm" title="下移">▼</button>
+            </div></div>
             <p class="dice-hint">用瀏覽器通知提醒自己的事，跟其他組別的提醒一樣：需要獨立分頁開啟（不能嵌在對話裡）、允許通知權限，並保持分頁在前景。</p>
-            <div class="alarm-list" id="alarmList"></div>
             <div class="alarm-add-row">
               <input type="time" id="alarmTimeInput">
               <input type="text" id="alarmLabelInput" placeholder="標籤（選填），例如：休息一下">
               <label class="alarm-once-label"><input type="checkbox" id="alarmOnceInput"> 只響一次</label>
-              <button type="button" id="alarmAddBtn">新增</button>
             </div>
+            <div class="alarm-list" id="alarmList"></div>
+            <button type="button" id="alarmAddBtn" class="dice-roll-btn">新增</button>
           </div>
         </div>
         </div>
