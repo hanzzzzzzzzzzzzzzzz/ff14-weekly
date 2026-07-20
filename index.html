@@ -190,7 +190,15 @@
     background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-sm);
     padding: 10px 12px; box-shadow: var(--shadow);
   }
-  .countdown-chip .cc-label { font-size: 11.5px; color: var(--ink-dim); margin-bottom: 3px; }
+  .cc-label-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 3px; }
+  .countdown-chip .cc-label { font-size: 11.5px; color: var(--ink-dim); margin-bottom: 0; }
+  .cc-move { display: flex; gap: 1px; flex-shrink: 0; }
+  .cc-move-btn {
+    background: none; border: none; color: var(--ink-dim); font-size: 9px; padding: 0 2px; line-height: 1;
+    transition: color 0.15s ease;
+  }
+  .cc-move-btn:hover:not(:disabled) { color: var(--crystal-ink); }
+  .cc-move-btn:disabled { opacity: 0.25; }
   .countdown-chip .cc-value {
     font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-variant-numeric: tabular-nums;
     font-size: 17px; font-weight: 700; color: var(--crystal-ink);
@@ -219,12 +227,20 @@
   .card.collapsed { padding-bottom: 12px; }
   .card.collapsed .card-head { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
   .card-head .reset-label { font-size: 12.5px; color: var(--ink-dim); margin-top: 2px; }
+  .card-status-wrap { display: flex; align-items: flex-start; gap: 6px; flex-shrink: 0; }
   .card-status { text-align: right; flex-shrink: 0; }
   .card-status .progress-frac {
     font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-variant-numeric: tabular-nums;
     font-weight: 700; font-size: 15px;
   }
   .card-status .until { font-size: 11.5px; color: var(--ink-dim); margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .card-move { display: flex; flex-direction: column; gap: 2px; }
+  .card-move-btn {
+    background: none; border: none; color: var(--ink-dim); font-size: 9px; padding: 0 1px; line-height: 1;
+    transition: color 0.15s ease;
+  }
+  .card-move-btn:hover:not(:disabled) { color: var(--crystal-ink); }
+  .card-move-btn:disabled { opacity: 0.25; }
 
   .item-row {
     display: flex; align-items: center; gap: 10px; padding: 8px 8px; margin: 0 -8px;
@@ -357,6 +373,8 @@
   }
   .reminder-add-btn:hover { filter: brightness(1.12); }
   .reminder-hint { font-size: 11px; color: var(--ink-dim); opacity: 0.75; margin: 6px 0 0; }
+  .group-visibility-list { display: flex; flex-wrap: wrap; gap: 12px; }
+  .group-visibility-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink); }
 
   .target-edit-wrap {
     display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--ink-dim);
@@ -457,10 +475,12 @@
   .extra-tools-details summary::-webkit-details-marker { display: none; }
   .extra-tools-details summary::before { content: "▸ "; }
   .extra-tools-details[open] summary::before { content: "▾ "; }
-  .extra-tools-body > *:first-child { margin-top: 14px; }
-  .fun-tools { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 24px; }
+  .extra-tools-body { margin-top: 14px; }
+  .tool-block { margin-top: 16px; }
+  .tool-block:first-child { margin-top: 0; }
+  .tool-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; text-align: left; }
   .fun-card {
-    flex: 1; min-width: 220px; background: var(--panel); border: 1px solid var(--line);
+    background: var(--panel); border: 1px solid var(--line);
     clip-path: var(--chamfer-lg); padding: 16px 18px; box-shadow: var(--shadow); text-align: center;
   }
   .fun-card h3 {
@@ -470,14 +490,14 @@
     min-height: 44px; display: flex; align-items: center; justify-content: center;
     font-size: 13.5px; color: var(--ink); line-height: 1.55; margin-bottom: 12px; padding: 0 4px;
   }
-  .fun-card button {
+  .fun-card > button {
     background: var(--crystal); color: #fff; border: none; clip-path: var(--chamfer-sm);
     padding: 7px 18px; font-size: 13px; font-weight: 600; transition: filter 0.15s ease;
   }
-  .fun-card button:hover { filter: brightness(1.12); }
+  .fun-card > button:hover { filter: brightness(1.12); }
 
   .dice-card {
-    margin-top: 16px; background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-lg);
+    background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-lg);
     padding: 16px 18px; box-shadow: var(--shadow);
   }
   .dice-card h3 { font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--crystal-ink); margin-bottom: 4px; }
@@ -522,7 +542,7 @@
   .dice-roll-btn:hover { filter: brightness(1.12); }
 
   .toolbox-card {
-    margin-top: 16px; background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-lg);
+    background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-lg);
     padding: 16px 18px; box-shadow: var(--shadow);
   }
   .toolbox-card h3 { font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--crystal-ink); margin-bottom: 4px; }
@@ -548,7 +568,7 @@
   .toolbox-add-row button:hover { filter: brightness(1.12); }
 
   .alarm-card {
-    margin-top: 16px; background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-lg);
+    background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-lg);
     padding: 16px 18px; box-shadow: var(--shadow);
   }
   .alarm-card h3 { font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--crystal-ink); margin-bottom: 4px; }
@@ -800,53 +820,77 @@
 
   <details class="extra-tools-details" id="extraToolsDetails">
     <summary>小工具（今日運勢／解答之書／擲骰器／工具箱／鬧鐘）</summary>
-    <div class="extra-tools-body">
-      <section class="fun-tools">
+    <div class="extra-tools-body" id="extraToolsBody">
+      <div class="tool-block" data-tool-key="fortune">
         <div class="fun-card">
-          <h3>今日運勢</h3>
+          <div class="tool-card-head"><h3>今日運勢</h3><div class="card-move">
+            <button type="button" class="card-move-btn" data-tool-move="up" data-tool="fortune" title="上移">▲</button>
+            <button type="button" class="card-move-btn" data-tool-move="down" data-tool="fortune" title="下移">▼</button>
+          </div></div>
           <div class="fun-result" id="fortuneResult">今天過得如何，抽一支籤看看吧。</div>
           <button type="button" id="fortuneBtn">抽今日運勢</button>
         </div>
+      </div>
+
+      <div class="tool-block" data-tool-key="answer">
         <div class="fun-card">
-          <h3>解答之書</h3>
+          <div class="tool-card-head"><h3>解答之書</h3><div class="card-move">
+            <button type="button" class="card-move-btn" data-tool-move="up" data-tool="answer" title="上移">▲</button>
+            <button type="button" class="card-move-btn" data-tool-move="down" data-tool="answer" title="下移">▼</button>
+          </div></div>
           <div class="fun-result" id="answerResult">心裡想著一個問題，翻開書頁看看答案。</div>
           <button type="button" id="answerBtn">翻開解答之書</button>
         </div>
-      </section>
-
-      <div class="dice-card">
-        <h3>擲骰器</h3>
-        <p class="dice-hint">選門、決定順序、或任何要靠骰大小決定的場合：幫每個選項取名，設定骰子上限，一起骰骰看，最大的贏。</p>
-        <div class="dice-config-row">
-          <label>骰子上限 <input type="number" id="diceMax" min="2" max="9999"></label>
-          <input type="text" id="diceNameInput" placeholder="新增名目，例如：左門">
-          <button type="button" id="diceAddBtn">新增</button>
-        </div>
-        <div class="dice-list" id="diceList"></div>
-        <button type="button" id="diceRollBtn" class="dice-roll-btn">骰骰子！</button>
       </div>
 
-      <div class="toolbox-card">
-        <h3>工具箱</h3>
-        <p class="dice-hint">收藏你自己覺得好用的網站連結，點名稱會開新分頁。</p>
-        <div class="toolbox-grid" id="toolboxGrid"></div>
-        <div class="toolbox-add-row">
-          <input type="text" id="toolboxNameInput" placeholder="名稱，例如：Teamcraft">
-          <input type="text" id="toolboxUrlInput" placeholder="網址，例如：ffxivteamcraft.com">
-          <input type="text" id="toolboxDescInput" placeholder="簡單介紹（選填）">
-          <button type="button" id="toolboxAddBtn">新增</button>
+      <div class="tool-block" data-tool-key="dice">
+        <div class="dice-card">
+          <div class="tool-card-head"><h3>擲骰器</h3><div class="card-move">
+            <button type="button" class="card-move-btn" data-tool-move="up" data-tool="dice" title="上移">▲</button>
+            <button type="button" class="card-move-btn" data-tool-move="down" data-tool="dice" title="下移">▼</button>
+          </div></div>
+          <p class="dice-hint">選門、決定順序、或任何要靠骰大小決定的場合：幫每個選項取名，設定骰子上限，一起骰骰看，最大的贏。</p>
+          <div class="dice-config-row">
+            <label>骰子上限 <input type="number" id="diceMax" min="2" max="9999"></label>
+            <input type="text" id="diceNameInput" placeholder="新增名目，例如：左門">
+            <button type="button" id="diceAddBtn">新增</button>
+          </div>
+          <div class="dice-list" id="diceList"></div>
+          <button type="button" id="diceRollBtn" class="dice-roll-btn">骰骰子！</button>
         </div>
       </div>
 
-      <div class="alarm-card">
-        <h3>鬧鐘</h3>
-        <p class="dice-hint">用瀏覽器通知提醒自己的事，跟其他組別的提醒一樣：需要獨立分頁開啟（不能嵌在對話裡）、允許通知權限，並保持分頁在前景。</p>
-        <div class="alarm-list" id="alarmList"></div>
-        <div class="alarm-add-row">
-          <input type="time" id="alarmTimeInput">
-          <input type="text" id="alarmLabelInput" placeholder="標籤（選填），例如：休息一下">
-          <label class="alarm-once-label"><input type="checkbox" id="alarmOnceInput"> 只響一次</label>
-          <button type="button" id="alarmAddBtn">新增</button>
+      <div class="tool-block" data-tool-key="toolbox">
+        <div class="toolbox-card">
+          <div class="tool-card-head"><h3>工具箱</h3><div class="card-move">
+            <button type="button" class="card-move-btn" data-tool-move="up" data-tool="toolbox" title="上移">▲</button>
+            <button type="button" class="card-move-btn" data-tool-move="down" data-tool="toolbox" title="下移">▼</button>
+          </div></div>
+          <p class="dice-hint">收藏你自己覺得好用的網站連結，點名稱會開新分頁。</p>
+          <div class="toolbox-grid" id="toolboxGrid"></div>
+          <div class="toolbox-add-row">
+            <input type="text" id="toolboxNameInput" placeholder="名稱，例如：Teamcraft">
+            <input type="text" id="toolboxUrlInput" placeholder="網址，例如：ffxivteamcraft.com">
+            <input type="text" id="toolboxDescInput" placeholder="簡單介紹（選填）">
+            <button type="button" id="toolboxAddBtn">新增</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tool-block" data-tool-key="alarm">
+        <div class="alarm-card">
+          <div class="tool-card-head"><h3>鬧鐘</h3><div class="card-move">
+            <button type="button" class="card-move-btn" data-tool-move="up" data-tool="alarm" title="上移">▲</button>
+            <button type="button" class="card-move-btn" data-tool-move="down" data-tool="alarm" title="下移">▼</button>
+          </div></div>
+          <p class="dice-hint">用瀏覽器通知提醒自己的事，跟其他組別的提醒一樣：需要獨立分頁開啟（不能嵌在對話裡）、允許通知權限，並保持分頁在前景。</p>
+          <div class="alarm-list" id="alarmList"></div>
+          <div class="alarm-add-row">
+            <input type="time" id="alarmTimeInput">
+            <input type="text" id="alarmLabelInput" placeholder="標籤（選填），例如：休息一下">
+            <label class="alarm-once-label"><input type="checkbox" id="alarmOnceInput"> 只響一次</label>
+            <button type="button" id="alarmAddBtn">新增</button>
+          </div>
         </div>
       </div>
     </div>
@@ -879,6 +923,13 @@
         </ul>
       </div>
     </details>
+    <details class="diy-notify" id="groupVisibilityDetails">
+      <summary>顯示的組別</summary>
+      <div class="diy-notify-body">
+        <p class="reminder-hint" style="margin:0 0 8px;">不需要的組別（例如已經不刷籌備任務）可以關掉，關掉後倒數卡片、清單卡片、提醒都不會出現，也不會算進「本輪進度」裡；隨時可以再打開。</p>
+        <div class="group-visibility-list" id="groupVisibilityList"></div>
+      </div>
+    </details>
     <details class="diy-notify" id="allRemindersDetails">
       <summary>所有提醒總覽</summary>
       <div class="diy-notify-body" id="allRemindersBody">尚未設定任何提醒。</div>
@@ -888,9 +939,9 @@
       <div class="diy-notify-body">
         <p class="last-updated" id="lastUpdatedLine">最後更新：載入中…</p>
         <ul id="changelogList">
-          <li><strong>鬧鐘可直接編輯、小工具收合成一區</strong>：鬧鐘點時間/標籤可以直接改，不用刪掉重建；今日運勢、解答之書、擲骰器、工具箱、鬧鐘這五個附加功能收進一個可展開/收合的區塊（預設收起），減少頁面長度。</li>
-          <li><strong>移除仙人微彩模擬器</strong>：做出來的效果不理想，整個拿掉，改天想到更好的做法再說。</li>
-          <li><strong>新增鬧鐘</strong>：可自訂時間、標籤，選「只響一次」或「每天」重複的瀏覽器通知，跟其他提醒共用同一套通知機制。</li>
+          <li><strong>修正今日運勢/解答之書的排序箭頭樣式</strong>：這兩張卡片的 ▲▼ 不小心被卡片內建的按鈕樣式蓋掉，變成大大的實心綠色按鈕，跟其他卡片不一致；已修正選擇器範圍，現在跟其他卡片一樣是細小的箭頭。</li>
+          <li><strong>新增「顯示的組別」開關</strong>：footer 加了一個區塊，可以把整個不需要的組別（例如已經不刷的籌備任務）關掉——關掉後倒數卡片、清單卡片、提醒都不會出現，也不會算進本輪進度，跟暫時收合不同，這是真的不追蹤了，隨時可以再打開。</li>
+          <li><strong>排序按鈕收進卡片本體，不再多佔一排空間</strong>：▲▼ 原本自己獨立一行浮在卡片上方，造成間隔太大；現在統一收進卡片右上角本體裡（跟標題／剩餘時間同一行），小工具卡片、群組卡片都改成這樣，剩餘時間/進度數字也順勢往左挪了一點讓出位置。</li>
         </ul>
       </div>
     </details>
@@ -906,7 +957,9 @@
       <p><strong>計數項目</strong>：友好部族、次數類項目用 － / ＋調整，也有「MAX」一鍵設成上限、「歸零」一鍵清空，兩個都會先跳確認再執行，避免手滑。</p>
       <p><strong>批次操作</strong>：籌備任務、友好部族這類多項目的組別，上方有「全部勾選」「全部清空」，「全部清空」一樣會先確認。</p>
       <p><strong>每日組別的一週檢視</strong>：日隨、籌備任務、友好部族這種每天重置的組別，下方有一排本週七天的迷你完成度，點任一天可以展開看那天各項目的明細，用 ◀ ▶ 可以切換到其他週。</p>
-      <p><strong>暫時隱藏群組</strong>：標題旁邊的 ▾ 可以把整組收起來；頂部「▾ 全部」可以一次收合或展開所有組別。</p>
+      <p><strong>暫時隱藏群組</strong>：標題旁邊的 ▾ 可以把整組收起來（還是會計入進度）；頂部「▾ 全部」可以一次收合或展開所有組別。</p>
+      <p><strong>不需要的組別直接關閉</strong>：footer 的「顯示的組別」可以把整個不玩的內容（例如已經不刷的籌備任務）關掉，關掉後倒數卡片、清單卡片、提醒都不會出現，也不會算進「本輪進度」，跟暫時收合不同，這是真的不追蹤了；隨時可以再打開，設定不會遺失。</p>
+      <p><strong>自訂排列順序</strong>：每個組別標題旁邊的 ▲▼ 可以調整這些卡片在頁面上的先後順序；小工具區塊裡的每張卡片（今日運勢、解答之書、擲骰器、工具箱、鬧鐘）左上角也有各自的 ▲▼，可以獨立調整順序。順序都會記住。</p>
       <p><strong>提醒設定</strong>：每組可以「+ 新增提醒」設定幾點幾分跳瀏覽器通知，週間性質的組可以選星期幾重複，也可以指定「特定日期」讓提醒只跳一次；點提醒標籤本身可以直接改時間，不用刪掉重建。footer 的「所有提醒總覽」集中列出目前設定的所有提醒，可以直接在那邊刪除。<u>瀏覽器提醒有限制</u>：只有獨立分頁開著（不能是嵌在 claude.ai 對話裡）、而且分頁要保持在前景，切到其他分頁/視窗可能會被瀏覽器暫停檢查而跳不出來。真正不管有沒有開網頁都會準時到的提醒，請用 Discord 排程（如果你有設定的話）。</p>
       <p><strong>全部完成的小驚喜</strong>：本輪事項（不含友好部族的累計進度）全部完成的瞬間，會跳出一個小彈窗，隨機顯示一句 FF14 風味的祝福。</p>
       <p><strong>資料保存與備份</strong>：所有勾選狀態、清單設定都只存在「這個瀏覽器」的本機儲存空間，換裝置、換瀏覽器、清瀏覽器資料都會遺失。請定期用「匯出備份」複製一份 JSON 存起來，之後可以用「匯入備份」貼回來完整還原（含勾選紀錄）。也可以開啟「太久沒備份」提醒，自訂超過幾天沒匯出就提示你。</p>
@@ -1109,16 +1162,6 @@
   }
   function saveNotified() { localStorage.setItem(NOTIFIED_KEY, JSON.stringify(notified)); }
 
-  var GROUP_ORDER = ["tue1600", "sat2100", "roulette", "prep", "tribe"];
-  function sortGroups(cfg) {
-    cfg.groups.sort(function (a, b) {
-      var ia = GROUP_ORDER.indexOf(a.id); if (ia < 0) ia = 999;
-      var ib = GROUP_ORDER.indexOf(b.id); if (ib < 0) ib = 999;
-      return ia - ib;
-    });
-    return cfg;
-  }
-
   function ensureNotifyDefaults(cfg) {
     cfg.groups.forEach(function (g) {
       if (!Array.isArray(g.notifyRules)) {
@@ -1178,7 +1221,7 @@
     }
   }
 
-  var config = applyJobNameFix(ensureNotifyDefaults(sortGroups(loadConfig())));
+  var config = applyJobNameFix(ensureNotifyDefaults(loadConfig()));
   saveConfig();
   var notified = loadNotified();
   var openWeekViews = {};
@@ -1293,6 +1336,18 @@
   var summaryEl = document.getElementById("summaryPill");
   var stripEl = document.getElementById("countdownStrip");
 
+  function moveGroup(groupId, dir) {
+    var idx = config.groups.findIndex(function (g) { return g.id === groupId; });
+    if (idx === -1) return;
+    var swapIdx = idx + (dir === "up" ? -1 : 1);
+    if (swapIdx < 0 || swapIdx >= config.groups.length) return;
+    var tmp = config.groups[idx];
+    config.groups[idx] = config.groups[swapIdx];
+    config.groups[swapIdx] = tmp;
+    saveConfig();
+    render();
+  }
+
   function render() {
     var now = new Date();
     var shiftedNow = taipeiShift(now);
@@ -1314,13 +1369,18 @@
     var stripHtml = "";
     var mainHtml = "";
 
-    config.groups.forEach(function (group) {
+    config.groups.forEach(function (group, idx) {
+      if (group.enabled === false) return;
       var b = groupBoundaries(group, shiftedNow);
       var remainMs = b.next.getTime() - shiftedNow.getTime();
       var periodMs = group.kind === "weekly" ? 7 * 86400000 : 86400000;
       var remainPct = Math.max(0, Math.min(100, (remainMs / periodMs) * 100));
       var isUrgent = remainMs <= NOTIFY_WINDOW_MS;
-      stripHtml += '<div class="countdown-chip"><div class="cc-label">' + escapeHtml(group.title) + ' 倒數</div><div class="cc-value">' + fmtDuration(remainMs) + '</div>' +
+      stripHtml += '<div class="countdown-chip"><div class="cc-label-row"><span class="cc-label">' + escapeHtml(group.title) + ' 倒數</span>' +
+        '<span class="cc-move">' +
+        '<button type="button" class="cc-move-btn" data-group-move="up" data-group="' + group.id + '" title="上移這組"' + (idx === 0 ? " disabled" : "") + '>▲</button>' +
+        '<button type="button" class="cc-move-btn" data-group-move="down" data-group="' + group.id + '" title="下移這組"' + (idx === config.groups.length - 1 ? " disabled" : "") + '>▼</button>' +
+        '</span></div><div class="cc-value">' + fmtDuration(remainMs) + '</div>' +
         '<div class="cc-bar-track"><div class="cc-bar-fill' + (isUrgent ? " urgent" : "") + '" style="width:' + remainPct + '%"></div></div></div>';
 
       if (group.kind === "weekly") {
@@ -1333,7 +1393,7 @@
           return itemRowHtml(group, item, b, val, done);
         }).join("");
         totalItems -= 0;
-        mainHtml += groupCardHtml(group, b, doneCount, group.items.length, rows, shiftedNow);
+        mainHtml += groupCardHtml(group, b, doneCount, group.items.length, rows, shiftedNow, idx, config.groups.length);
       } else {
         var dailyDone = 0, dailyTotal = 0;
         group.items.forEach(function (item) {
@@ -1343,11 +1403,17 @@
           if (isItemDone(item, val)) dailyDone++;
         });
         totalItems += dailyTotal; totalDone += dailyDone;
-        mainHtml += dailyGroupCardHtml(group, b, shiftedNow, dailyDone, dailyTotal);
+        mainHtml += dailyGroupCardHtml(group, b, shiftedNow, dailyDone, dailyTotal, idx, config.groups.length);
       }
     });
 
     stripEl.innerHTML = stripHtml;
+    stripEl.querySelectorAll("[data-group-move]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        if (btn.disabled) return;
+        moveGroup(btn.getAttribute("data-group"), btn.getAttribute("data-group-move"));
+      });
+    });
     mainEl.innerHTML = mainHtml;
     var allDoneNow = totalItems > 0 && totalDone === totalItems;
     summaryEl.textContent = allDoneNow
@@ -1359,6 +1425,7 @@
     if (allRemindersEl) {
       var lines = [];
       config.groups.forEach(function (group) {
+        if (group.enabled === false) return;
         (group.notifyRules || []).forEach(function (r) {
           var whenLabel = r.date ? r.date.replace(/-/g, "/") : (group.kind === "weekly" ? "每週" + weekdayLabel(r.weekday) : "每天");
           lines.push('<li><strong>' + escapeHtml(group.title) + '</strong>：' + whenLabel + ' ' + pad2(r.hour) + ':' + pad2(r.minute) +
@@ -1372,6 +1439,23 @@
           if (!group) return;
           var ruleId = btn.getAttribute("data-rule");
           group.notifyRules = (group.notifyRules || []).filter(function (r) { return r.id !== ruleId; });
+          saveConfig();
+          render();
+        });
+      });
+    }
+
+    var groupVisibilityEl = document.getElementById("groupVisibilityList");
+    if (groupVisibilityEl) {
+      groupVisibilityEl.innerHTML = config.groups.map(function (group) {
+        var checked = group.enabled !== false;
+        return '<label class="group-visibility-item"><input type="checkbox" data-group-enabled="' + group.id + '"' + (checked ? " checked" : "") + '> ' + escapeHtml(group.title) + '</label>';
+      }).join("");
+      groupVisibilityEl.querySelectorAll("[data-group-enabled]").forEach(function (cb) {
+        cb.addEventListener("change", function () {
+          var group = config.groups.find(function (g) { return g.id === cb.getAttribute("data-group-enabled"); });
+          if (!group) return;
+          group.enabled = cb.checked;
           saveConfig();
           render();
         });
@@ -1473,24 +1557,34 @@
       '</div><p class="reminder-hint">不填日期＝每天/每週固定提醒；有填日期＝只在那一天提醒一次。</p></details></div>';
   }
 
-  function cardHeadHtml(group, doneCount, total, untilPrefix, untilMs) {
+  function groupMoveHtml(group, idx, groupCount) {
+    return '<div class="card-move">' +
+      '<button type="button" class="card-move-btn" data-group-move="up" data-group="' + group.id + '" title="上移這組"' + (idx === 0 ? " disabled" : "") + '>▲</button>' +
+      '<button type="button" class="card-move-btn" data-group-move="down" data-group="' + group.id + '" title="下移這組"' + (idx === groupCount - 1 ? " disabled" : "") + '>▼</button>' +
+      '</div>';
+  }
+
+  function cardHeadHtml(group, doneCount, total, untilPrefix, untilMs, idx, groupCount) {
     var collapsed = !!group.collapsed;
     return '<div class="card-head">' +
       '<div><h2>' + escapeHtml(group.title) +
       ' <button type="button" class="collapse-toggle" data-collapse="' + group.id + '" title="' + (collapsed ? "展開這組" : "暫時隱藏這組") + '">' + (collapsed ? "▸" : "▾") + '</button>' +
       '</h2><div class="reset-label">' + escapeHtml(group.resetLabel) + '</div></div>' +
-      '<div class="card-status"><div class="progress-frac">' + doneCount + ' / ' + total + '</div><div class="until">' + untilPrefix + fmtDuration(untilMs) + '</div></div></div>';
+      '<div class="card-status-wrap">' +
+      '<div class="card-status"><div class="progress-frac">' + doneCount + ' / ' + total + '</div><div class="until">' + untilPrefix + fmtDuration(untilMs) + '</div></div>' +
+      groupMoveHtml(group, idx, groupCount) +
+      '</div></div>';
   }
 
-  function groupCardHtml(group, b, doneCount, total, rows, shiftedNow) {
+  function groupCardHtml(group, b, doneCount, total, rows, shiftedNow, idx, groupCount) {
     var collapsed = !!group.collapsed;
     return '<section class="card' + (collapsed ? ' collapsed' : '') + '" data-group-card="' + group.id + '">' +
-      cardHeadHtml(group, doneCount, total, "剩 ", b.next.getTime() - shiftedNow.getTime()) +
+      cardHeadHtml(group, doneCount, total, "剩 ", b.next.getTime() - shiftedNow.getTime(), idx, groupCount) +
       (collapsed ? "" : notifyRuleHtml(group) + rows + addRowHtml(group.id)) +
       '</section>';
   }
 
-  function dailyGroupCardHtml(group, b, shiftedNow, doneCount, total) {
+  function dailyGroupCardHtml(group, b, shiftedNow, doneCount, total, idx, groupCount) {
     var gridItems = group.items.filter(function (it) { return it.type !== "flag"; });
     var flagItems = group.items.filter(function (it) { return it.type === "flag"; });
 
@@ -1595,7 +1689,7 @@
     var b2 = groupBoundaries(group, shiftedNow);
     var collapsed = !!group.collapsed;
     return '<section class="card' + (collapsed ? ' collapsed' : '') + '" data-group-card="' + group.id + '">' +
-      cardHeadHtml(group, doneCount, total, "今日剩 ", b2.next.getTime() - shiftedNow.getTime()) +
+      cardHeadHtml(group, doneCount, total, "今日剩 ", b2.next.getTime() - shiftedNow.getTime(), idx, groupCount) +
       (collapsed ? "" : notifyRuleHtml(group) + todayRows + gridHtml + flagHtml + addRowHtml(group.id)) +
       '</section>';
   }
@@ -1735,6 +1829,12 @@
         group.collapsed = !group.collapsed;
         saveConfig();
         render();
+      });
+    });
+    mainEl.querySelectorAll("[data-group-move]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        if (btn.disabled) return;
+        moveGroup(btn.getAttribute("data-group"), btn.getAttribute("data-group-move"));
       });
     });
     mainEl.querySelectorAll("[data-day-toggle]").forEach(function (el) {
@@ -1889,7 +1989,7 @@
       var parsed = JSON.parse(importText.value);
       var cfg = parsed && parsed.config ? parsed.config : parsed;
       if (!cfg || !Array.isArray(cfg.groups)) throw new Error("bad format");
-      config = ensureNotifyDefaults(sortGroups(cfg));
+      config = ensureNotifyDefaults(cfg);
       saveConfig();
       if (parsed && parsed.progress) restoreProgress(parsed.progress);
       if (parsed && Array.isArray(parsed.toolbox)) { toolboxLinks = parsed.toolbox; saveToolbox(); renderToolbox(); }
@@ -1964,6 +2064,7 @@
     if (typeof Notification === "undefined" || Notification.permission !== "granted") return;
     var todayKey = taipeiDateKey(shiftedNow);
     config.groups.forEach(function (group) {
+      if (group.enabled === false) return;
       var rules = group.notifyRules || [];
       var fired = [];
       rules.forEach(function (rule) {
@@ -2242,6 +2343,48 @@
     });
   }
 
+  // ---- 小工具卡片自訂順序 ----
+  var TOOL_ORDER_KEY = "ff14weekly.toolOrder.v1";
+  var DEFAULT_TOOL_ORDER = ["fortune", "answer", "dice", "toolbox", "alarm"];
+  function loadToolOrder() {
+    try {
+      var raw = JSON.parse(localStorage.getItem(TOOL_ORDER_KEY));
+      if (Array.isArray(raw) && raw.length === DEFAULT_TOOL_ORDER.length && DEFAULT_TOOL_ORDER.every(function (k) { return raw.indexOf(k) !== -1; })) return raw;
+    } catch (e) {}
+    return DEFAULT_TOOL_ORDER.slice();
+  }
+  function saveToolOrder() { localStorage.setItem(TOOL_ORDER_KEY, JSON.stringify(toolOrder)); }
+  var toolOrder = loadToolOrder();
+  var extraToolsBodyEl = document.getElementById("extraToolsBody");
+  function applyToolOrder() {
+    if (!extraToolsBodyEl) return;
+    toolOrder.forEach(function (key) {
+      var block = extraToolsBodyEl.querySelector('[data-tool-key="' + key + '"]');
+      if (block) extraToolsBodyEl.appendChild(block);
+    });
+    extraToolsBodyEl.querySelectorAll("[data-tool-move]").forEach(function (btn) {
+      var idx = toolOrder.indexOf(btn.getAttribute("data-tool"));
+      var dir = btn.getAttribute("data-tool-move");
+      btn.disabled = (dir === "up" && idx === 0) || (dir === "down" && idx === toolOrder.length - 1);
+    });
+  }
+  if (extraToolsBodyEl) {
+    applyToolOrder();
+    extraToolsBodyEl.querySelectorAll("[data-tool-move]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        if (btn.disabled) return;
+        var key = btn.getAttribute("data-tool");
+        var dir = btn.getAttribute("data-tool-move") === "up" ? -1 : 1;
+        var idx = toolOrder.indexOf(key);
+        var swapIdx = idx + dir;
+        if (swapIdx < 0 || swapIdx >= toolOrder.length) return;
+        var tmp = toolOrder[idx]; toolOrder[idx] = toolOrder[swapIdx]; toolOrder[swapIdx] = tmp;
+        saveToolOrder();
+        applyToolOrder();
+      });
+    });
+  }
+
   // ---- 工具箱：自訂連結卡片 ----
   var TOOLBOX_KEY = "ff14weekly.toolbox.v1";
   function loadToolbox() {
@@ -2416,7 +2559,7 @@
     }
   }
 
-  var LAST_UPDATED_TEXT = "2026/07/20 (週一) 15:10";
+  var LAST_UPDATED_TEXT = "2026/07/20 (週一) 16:05";
   var lastUpdatedEl = document.getElementById("lastUpdatedLine");
   if (lastUpdatedEl) lastUpdatedEl.textContent = "最後更新：" + LAST_UPDATED_TEXT;
 
