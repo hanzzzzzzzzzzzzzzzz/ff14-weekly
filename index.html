@@ -1,5 +1,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='20' font-size='20'>💎</text></svg>">
 <title>光戰每週小手帳</title>
 <style>
   :root {
@@ -97,8 +98,8 @@
 
   h1, h2, h3 { font-family: Georgia, "Iowan Old Style", "Noto Serif TC", serif; text-wrap: balance; margin: 0; }
 
-  .title-row { display: flex; align-items: flex-start; gap: 10px; }
-  .crystal-icon { width: 22px; height: 22px; flex-shrink: 0; margin-top: 3px; color: var(--crystal); filter: drop-shadow(0 0 4px rgba(44, 125, 118, 0.35)); }
+  .title-row { display: block; }
+  .crystal-icon { display: none; }
   .eyebrow {
     font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
     color: var(--crystal-ink); margin: 0 0 6px; font-weight: 600;
@@ -260,7 +261,7 @@
   .card-status { text-align: right; flex-shrink: 0; }
   .card-status .progress-frac {
     font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-variant-numeric: tabular-nums;
-    font-weight: 700; font-size: 15px;
+    font-weight: 700; font-size: 15px; color: var(--ink);
   }
   .card-status .until { font-size: 11.5px; color: var(--ink-dim); margin-top: 2px; font-variant-numeric: tabular-nums; }
   .card-move { display: flex; flex-direction: column; gap: 2px; }
@@ -365,10 +366,10 @@
   }
 
   .notify-rule {
-    margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px dashed var(--line);
+    margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px dashed var(--line);
     font-size: 12.5px; color: var(--ink-dim);
   }
-  .reminder-chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+  .reminder-chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
   .reminder-empty { font-size: 12px; color: var(--ink-dim); opacity: 0.7; }
   .reminder-chip {
     display: inline-flex; align-items: center; gap: 5px;
@@ -394,7 +395,7 @@
   .reminder-edit-save:hover { filter: brightness(1.12); }
   .reminder-edit-cancel { background: var(--panel); color: var(--ink-dim); border: 1px solid var(--line); }
   .reminder-edit-cancel:hover { border-color: var(--crystal); }
-  .reminder-add-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .reminder-add-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
   .notify-rule select, .notify-rule input[type="time"], .notify-rule input[type="date"] {
     background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; color: var(--ink);
     padding: 3px 6px; font-size: 12px; font-family: inherit;
@@ -499,24 +500,24 @@
   }
   .day-dot-static.counter-static.done { color: #fff; }
 
-  .extra-tools-details { margin-top: 24px; }
-  .extra-tools-details summary {
-    font-size: 13.5px; font-weight: 700; color: var(--crystal-ink); list-style: none; user-select: none;
-    padding: 10px 14px; background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-sm);
-  }
-  .extra-tools-details summary::-webkit-details-marker { display: none; }
-  .extra-tools-details summary::before { content: "▸ "; }
-  .extra-tools-details[open] summary::before { content: "▾ "; }
-  .extra-tools-body { margin-top: 14px; }
-  .tool-block { position: relative; margin-top: 16px; }
-  .tool-block:first-child { margin-top: 0; }
-  .tool-block::before {
+  .extra-tools-card-wrap { position: relative; margin-top: 16px; }
+  .extra-tools-card-wrap::before {
     content: ""; position: absolute; top: -8px; left: 20px; width: 46px; height: 16px; z-index: 5;
     background: var(--tape); border: 1px solid var(--tape-line); transform: rotate(-3deg);
     pointer-events: none;
   }
-  .tool-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; text-align: left; position: relative; padding-bottom: 12px; margin-bottom: 8px; }
-  .tool-card-head::after {
+  .extra-tools-card {
+    position: relative;
+    background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-lg);
+    padding: 18px 18px 14px; box-shadow: 0 0 0 1px var(--card-ring), var(--shadow);
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  .extra-tools-head {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+    padding-bottom: 14px; margin-bottom: 14px; position: relative;
+  }
+  .extra-tools-head::after {
     content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 6px;
     background: var(--crystal);
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0 12 3 T24 3' fill='none' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E");
@@ -524,12 +525,53 @@
     -webkit-mask-repeat: repeat-x; mask-repeat: repeat-x;
     -webkit-mask-size: 24px 6px; mask-size: 24px 6px;
   }
-  .fun-pair-card {
-    position: relative; background: var(--panel); border: 1px solid var(--line);
-    clip-path: var(--chamfer-lg); padding: 16px 18px; box-shadow: var(--shadow);
-    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px); background-size: 22px 22px;
+  .extra-tools-head h2 { font-size: 15.5px; font-weight: 700; letter-spacing: 0.02em; margin: 0; color: var(--ink); }
+  .extra-tools-collapse-toggle {
+    background: none; border: none; color: var(--ink-dim); font-size: 13px; cursor: pointer;
+    padding: 0 0 0 2px; vertical-align: middle;
   }
-  .fun-pair-card .card-move { position: absolute; top: 14px; right: 16px; }
+  .extra-tools-collapse-toggle:hover { color: var(--crystal-ink); }
+  .extra-tools-card.collapsed .extra-tools-body { display: none; }
+  .extra-tools-card.collapsed .extra-tools-head { margin-bottom: 0; padding-bottom: 0; }
+  .extra-tools-card.collapsed .extra-tools-head::after { display: none; }
+  .extra-tools-body {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .extra-tools-body > *:not(:first-child) {
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .tool-block { position: relative; }
+  .tool-block[data-tool-key="fortuneAnswer"],
+  .tool-block[data-tool-key="toolbox"] {
+    width: 100%;
+  }
+  .tools-row {
+    display: flex;
+    gap: 16px;
+  }
+  .tools-row .tool-block {
+    flex: 1;
+    position: relative;
+  }
+  @media (max-width: 600px) {
+    .tools-row {
+      flex-direction: column;
+      gap: 18px;
+    }
+    .tools-row .tool-block:not(:first-child) {
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+  }
+  .tool-card-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--line);
+  }
+  .fun-pair-card { position: relative; }
+  .fun-pair-card .card-move { position: absolute; top: 0; right: 0; }
   .fun-pair-grid { display: flex; gap: 16px; flex-wrap: wrap; }
   .fun-card-mini { flex: 1; min-width: 200px; text-align: center; }
   .fun-card-mini h3 {
@@ -545,12 +587,8 @@
   }
   .fun-card-mini > button:hover { filter: brightness(1.12); }
 
-  .dice-card {
-    position: relative; background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-lg);
-    padding: 16px 18px; box-shadow: var(--shadow);
-    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px); background-size: 22px 22px;
-  }
-  .dice-card h3 { font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--crystal-ink); margin-bottom: 4px; }
+  .dice-card { position: relative; }
+  .dice-card h3 { font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--crystal-ink); margin: 0; }
   .dice-hint { font-size: 12px; color: var(--ink-dim); margin: 0 0 10px; max-width: 68ch; }
   .dice-config-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; font-size: 12.5px; color: var(--ink-dim); }
   .dice-config-row label { display: flex; align-items: center; gap: 6px; }
@@ -604,12 +642,8 @@
   }
   .dice-roll-btn:hover { filter: brightness(1.12); }
 
-  .toolbox-card {
-    position: relative; background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-lg);
-    padding: 16px 18px; box-shadow: var(--shadow);
-    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px); background-size: 22px 22px;
-  }
-  .toolbox-card h3 { font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--crystal-ink); margin-bottom: 4px; }
+  .toolbox-card { position: relative; }
+  .toolbox-card h3 { font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--crystal-ink); margin: 0; }
   .toolbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin: 10px 0; }
   .toolbox-empty { font-size: 12.5px; color: var(--ink-dim); opacity: 0.75; margin: 10px 0; grid-column: 1 / -1; }
   .toolbox-item {
@@ -654,12 +688,8 @@
   }
   .toolbox-add-row button:hover { filter: brightness(1.12); }
 
-  .alarm-card {
-    position: relative; background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-lg);
-    padding: 16px 18px; box-shadow: var(--shadow);
-    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px); background-size: 22px 22px;
-  }
-  .alarm-card h3 { font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--crystal-ink); margin-bottom: 4px; }
+  .alarm-card { position: relative; }
+  .alarm-card h3 { font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--crystal-ink); margin: 0; }
   .alarm-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
   .alarm-empty { font-size: 12.5px; color: var(--ink-dim); opacity: 0.75; margin: 10px 0; }
   .alarm-item {
@@ -883,7 +913,7 @@
     header.hero h1 { font-size: 23px; }
     .clock-value { font-size: 16px; }
     .summary-pill { font-size: 12.5px; }
-    .card { padding: 14px 14px 12px; }
+    .card, .extra-tools-card { padding: 14px 14px 12px; }
     .card-head h2 { font-size: 16.5px; }
     .item-name { font-size: 15.5px; }
     .status-tag { font-size: 12px; padding: 4px 10px; }
@@ -908,6 +938,54 @@
     .toolbox-add-row input { width: 100%; }
     .footer-notify-grid { grid-template-columns: 1fr; }
   }
+
+  .fashion-card-wrap { position: relative; margin-top: 20px; }
+  .fashion-card-wrap::before {
+    content: ""; position: absolute; top: -8px; left: 20px; width: 46px; height: 16px; z-index: 5;
+    background: var(--tape); border: 1px solid var(--tape-line); transform: rotate(-3deg);
+    pointer-events: none;
+  }
+  .fashion-card {
+    position: relative;
+    background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-lg);
+    padding: 18px 18px 14px; box-shadow: 0 0 0 1px var(--card-ring), var(--shadow);
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  .fashion-head {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+    padding-bottom: 14px; margin-bottom: 8px; position: relative;
+  }
+  .fashion-head::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 6px;
+    background: var(--crystal);
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0 12 3 T24 3' fill='none' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0 12 3 T24 3' fill='none' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E");
+    -webkit-mask-repeat: repeat-x; mask-repeat: repeat-x;
+    -webkit-mask-size: 24px 6px; mask-size: 24px 6px;
+  }
+  .fashion-head h2 { font-size: 18px; font-weight: 700; margin: 0; }
+  .fashion-collapse-toggle {
+    background: none; border: none; color: var(--ink-dim); font-size: 13px;
+    padding: 0 0 0 2px; vertical-align: middle; cursor: pointer;
+  }
+  .fashion-collapse-toggle:hover { color: var(--crystal-ink); }
+  .fashion-card.collapsed .fashion-content { display: none; }
+  .fashion-card.collapsed .fashion-head { margin-bottom: 0; padding-bottom: 0; }
+  .fashion-card.collapsed .fashion-head::after { display: none; }
+  .fashion-move { display: flex; gap: 2px; }
+  .fashion-move-btn { background: none; border: none; color: var(--ink-dim); font-size: 9px; padding: 0 1px; transition: color 0.15s; }
+  .fashion-move-btn:hover { color: var(--crystal-ink); }
+  .fashion-content { padding: 12px 0; }
+  .fashion-stars { font-size: 20px; letter-spacing: 2px; margin: 8px 0 12px; }
+  .fashion-items { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+  .fashion-item { flex: 1; min-width: 180px; background: var(--panel-2); border: 1px solid var(--line); clip-path: var(--chamfer-sm); padding: 10px 12px; }
+  .fashion-item strong { color: var(--accent-ink); font-size: 12px; display: block; margin-bottom: 4px; }
+  .fashion-item p { margin: 0; font-size: 13px; color: var(--ink); line-height: 1.4; }
+  .fashion-meta { font-size: 12px; color: var(--ink-dim); margin-top: 12px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .fashion-link { color: var(--crystal-ink); text-decoration: none; border-bottom: 1px dashed var(--crystal); }
+  .fashion-link:hover { border-color: transparent; color: var(--accent); }
+  .fashion-image { max-width: 100%; border-radius: 4px; max-height: 300px; margin-top: 12px; }
 </style>
 
 <div class="page">
@@ -959,8 +1037,48 @@
 
   <main id="main"></main>
 
-  <details class="extra-tools-details" id="extraToolsDetails">
-    <summary>小工具（今日運勢／解答之書／擲骰器／工具箱／鬧鐘）</summary>
+  <div class="fashion-card-wrap">
+    <div class="fashion-card">
+      <div class="fashion-head">
+        <div style="flex: 1;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <h2 style="display: inline; margin: 0;">✨ 時尚評鑑</h2>
+            <button class="fashion-collapse-toggle" data-fashion-collapse title="收起/展開">▾</button>
+            <span style="font-size: 12px; color: var(--ink-dim);" data-fashion-range>2026/07/14 16:00-2026/07/21 15:59</span>
+          </div>
+          <div style="font-size: 12px; color: var(--ink-dim); margin-top: 4px;">每週二 16:00 重置</div>
+        </div>
+        <div class="card-status-wrap">
+          <div class="card-status" style="flex-direction: column; gap: 0;">
+            <div style="font-size: 11.5px; color: var(--ink-dim); text-align: right;" data-fashion-countdown>剩7天15時36分53秒</div>
+          </div>
+          <div class="fashion-move">
+            <button class="fashion-move-btn" data-fashion-move="up" title="上移">▲</button>
+            <button class="fashion-move-btn" data-fashion-move="down" title="下移">▼</button>
+          </div>
+        </div>
+      </div>
+      <div id="fashion-content" class="fashion-content">
+        <p style="color: var(--ink-dim);">載入中...</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="extra-tools-card-wrap">
+  <div class="extra-tools-card" id="extraToolsDetails">
+    <div class="extra-tools-head">
+      <div style="flex: 1;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <h2 style="display: inline; margin: 0;">小工具</h2>
+          <button type="button" class="extra-tools-collapse-toggle" data-extra-tools-collapse title="收起/展開">▾</button>
+        </div>
+        <div style="font-size: 12px; color: var(--ink-dim); margin-top: 4px;">今日運勢／解答之書／擲骰器／工具箱／鬧鐘</div>
+      </div>
+      <div class="card-move">
+        <button type="button" class="card-move-btn" data-tools-move="up" title="上移">▲</button>
+        <button type="button" class="card-move-btn" data-tools-move="down" title="下移">▼</button>
+      </div>
+    </div>
     <div class="extra-tools-body" id="extraToolsBody">
       <div class="tool-block" data-tool-key="fortuneAnswer">
         <div class="fun-pair-card">
@@ -983,20 +1101,39 @@
         </div>
       </div>
 
-      <div class="tool-block" data-tool-key="dice">
-        <div class="dice-card">
-          <div class="tool-card-head"><h3>擲骰器</h3><div class="card-move">
-            <button type="button" class="card-move-btn" data-tool-move="up" data-tool="dice" title="上移">▲</button>
-            <button type="button" class="card-move-btn" data-tool-move="down" data-tool="dice" title="下移">▼</button>
-          </div></div>
-          <p class="dice-hint">選門、決定順序、或任何要靠骰大小決定的場合：幫每個選項取名，設定骰子上限，一起骰骰看，最大的贏。</p>
-          <div class="dice-config-row">
-            <label>骰子上限 <input type="number" id="diceMax" min="2" max="9999"></label>
-            <input type="text" id="diceNameInput" placeholder="新增名目，例如：左門">
-            <button type="button" id="diceAddBtn">新增</button>
+      <div class="tools-row" data-tool-key="dice-alarm">
+        <div class="tool-block" data-tool-key="dice">
+          <div class="dice-card">
+            <div class="tool-card-head"><h3>擲骰器</h3><div class="card-move">
+              <button type="button" class="card-move-btn" data-tool-move="up" data-tool="dice" title="上移">▲</button>
+              <button type="button" class="card-move-btn" data-tool-move="down" data-tool="dice" title="下移">▼</button>
+            </div></div>
+            <p class="dice-hint">選門、決定順序、或任何要靠骰大小決定的場合：幫每個選項取名，設定骰子上限，一起骰骰看，最大的贏。</p>
+            <div class="dice-config-row">
+              <label>骰子上限 <input type="number" id="diceMax" min="2" max="9999"></label>
+              <input type="text" id="diceNameInput" placeholder="新增名目，例如：左門">
+              <button type="button" id="diceAddBtn">新增</button>
+            </div>
+            <div class="dice-list" id="diceList"></div>
+            <button type="button" id="diceRollBtn" class="dice-roll-btn">骰骰子！</button>
           </div>
-          <div class="dice-list" id="diceList"></div>
-          <button type="button" id="diceRollBtn" class="dice-roll-btn">骰骰子！</button>
+        </div>
+
+        <div class="tool-block" data-tool-key="alarm">
+          <div class="alarm-card">
+            <div class="tool-card-head"><h3>鬧鐘</h3><div class="card-move">
+              <button type="button" class="card-move-btn" data-tool-move="up" data-tool="alarm" title="上移">▲</button>
+              <button type="button" class="card-move-btn" data-tool-move="down" data-tool="alarm" title="下移">▼</button>
+            </div></div>
+            <p class="dice-hint">用瀏覽器通知提醒自己的事，跟其他組別的提醒一樣：需要獨立分頁開啟（不能嵌在對話裡）、允許通知權限，並保持分頁在前景。</p>
+            <div class="alarm-list" id="alarmList"></div>
+            <div class="alarm-add-row">
+              <input type="time" id="alarmTimeInput">
+              <input type="text" id="alarmLabelInput" placeholder="標籤（選填），例如：休息一下">
+              <label class="alarm-once-label"><input type="checkbox" id="alarmOnceInput"> 只響一次</label>
+              <button type="button" id="alarmAddBtn">新增</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1017,24 +1154,9 @@
         </div>
       </div>
 
-      <div class="tool-block" data-tool-key="alarm">
-        <div class="alarm-card">
-          <div class="tool-card-head"><h3>鬧鐘</h3><div class="card-move">
-            <button type="button" class="card-move-btn" data-tool-move="up" data-tool="alarm" title="上移">▲</button>
-            <button type="button" class="card-move-btn" data-tool-move="down" data-tool="alarm" title="下移">▼</button>
-          </div></div>
-          <p class="dice-hint">用瀏覽器通知提醒自己的事，跟其他組別的提醒一樣：需要獨立分頁開啟（不能嵌在對話裡）、允許通知權限，並保持分頁在前景。</p>
-          <div class="alarm-list" id="alarmList"></div>
-          <div class="alarm-add-row">
-            <input type="time" id="alarmTimeInput">
-            <input type="text" id="alarmLabelInput" placeholder="標籤（選填），例如：休息一下">
-            <label class="alarm-once-label"><input type="checkbox" id="alarmOnceInput"> 只響一次</label>
-            <button type="button" id="alarmAddBtn">新增</button>
-          </div>
-        </div>
-      </div>
     </div>
-  </details>
+  </div>
+  </div>
 
   <footer>
     <div class="footer-row">
@@ -1076,9 +1198,9 @@
       <div class="diy-notify-body">
         <p class="last-updated" id="lastUpdatedLine">最後更新：載入中…</p>
         <ul id="changelogList">
-          <li><strong>頁尾的說明區塊改成兩欄排版</strong>：「想要主動推播提醒」「顯示的組別」「所有提醒總覽」「更新日誌」這四個收合區塊，桌面版排成左右兩欄，手機版還是維持單欄避免太擠。</li>
-          <li><strong>新增角色切換功能</strong>：右上角多了一顆「🧑 角色」按鈕，點下去可以新增／重新命名／刪除／切換不同角色，每個角色的每週每日清單設定與勾選進度都各自獨立；今日運勢、解答之書、擲骰、工具箱、鬧鐘、便利貼、主題這些共用工具則所有角色共用，不受影響。原本累積的紀錄會自動歸到第一個角色底下，不會不見。</li>
-          <li><strong>深色模式打勾改成金色</strong>：深色模式底下「已完成」的綠色（打勾方塊、chip 底色）換成跟黑金主題搭的琥珀金，不再是綠色；淺色模式的打勾維持原本的綠色不變。</li>
+          <li><strong>修復時尚評鑑抓不到朋友提交內容的問題</strong>：卡片原本沒有真的去 GitHub 抓資料，不管朋友透過 Discord Bot 提交什麼，畫面永遠只顯示「內容還在路上」的預設樣子。現在改成真的會去抓最新資料，並且每 5 分鐘自動重新抓一次，網頁開著不用重新整理也會看到朋友剛提交的內容；順便修掉「By.」後面多一槓的小錯字。</li>
+          <li><strong>小工具區塊改成單一卡片</strong>：「小工具」原本是收合標題跟底下的今日運勢／擲骰器等各自獨立一塊，中間留白怎麼調都很大；現在整併成一張跟其他清單卡片一樣的卡片，標題跟內容黏在一起，不會再有奇怪的大空隙。收合按鈕跟上下移動的位置不變。</li>
+          <li><strong>新增時尚評鑑功能</strong>：朋友可以透過 Discord Bot 指令 <code>/時尚評鑑</code> 提交每週的穿搭建議、注意事項、客家指數評分（1-5 星）、圖片和貼文連結，每週二下午 4 點自動更新與重置，右上角倒數距下次更新的時間。</li>
         </ul>
       </div>
     </details>
@@ -1097,7 +1219,8 @@
   <div class="modal-box modal-box-wide">
     <h3>使用說明</h3>
     <div class="help-body">
-      <p><strong>這是什麼</strong>：追蹤 FF14 繁中服每週/每日固定事項的清單，包含週間事項（天書、幻巧戰、老主顧、時尚評鑑）、仙人彩、日隨、籌備任務、友好部族，各自依照重置時間自動倒數與重置勾選狀態；下方還附了幾個小工具。</p>
+      <p><strong>這是什麼</strong>：追蹤 FF14 繁中服每週/每日固定事項的清單，包含週間事項（天書、幻巧戰、老主顧）、時尚評鑑（每週二 16:00 更新）、仙人彩、日隨、籌備任務、友好部族，各自依照重置時間自動倒數與重置勾選狀態；下方還附了幾個小工具。</p>
+      <p><strong>時尚評鑑</strong>：每週二下午 4 點自動更新。使用 Discord Bot 指令 <code style="background: var(--panel-2); padding: 2px 6px; border-radius: 4px;">/時尚評鑑</code> 讓朋友提交穿搭建議、注意事項、客家指數評分（1-5 星）、圖片和貼文連結。卡片會實時顯示最新內容，並在右上角倒數距下次更新的時間。</p>
       <p><strong>打勾與清單管理</strong>：點方框打勾／取消；點名稱可以直接改名；項目旁的 × 可以刪除（手機上會直接常駐顯示，電腦滑鼠移過去才會淡入）；「+ 新增項目」可以自己加新的一項（勾選、次數計數、或不會重置的追蹤標記三種類型）。</p>
       <p><strong>計數項目</strong>：友好部族、次數類項目用 － / ＋調整，也有「MAX」一鍵設成上限、「歸零」一鍵清空，兩個都會先跳確認再執行，避免手滑。</p>
       <p><strong>批次操作</strong>：籌備任務、友好部族這類多項目的組別，上方有「全部勾選」「全部清空」，「全部清空」一樣會先確認。</p>
@@ -1751,7 +1874,6 @@
           totalItems++; if (done) totalDone++;
           return itemRowHtml(group, item, b, val, done);
         }).join("");
-        totalItems -= 0;
         mainHtml += groupCardHtml(group, b, doneCount, group.items.length, rows, shiftedNow, visIdx, visibleGroups.length);
       } else {
         var dailyDone = 0, dailyTotal = 0;
@@ -2047,10 +2169,9 @@
       flagHtml = bulkActionsHtml(group.id, "flag") + '<div class="chip-grid">' + flagChipsHtml + '</div>';
     }
 
-    var b2 = groupBoundaries(group, shiftedNow);
     var collapsed = !!group.collapsed;
     return '<div class="card-wrap"><section class="card' + (collapsed ? ' collapsed' : '') + '" data-group-card="' + group.id + '">' +
-      cardHeadHtml(group, doneCount, total, "今日剩 ", b2.next.getTime() - shiftedNow.getTime(), idx, groupCount) +
+      cardHeadHtml(group, doneCount, total, "今日剩 ", b.next.getTime() - shiftedNow.getTime(), idx, groupCount) +
       (collapsed ? "" : notifyRuleHtml(group) + todayRows + gridHtml + flagHtml + addRowHtml(group.id)) +
       '</section></div>';
   }
@@ -2726,13 +2847,23 @@
     });
   }
 
-  var extraToolsDetails = document.getElementById("extraToolsDetails");
-  if (extraToolsDetails) {
+  var extraToolsCard = document.getElementById("extraToolsDetails");
+  var extraToolsToggleBtn = document.querySelector("[data-extra-tools-collapse]");
+  if (extraToolsCard) {
     var EXTRA_TOOLS_OPEN_KEY = "ff14weekly.extraToolsOpen.v1";
-    extraToolsDetails.open = localStorage.getItem(EXTRA_TOOLS_OPEN_KEY) === "1";
-    extraToolsDetails.addEventListener("toggle", function () {
-      localStorage.setItem(EXTRA_TOOLS_OPEN_KEY, extraToolsDetails.open ? "1" : "0");
-    });
+    var extraToolsOpen = localStorage.getItem(EXTRA_TOOLS_OPEN_KEY) === "1";
+    var applyExtraToolsOpen = function () {
+      extraToolsCard.classList.toggle("collapsed", !extraToolsOpen);
+      if (extraToolsToggleBtn) extraToolsToggleBtn.textContent = extraToolsOpen ? "▾" : "▸";
+    };
+    applyExtraToolsOpen();
+    if (extraToolsToggleBtn) {
+      extraToolsToggleBtn.addEventListener("click", function () {
+        extraToolsOpen = !extraToolsOpen;
+        localStorage.setItem(EXTRA_TOOLS_OPEN_KEY, extraToolsOpen ? "1" : "0");
+        applyExtraToolsOpen();
+      });
+    }
   }
 
   // ---- 小工具卡片自訂順序 ----
@@ -3023,7 +3154,9 @@
     }
   }
 
-  var LAST_UPDATED_TEXT = "2026/07/20 (週一) 21:52";
+  // 手動維護：每次修改網站程式碼時手動更新這個時間點，不要用 new Date() 抓「現在」——
+  // 那樣不管有沒有真的改版，每次載入頁面都會顯示成剛更新過，等於騙人。
+  var LAST_UPDATED_TEXT = "2026/07/21 (週二) 01:37";
   var lastUpdatedEl = document.getElementById("lastUpdatedLine");
   if (lastUpdatedEl) lastUpdatedEl.textContent = "最後更新：" + LAST_UPDATED_TEXT;
 
@@ -3041,5 +3174,167 @@
     checkNotifications(shiftedNow);
     checkAlarms(shiftedNow);
   }, 1000);
+
+  function initFashionMoveButtons() {
+    document.addEventListener('click', function(e) {
+      if (e.target.matches('button[data-fashion-move]')) {
+        var fashionWrap = document.querySelector('.fashion-card-wrap');
+        if (!fashionWrap) return;
+        var direction = e.target.getAttribute('data-fashion-move');
+        var prevSib = fashionWrap.previousElementSibling;
+        var nextSib = fashionWrap.nextElementSibling;
+        if (direction === 'up' && prevSib && prevSib.id !== 'main') {
+          fashionWrap.parentNode.insertBefore(fashionWrap, prevSib);
+          saveData();
+        } else if (direction === 'down' && nextSib) {
+          fashionWrap.parentNode.insertBefore(nextSib, fashionWrap);
+          saveData();
+        }
+      }
+      if (e.target.matches('button[data-fashion-collapse]')) {
+        var fashionCard = document.querySelector('.fashion-card');
+        if (fashionCard) {
+          fashionCard.classList.toggle('collapsed');
+          e.target.textContent = fashionCard.classList.contains('collapsed') ? '▸' : '▾';
+          saveData();
+        }
+      }
+      if (e.target.matches('button[data-tools-move]')) {
+        var toolsWrap = document.querySelector('.extra-tools-card-wrap');
+        if (!toolsWrap) return;
+        var direction = e.target.getAttribute('data-tools-move');
+        var prevSib = toolsWrap.previousElementSibling;
+        var nextSib = toolsWrap.nextElementSibling;
+        if (direction === 'up' && prevSib && prevSib.id !== 'main') {
+          toolsWrap.parentNode.insertBefore(toolsWrap, prevSib);
+          saveData();
+        } else if (direction === 'down' && nextSib) {
+          toolsWrap.parentNode.insertBefore(nextSib, toolsWrap);
+          saveData();
+        }
+      }
+      if (e.target.matches('button[data-tool-move][data-tool="dice"], button[data-tool-move][data-tool="alarm"]')) {
+        var toolsRow = document.querySelector('.tools-row');
+        if (!toolsRow) return;
+        var direction = e.target.getAttribute('data-tool-move');
+        var prevSib = toolsRow.previousElementSibling;
+        var nextSib = toolsRow.nextElementSibling;
+        if (direction === 'up' && prevSib) {
+          toolsRow.parentNode.insertBefore(toolsRow, prevSib);
+          saveData();
+        } else if (direction === 'down' && nextSib) {
+          toolsRow.parentNode.insertBefore(nextSib, toolsRow);
+          saveData();
+        }
+      }
+    });
+  }
+
+  function renderFashionJudging(data) {
+    data = data || {};
+    var hakkaIndex = data.hakkaIndex || 0;
+    var stars = '';
+    for (var i = 1; i <= 5; i++) {
+      stars += i <= hakkaIndex ? '⭐' : '☆';
+    }
+    var placeholderText = '<span style="color: var(--ink-dim);">您的時尚評鑑內容還在路上</span>';
+    var html = '<div style="margin-bottom: 8px;"><strong style="color: var(--accent-ink);">客家指數</strong><span class="fashion-stars"> ' + stars + '</span></div>' +
+      '<div class="fashion-items">' +
+      '<div class="fashion-item"><strong>穿搭建議</strong><p>' + (data.content ? escapeHtml(data.content) : placeholderText) + '</p></div>' +
+      '<div class="fashion-item"><strong>注意事項</strong><p>' + (data.notes ? escapeHtml(data.notes) : placeholderText) + '</p></div>' +
+      '</div>' +
+      '<div class="fashion-meta">';
+    if (data.author) {
+      html += '<span>By. ' + escapeHtml(data.author) + '</span>';
+    } else {
+      html += '<span style="color: var(--ink-dim);">By. —</span>';
+    }
+    if (data.threadsLink) {
+      html += '<a href="' + escapeAttr(data.threadsLink) + '" target="_blank" rel="noopener noreferrer" class="fashion-link">貼文連結</a>';
+    } else {
+      html += '<span style="color: var(--ink-dim);">貼文連結：暫無</span>';
+    }
+    html += '<span style="margin-left: auto; text-align: right; font-size: 11px; color: var(--ink-dim);" data-fashion-date>最後更新：--/--/-- --:--</span>';
+    html += '</div>';
+    if (data.imageUrl) {
+      html += '<img src="' + escapeAttr(data.imageUrl) + '" class="fashion-image" loading="lazy">';
+    }
+    document.getElementById('fashion-content').innerHTML = html;
+    var dateEl = document.querySelector('[data-fashion-date]');
+    if (dateEl) {
+      if (data.updatedAt) {
+        var lastUpdate = new Date(data.updatedAt);
+        var pad = function (n) { return String(n).padStart(2, '0'); };
+        dateEl.textContent = '最後更新：' + lastUpdate.getFullYear() + '/' + pad(lastUpdate.getMonth() + 1) + '/' + pad(lastUpdate.getDate()) + ' ' + pad(lastUpdate.getHours()) + ':' + pad(lastUpdate.getMinutes());
+      } else {
+        dateEl.textContent = '最後更新：未知';
+      }
+    }
+  }
+
+  function loadFashionJudging() {
+    // raw.githubusercontent.com 不管抓的分支叫 main 還是 master，先試 main 失敗再試 master，
+    // 避免因為分支名稱猜錯就整個顯示不出朋友透過 Discord Bot 提交的內容。
+    var branches = ['main', 'master'];
+    function tryBranch(i) {
+      if (i >= branches.length) { renderFashionJudging(null); return; }
+      var url = 'https://raw.githubusercontent.com/hanzzzzzzzzzzzzzzzz/ff14-weekly/' + branches[i] + '/fashion-judging.json?t=' + Date.now();
+      fetch(url, { cache: 'no-store' })
+        .then(function (res) { if (!res.ok) throw new Error('http ' + res.status); return res.json(); })
+        .then(function (data) { renderFashionJudging(data); })
+        .catch(function () { tryBranch(i + 1); });
+    }
+    tryBranch(0);
+  }
+
+  function updateFashionCountdown() {
+    var now = new Date();
+    var start = new Date(now);
+    var dayOfWeek = start.getDay();
+    var daysUntilTuesday = (2 - dayOfWeek + 7) % 7;
+    if (daysUntilTuesday === 0 && now.getHours() < 16) {
+      daysUntilTuesday = 0;
+    } else if (daysUntilTuesday === 0) {
+      daysUntilTuesday = 7;
+    }
+    start.setDate(start.getDate() - daysUntilTuesday + (daysUntilTuesday === 0 && now.getHours() >= 16 ? 0 : 7));
+    start.setHours(16, 0, 0, 0);
+    if (start > now) {
+      start.setDate(start.getDate() - 7);
+    }
+    var end = new Date(start);
+    end.setDate(end.getDate() + 7);
+    end.setSeconds(end.getSeconds() - 1);
+    var next = new Date(start);
+    next.setDate(next.getDate() + 7);
+    var diff = Math.max(0, next - now);
+    var days = Math.floor(diff / 86400000);
+    var hrs = Math.floor((diff % 86400000) / 3600000);
+    var mins = Math.floor((diff % 3600000) / 60000);
+    var secs = Math.floor((diff % 60000) / 1000);
+    var countdownEl = document.querySelector('[data-fashion-countdown]');
+    if (countdownEl) {
+      countdownEl.className = 'progress-frac';
+      if (days === 0) {
+        countdownEl.textContent = '今日剩 ' + String(hrs).padStart(2, '0') + '時' + String(mins).padStart(2, '0') + '分' + String(secs).padStart(2, '0') + '秒';
+      } else {
+        countdownEl.textContent = '剩' + days + '天' + String(hrs).padStart(2, '0') + '時' + String(mins).padStart(2, '0') + '分' + String(secs).padStart(2, '0') + '秒';
+      }
+    }
+    var pad = function(n) { return String(n).padStart(2, '0'); };
+    var startStr = start.getFullYear() + '/' + pad(start.getMonth() + 1) + '/' + pad(start.getDate()) + ' ' + pad(start.getHours()) + ':00';
+    var endStr = end.getFullYear() + '/' + pad(end.getMonth() + 1) + '/' + pad(end.getDate()) + ' ' + pad(end.getHours()) + ':' + pad(end.getMinutes());
+    var rangeEl = document.querySelector('[data-fashion-range]');
+    if (rangeEl) {
+      rangeEl.textContent = startStr + '-' + endStr;
+    }
+  }
+
+  setInterval(updateFashionCountdown, 1000);
+  updateFashionCountdown();
+
+  initFashionMoveButtons();
+  loadFashionJudging();
+  setInterval(loadFashionJudging, 5 * 60 * 1000);
 })();
 </script>
