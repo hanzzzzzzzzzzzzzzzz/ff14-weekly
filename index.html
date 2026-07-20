@@ -76,7 +76,7 @@
     -webkit-font-smoothing: antialiased;
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'><path d='M2 1 L2 19 L6.8 15.2 L10 22 L13.2 20.5 L10 13.6 L16 13.6 Z' fill='%23dcac5c' stroke='%231c2420' stroke-width='1.3' stroke-linejoin='round'/></svg>") 2 1, auto;
   }
-  button, summary, a, [role="button"], .week-day[data-day-toggle], .reminder-chip-label {
+  button, summary, a, [role="button"], .week-day[data-day-toggle], .reminder-chip-label, .alarm-time, .alarm-label {
     cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'><path d='M2 1 L2 19 L6.8 15.2 L10 22 L13.2 20.5 L10 13.6 L16 13.6 Z' fill='%232c7d76' stroke='%231c2420' stroke-width='1.3' stroke-linejoin='round'/></svg>") 2 1, pointer;
   }
   input, textarea, select { cursor: auto; }
@@ -449,6 +449,15 @@
   }
   .day-dot-static.counter-static.done { color: #fff; }
 
+  .extra-tools-details { margin-top: 24px; }
+  .extra-tools-details summary {
+    font-size: 13.5px; font-weight: 700; color: var(--crystal-ink); list-style: none; user-select: none;
+    padding: 10px 14px; background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-sm);
+  }
+  .extra-tools-details summary::-webkit-details-marker { display: none; }
+  .extra-tools-details summary::before { content: "▸ "; }
+  .extra-tools-details[open] summary::before { content: "▾ "; }
+  .extra-tools-body > *:first-child { margin-top: 14px; }
   .fun-tools { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 24px; }
   .fun-card {
     flex: 1; min-width: 220px; background: var(--panel); border: 1px solid var(--line);
@@ -553,9 +562,26 @@
     font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-variant-numeric: tabular-nums;
     font-size: 14px; font-weight: 700; color: var(--crystal-ink);
   }
+  .alarm-time:hover, .alarm-label:hover { text-decoration: underline; }
   .alarm-label { font-size: 12.5px; color: var(--ink); }
   .alarm-tag { font-size: 10.5px; color: var(--ink-dim); background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; }
   .alarm-item .del-btn { position: absolute; top: 4px; right: 4px; width: 16px; height: 16px; font-size: 11px; }
+  .alarm-edit-form {
+    display: inline-flex; align-items: center; gap: 6px; background: var(--panel-2);
+    border: 1px solid var(--accent); clip-path: var(--chamfer-sm); padding: 5px 10px;
+  }
+  .alarm-edit-form input[type="time"], .alarm-edit-form input[type="text"] {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 4px; color: var(--ink);
+    padding: 3px 6px; font-size: 12px; font-family: inherit;
+  }
+  .alarm-edit-form .alarm-once-label { font-size: 11px; }
+  .alarm-edit-save, .alarm-edit-cancel {
+    border: none; border-radius: 4px; font-size: 12px; width: 20px; height: 20px; transition: filter 0.15s ease, border-color 0.15s ease;
+  }
+  .alarm-edit-save { background: var(--good); color: #fff; }
+  .alarm-edit-save:hover { filter: brightness(1.12); }
+  .alarm-edit-cancel { background: var(--panel); color: var(--ink-dim); border: 1px solid var(--line); }
+  .alarm-edit-cancel:hover { border-color: var(--crystal); }
   .alarm-add-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .alarm-add-row input[type="time"] {
     background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; color: var(--ink);
@@ -772,54 +798,59 @@
 
   <main id="main"></main>
 
-  <section class="fun-tools">
-    <div class="fun-card">
-      <h3>今日運勢</h3>
-      <div class="fun-result" id="fortuneResult">今天過得如何，抽一支籤看看吧。</div>
-      <button type="button" id="fortuneBtn">抽今日運勢</button>
-    </div>
-    <div class="fun-card">
-      <h3>解答之書</h3>
-      <div class="fun-result" id="answerResult">心裡想著一個問題，翻開書頁看看答案。</div>
-      <button type="button" id="answerBtn">翻開解答之書</button>
-    </div>
-  </section>
+  <details class="extra-tools-details" id="extraToolsDetails">
+    <summary>小工具（今日運勢／解答之書／擲骰器／工具箱／鬧鐘）</summary>
+    <div class="extra-tools-body">
+      <section class="fun-tools">
+        <div class="fun-card">
+          <h3>今日運勢</h3>
+          <div class="fun-result" id="fortuneResult">今天過得如何，抽一支籤看看吧。</div>
+          <button type="button" id="fortuneBtn">抽今日運勢</button>
+        </div>
+        <div class="fun-card">
+          <h3>解答之書</h3>
+          <div class="fun-result" id="answerResult">心裡想著一個問題，翻開書頁看看答案。</div>
+          <button type="button" id="answerBtn">翻開解答之書</button>
+        </div>
+      </section>
 
-  <div class="dice-card">
-    <h3>擲骰器</h3>
-    <p class="dice-hint">選門、決定順序、或任何要靠骰大小決定的場合：幫每個選項取名，設定骰子上限，一起骰骰看，最大的贏。</p>
-    <div class="dice-config-row">
-      <label>骰子上限 <input type="number" id="diceMax" min="2" max="9999"></label>
-      <input type="text" id="diceNameInput" placeholder="新增名目，例如：左門">
-      <button type="button" id="diceAddBtn">新增</button>
-    </div>
-    <div class="dice-list" id="diceList"></div>
-    <button type="button" id="diceRollBtn" class="dice-roll-btn">骰骰子！</button>
-  </div>
+      <div class="dice-card">
+        <h3>擲骰器</h3>
+        <p class="dice-hint">選門、決定順序、或任何要靠骰大小決定的場合：幫每個選項取名，設定骰子上限，一起骰骰看，最大的贏。</p>
+        <div class="dice-config-row">
+          <label>骰子上限 <input type="number" id="diceMax" min="2" max="9999"></label>
+          <input type="text" id="diceNameInput" placeholder="新增名目，例如：左門">
+          <button type="button" id="diceAddBtn">新增</button>
+        </div>
+        <div class="dice-list" id="diceList"></div>
+        <button type="button" id="diceRollBtn" class="dice-roll-btn">骰骰子！</button>
+      </div>
 
-  <div class="toolbox-card">
-    <h3>工具箱</h3>
-    <p class="dice-hint">收藏你自己覺得好用的網站連結，點名稱會開新分頁。</p>
-    <div class="toolbox-grid" id="toolboxGrid"></div>
-    <div class="toolbox-add-row">
-      <input type="text" id="toolboxNameInput" placeholder="名稱，例如：Teamcraft">
-      <input type="text" id="toolboxUrlInput" placeholder="網址，例如：ffxivteamcraft.com">
-      <input type="text" id="toolboxDescInput" placeholder="簡單介紹（選填）">
-      <button type="button" id="toolboxAddBtn">新增</button>
-    </div>
-  </div>
+      <div class="toolbox-card">
+        <h3>工具箱</h3>
+        <p class="dice-hint">收藏你自己覺得好用的網站連結，點名稱會開新分頁。</p>
+        <div class="toolbox-grid" id="toolboxGrid"></div>
+        <div class="toolbox-add-row">
+          <input type="text" id="toolboxNameInput" placeholder="名稱，例如：Teamcraft">
+          <input type="text" id="toolboxUrlInput" placeholder="網址，例如：ffxivteamcraft.com">
+          <input type="text" id="toolboxDescInput" placeholder="簡單介紹（選填）">
+          <button type="button" id="toolboxAddBtn">新增</button>
+        </div>
+      </div>
 
-  <div class="alarm-card">
-    <h3>鬧鐘</h3>
-    <p class="dice-hint">用瀏覽器通知提醒自己的事，跟其他組別的提醒一樣：需要獨立分頁開啟（不能嵌在對話裡）、允許通知權限，並保持分頁在前景。</p>
-    <div class="alarm-list" id="alarmList"></div>
-    <div class="alarm-add-row">
-      <input type="time" id="alarmTimeInput">
-      <input type="text" id="alarmLabelInput" placeholder="標籤（選填），例如：休息一下">
-      <label class="alarm-once-label"><input type="checkbox" id="alarmOnceInput"> 只響一次</label>
-      <button type="button" id="alarmAddBtn">新增</button>
+      <div class="alarm-card">
+        <h3>鬧鐘</h3>
+        <p class="dice-hint">用瀏覽器通知提醒自己的事，跟其他組別的提醒一樣：需要獨立分頁開啟（不能嵌在對話裡）、允許通知權限，並保持分頁在前景。</p>
+        <div class="alarm-list" id="alarmList"></div>
+        <div class="alarm-add-row">
+          <input type="time" id="alarmTimeInput">
+          <input type="text" id="alarmLabelInput" placeholder="標籤（選填），例如：休息一下">
+          <label class="alarm-once-label"><input type="checkbox" id="alarmOnceInput"> 只響一次</label>
+          <button type="button" id="alarmAddBtn">新增</button>
+        </div>
+      </div>
     </div>
-  </div>
+  </details>
 
   <footer>
     <div class="footer-row">
@@ -857,9 +888,9 @@
       <div class="diy-notify-body">
         <p class="last-updated" id="lastUpdatedLine">最後更新：載入中…</p>
         <ul id="changelogList">
+          <li><strong>鬧鐘可直接編輯、小工具收合成一區</strong>：鬧鐘點時間/標籤可以直接改，不用刪掉重建；今日運勢、解答之書、擲骰器、工具箱、鬧鐘這五個附加功能收進一個可展開/收合的區塊（預設收起），減少頁面長度。</li>
           <li><strong>移除仙人微彩模擬器</strong>：做出來的效果不理想，整個拿掉，改天想到更好的做法再說。</li>
           <li><strong>新增鬧鐘</strong>：可自訂時間、標籤，選「只響一次」或「每天」重複的瀏覽器通知，跟其他提醒共用同一套通知機制。</li>
-          <li><strong>新增「工具箱」</strong>：可以自己收藏常用網站連結（名稱＋網址＋簡介），點名稱開新分頁，內容會一起包含在匯出備份裡。</li>
         </ul>
       </div>
     </details>
@@ -885,7 +916,8 @@
       <p><strong>擲骰器</strong>：選門、決定順序這類要骰大小的場合，可以幫每個選項取名、設定骰子上限，按「骰骰子！」讓所有名目各自骰一次，骰到最大的會標示出來；名目跟骰子上限會記住，不用重新輸入。</p>
       <p><strong>懸浮便利貼</strong>：右下角常駐一張便利貼，可以隨手記東西（市場板價格、隊友暱稱等），內容自動存起來；按「－」可以收合成一個小標籤，不擋畫面。</p>
       <p><strong>工具箱</strong>：最下面可以自己新增常用網站的連結卡片（名稱、網址、簡介），點名稱會開新分頁，內容會包含在「匯出備份」裡一起保存。</p>
-      <p><strong>鬧鐘</strong>：自訂任何時間點的瀏覽器通知，可加標籤、設定「只響一次」（響過就自動刪除）或每天重複。跟其他提醒一樣，需要獨立分頁開啟、允許通知權限、並保持分頁在前景才會準時跳出。</p>
+      <p><strong>鬧鐘</strong>：自訂任何時間點的瀏覽器通知，可加標籤、設定「只響一次」（響過就自動刪除）或每天重複；點時間或標籤可以直接修改，不用刪掉重建。跟其他提醒一樣，需要獨立分頁開啟、允許通知權限、並保持分頁在前景才會準時跳出。</p>
+      <p><strong>小工具收合區</strong>：今日運勢、解答之書、擲骰器、工具箱、鬧鐘這五個附加功能收在一個可展開/收合的區塊裡（預設收起），點標題列展開，減少不需要時佔用的畫面空間；展開/收合狀態會記住。</p>
     </div>
     <div class="modal-actions">
       <button type="button" id="closeHelpBtn">關閉</button>
@@ -2201,6 +2233,15 @@
     });
   }
 
+  var extraToolsDetails = document.getElementById("extraToolsDetails");
+  if (extraToolsDetails) {
+    var EXTRA_TOOLS_OPEN_KEY = "ff14weekly.extraToolsOpen.v1";
+    extraToolsDetails.open = localStorage.getItem(EXTRA_TOOLS_OPEN_KEY) === "1";
+    extraToolsDetails.addEventListener("toggle", function () {
+      localStorage.setItem(EXTRA_TOOLS_OPEN_KEY, extraToolsDetails.open ? "1" : "0");
+    });
+  }
+
   // ---- 工具箱：自訂連結卡片 ----
   var TOOLBOX_KEY = "ff14weekly.toolbox.v1";
   function loadToolbox() {
@@ -2271,6 +2312,7 @@
   }
   function saveAlarms() { localStorage.setItem(ALARM_KEY, JSON.stringify(alarms)); }
   var alarms = loadAlarms();
+  var editingAlarmId = null;
   var alarmListEl = document.getElementById("alarmList");
   function renderAlarms() {
     if (!alarmListEl) return;
@@ -2280,9 +2322,18 @@
     }
     var sorted = alarms.slice().sort(function (a, b) { return a.time < b.time ? -1 : a.time > b.time ? 1 : 0; });
     alarmListEl.innerHTML = sorted.map(function (alarm) {
+      if (editingAlarmId === alarm.id) {
+        return '<div class="alarm-edit-form">' +
+          '<input type="time" class="alarm-edit-time" value="' + escapeAttr(alarm.time) + '">' +
+          '<input type="text" class="alarm-edit-label" placeholder="標籤（選填）" value="' + escapeAttr(alarm.label) + '">' +
+          '<label class="alarm-once-label"><input type="checkbox" class="alarm-edit-once"' + (alarm.once ? " checked" : "") + '> 只響一次</label>' +
+          '<button type="button" class="alarm-edit-save" data-alarm-id="' + alarm.id + '">✓</button>' +
+          '<button type="button" class="alarm-edit-cancel">×</button>' +
+          '</div>';
+      }
       return '<div class="alarm-item">' +
-        '<span class="alarm-time">' + escapeHtml(alarm.time) + '</span>' +
-        (alarm.label ? '<span class="alarm-label">' + escapeHtml(alarm.label) + '</span>' : '') +
+        '<span class="alarm-time" data-alarm-edit="' + alarm.id + '" title="點擊編輯">' + escapeHtml(alarm.time) + '</span>' +
+        (alarm.label ? '<span class="alarm-label" data-alarm-edit="' + alarm.id + '" title="點擊編輯">' + escapeHtml(alarm.label) + '</span>' : '') +
         '<span class="alarm-tag">' + (alarm.once ? "單次" : "每天") + '</span>' +
         '<button type="button" class="del-btn" data-alarm-del="' + alarm.id + '" title="刪除這個鬧鐘">×</button>' +
         '</div>';
@@ -2292,6 +2343,32 @@
         var id = btn.getAttribute("data-alarm-del");
         alarms = alarms.filter(function (a) { return a.id !== id; });
         saveAlarms();
+        renderAlarms();
+      });
+    });
+    alarmListEl.querySelectorAll("[data-alarm-edit]").forEach(function (el) {
+      el.addEventListener("click", function () {
+        editingAlarmId = el.getAttribute("data-alarm-edit");
+        renderAlarms();
+      });
+    });
+    alarmListEl.querySelectorAll(".alarm-edit-cancel").forEach(function (btn) {
+      btn.addEventListener("click", function () { editingAlarmId = null; renderAlarms(); });
+    });
+    alarmListEl.querySelectorAll(".alarm-edit-save").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var id = btn.getAttribute("data-alarm-id");
+        var wrap = btn.closest(".alarm-edit-form");
+        var timeVal = wrap.querySelector(".alarm-edit-time").value;
+        if (!timeVal) return;
+        var alarm = alarms.find(function (a) { return a.id === id; });
+        if (alarm) {
+          alarm.time = timeVal;
+          alarm.label = wrap.querySelector(".alarm-edit-label").value.trim();
+          alarm.once = wrap.querySelector(".alarm-edit-once").checked;
+          saveAlarms();
+        }
+        editingAlarmId = null;
         renderAlarms();
       });
     });
@@ -2339,7 +2416,7 @@
     }
   }
 
-  var LAST_UPDATED_TEXT = "2026/07/20 (週一) 09:57";
+  var LAST_UPDATED_TEXT = "2026/07/20 (週一) 15:10";
   var lastUpdatedEl = document.getElementById("lastUpdatedLine");
   if (lastUpdatedEl) lastUpdatedEl.textContent = "最後更新：" + LAST_UPDATED_TEXT;
 
