@@ -33,14 +33,18 @@ async def on_ready():
     content="穿搭建議（例如：推薦搭配 XX 裝備）",
     notes="注意事項或備註",
     hakka_index="客家指數（1-5）",
-    image_url="圖片連結"
+    image_url="圖片連結",
+    author="評鑑者名稱",
+    threads_link="貼文連結（Discord Threads 或其他）- 選填"
 )
 async def fashion_judging(
     interaction: discord.Interaction,
     content: str,
     notes: str,
     hakka_index: int,
-    image_url: str
+    image_url: str,
+    author: str,
+    threads_link: str = None
 ):
     await interaction.response.defer()
 
@@ -52,7 +56,9 @@ async def fashion_judging(
         "content": content,
         "notes": notes,
         "hakkaIndex": hakka_index,
-        "imageUrl": image_url
+        "imageUrl": image_url,
+        "author": author,
+        "threadsLink": threads_link or ""
     }
 
     try:
@@ -85,6 +91,7 @@ async def fashion_judging(
             await interaction.followup.send(
                 f"✅ 時尚評鑑已更新！\n"
                 f"客家指數：{star_emoji}\n"
+                f"By. {author}\n"
                 f"建議：{content}\n"
                 f"備註：{notes}"
             )
