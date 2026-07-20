@@ -14,49 +14,57 @@
     --crystal: #2c7d76;
     --crystal-ink: #12433f;
     --good: #3d7a41;
-    --good-bg: rgba(61, 122, 65, 0.14);
+    --good-bg: #d9e6d6;
     --warn: #a86a13;
     --warn-bg: rgba(168, 106, 19, 0.14);
     --bad: #ad4444;
     --bad-bg: rgba(173, 68, 68, 0.14);
     --card-ring: rgba(169, 118, 44, 0.16);
     --shadow: 0 1px 2px rgba(28, 36, 32, 0.06), 0 8px 24px -12px rgba(28, 36, 32, 0.18);
+    --tape: rgba(169, 118, 44, 0.28);
+    --tape-line: rgba(169, 118, 44, 0.45);
+    --grid-line: rgba(28, 36, 32, 0.07);
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --paper: #12161c;
-      --panel: #1b212a;
-      --panel-2: #232b35;
-      --ink: #e6ebe6;
-      --ink-dim: #97a29b;
-      --line: rgba(230, 235, 230, 0.12);
+      --paper: #15120e;
+      --panel: #1f1a13;
+      --panel-2: #2b2419;
+      --ink: #f0e6d2;
+      --ink-dim: #b8a888;
+      --line: rgba(240, 220, 170, 0.14);
       --accent: #dcac5c;
       --accent-ink: #f4dba8;
-      --crystal: #59b3a9;
-      --crystal-ink: #a8ddd5;
-      --good: #6fbb72;
-      --good-bg: rgba(111, 187, 114, 0.16);
+      --crystal: #d4af6a;
+      --crystal-ink: #f0d9a8;
+      --good: #c9a227;
+      --good-bg: #443b1b;
       --warn: #d9a44b;
       --warn-bg: rgba(217, 164, 75, 0.16);
       --bad: #e08080;
       --bad-bg: rgba(224, 128, 128, 0.16);
       --card-ring: rgba(220, 172, 92, 0.28);
       --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+      --tape: rgba(220, 172, 92, 0.32);
+      --tape-line: rgba(220, 172, 92, 0.5);
+      --grid-line: rgba(240, 220, 170, 0.07);
       color-scheme: dark;
     }
   }
   :root[data-theme="light"] {
     --paper: #eef1ec; --panel: #ffffff; --panel-2: #e5e9e2; --ink: #1c2420; --ink-dim: #5b6560;
     --line: rgba(28, 36, 32, 0.12); --accent: #a9762c; --accent-ink: #5c3f14; --crystal: #2c7d76; --crystal-ink: #12433f;
-    --good: #3d7a41; --good-bg: rgba(61, 122, 65, 0.14); --warn: #a86a13; --warn-bg: rgba(168, 106, 19, 0.14);
-    --bad: #ad4444; --bad-bg: rgba(173, 68, 68, 0.14); --card-ring: rgba(169, 118, 44, 0.16); color-scheme: light;
+    --good: #3d7a41; --good-bg: #d9e6d6; --warn: #a86a13; --warn-bg: rgba(168, 106, 19, 0.14);
+    --bad: #ad4444; --bad-bg: rgba(173, 68, 68, 0.14); --card-ring: rgba(169, 118, 44, 0.16);
+    --tape: rgba(169, 118, 44, 0.28); --tape-line: rgba(169, 118, 44, 0.45); --grid-line: rgba(28, 36, 32, 0.07); color-scheme: light;
   }
   :root[data-theme="dark"] {
-    --paper: #12161c; --panel: #1b212a; --panel-2: #232b35; --ink: #e6ebe6; --ink-dim: #97a29b;
-    --line: rgba(230, 235, 230, 0.12); --accent: #dcac5c; --accent-ink: #f4dba8; --crystal: #59b3a9; --crystal-ink: #a8ddd5;
-    --good: #6fbb72; --good-bg: rgba(111, 187, 114, 0.16); --warn: #d9a44b; --warn-bg: rgba(217, 164, 75, 0.16);
-    --bad: #e08080; --bad-bg: rgba(224, 128, 128, 0.16); --card-ring: rgba(220, 172, 92, 0.28); color-scheme: dark;
+    --paper: #15120e; --panel: #1f1a13; --panel-2: #2b2419; --ink: #f0e6d2; --ink-dim: #b8a888;
+    --line: rgba(240, 220, 170, 0.14); --accent: #dcac5c; --accent-ink: #f4dba8; --crystal: #d4af6a; --crystal-ink: #f0d9a8;
+    --good: #c9a227; --good-bg: #443b1b; --warn: #d9a44b; --warn-bg: rgba(217, 164, 75, 0.16);
+    --bad: #e08080; --bad-bg: rgba(224, 128, 128, 0.16); --card-ring: rgba(220, 172, 92, 0.28);
+    --tape: rgba(220, 172, 92, 0.32); --tape-line: rgba(220, 172, 92, 0.5); --grid-line: rgba(240, 220, 170, 0.07); color-scheme: dark;
   }
 
   * { box-sizing: border-box; }
@@ -126,7 +134,7 @@
     background: var(--panel-2); color: var(--ink); border: 1px solid var(--line);
     font-variant-numeric: tabular-nums;
   }
-  .clock-row-right { display: flex; align-items: center; gap: 8px; }
+  .clock-row-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .theme-toggle {
     background: var(--panel); border: 1px solid var(--line); color: var(--ink-dim); clip-path: var(--chamfer-sm);
     padding: 5px 10px; font-size: 12px; transition: border-color 0.15s ease, color 0.15s ease;
@@ -217,10 +225,26 @@
     position: relative;
     background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-lg);
     padding: 18px 18px 14px; box-shadow: 0 0 0 1px var(--card-ring), var(--shadow);
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  .card-wrap { position: relative; }
+  .card-wrap::before {
+    content: ""; position: absolute; top: -8px; left: 20px; width: 46px; height: 16px; z-index: 5;
+    background: var(--tape); border: 1px solid var(--tape-line); transform: rotate(-3deg);
+    pointer-events: none;
   }
   .card-head {
     display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
-    padding-bottom: 10px; margin-bottom: 8px; border-bottom: 1px solid var(--line);
+    padding-bottom: 14px; margin-bottom: 8px; border-bottom: none; position: relative;
+  }
+  .card-head::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 6px;
+    background: var(--crystal);
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0 12 3 T24 3' fill='none' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0 12 3 T24 3' fill='none' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E");
+    -webkit-mask-repeat: repeat-x; mask-repeat: repeat-x;
+    -webkit-mask-size: 24px 6px; mask-size: 24px 6px;
   }
   .card-head h2 { font-size: 18px; font-weight: 700; letter-spacing: 0.03em; }
   .collapse-toggle {
@@ -229,7 +253,8 @@
   }
   .collapse-toggle:hover { color: var(--crystal-ink); }
   .card.collapsed { padding-bottom: 12px; }
-  .card.collapsed .card-head { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+  .card.collapsed .card-head { margin-bottom: 0; padding-bottom: 0; }
+  .card.collapsed .card-head::after { display: none; }
   .card-head .reset-label { font-size: 12.5px; color: var(--ink-dim); margin-top: 2px; }
   .card-status-wrap { display: flex; align-items: flex-start; gap: 6px; flex-shrink: 0; }
   .card-status { text-align: right; flex-shrink: 0; }
@@ -251,7 +276,10 @@
     border-bottom: 1px solid var(--line); border-radius: 8px; transition: background-color 0.2s;
   }
   .item-row:last-of-type { border-bottom: none; }
-  .item-row.done { background: var(--good-bg); }
+  .item-row.done .item-name {
+    background-image: linear-gradient(transparent 60%, var(--tape) 60%);
+    background-repeat: no-repeat; background-position: left center; background-size: var(--name-w, 100%) 100%;
+  }
   @media (hover: hover) {
     .item-row .del-btn { opacity: 0; }
     .item-row:hover .del-btn, .item-row:focus-within .del-btn { opacity: 0.55; }
@@ -480,12 +508,26 @@
   .extra-tools-details summary::before { content: "▸ "; }
   .extra-tools-details[open] summary::before { content: "▾ "; }
   .extra-tools-body { margin-top: 14px; }
-  .tool-block { margin-top: 16px; }
+  .tool-block { position: relative; margin-top: 16px; }
   .tool-block:first-child { margin-top: 0; }
-  .tool-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; text-align: left; }
+  .tool-block::before {
+    content: ""; position: absolute; top: -8px; left: 20px; width: 46px; height: 16px; z-index: 5;
+    background: var(--tape); border: 1px solid var(--tape-line); transform: rotate(-3deg);
+    pointer-events: none;
+  }
+  .tool-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; text-align: left; position: relative; padding-bottom: 12px; margin-bottom: 8px; }
+  .tool-card-head::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 6px;
+    background: var(--crystal);
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0 12 3 T24 3' fill='none' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0 12 3 T24 3' fill='none' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E");
+    -webkit-mask-repeat: repeat-x; mask-repeat: repeat-x;
+    -webkit-mask-size: 24px 6px; mask-size: 24px 6px;
+  }
   .fun-pair-card {
     position: relative; background: var(--panel); border: 1px solid var(--line);
     clip-path: var(--chamfer-lg); padding: 16px 18px; box-shadow: var(--shadow);
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px); background-size: 22px 22px;
   }
   .fun-pair-card .card-move { position: absolute; top: 14px; right: 16px; }
   .fun-pair-grid { display: flex; gap: 16px; flex-wrap: wrap; }
@@ -504,8 +546,9 @@
   .fun-card-mini > button:hover { filter: brightness(1.12); }
 
   .dice-card {
-    background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-lg);
+    position: relative; background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-lg);
     padding: 16px 18px; box-shadow: var(--shadow);
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px); background-size: 22px 22px;
   }
   .dice-card h3 { font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--crystal-ink); margin-bottom: 4px; }
   .dice-hint { font-size: 12px; color: var(--ink-dim); margin: 0 0 10px; max-width: 68ch; }
@@ -562,8 +605,9 @@
   .dice-roll-btn:hover { filter: brightness(1.12); }
 
   .toolbox-card {
-    background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-lg);
+    position: relative; background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-lg);
     padding: 16px 18px; box-shadow: var(--shadow);
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px); background-size: 22px 22px;
   }
   .toolbox-card h3 { font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--crystal-ink); margin-bottom: 4px; }
   .toolbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin: 10px 0; }
@@ -611,8 +655,9 @@
   .toolbox-add-row button:hover { filter: brightness(1.12); }
 
   .alarm-card {
-    background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-lg);
+    position: relative; background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-lg);
     padding: 16px 18px; box-shadow: var(--shadow);
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px); background-size: 22px 22px;
   }
   .alarm-card h3 { font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--crystal-ink); margin-bottom: 4px; }
   .alarm-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
@@ -673,9 +718,9 @@
   .site-disclaimer {
     font-size: 11.5px; color: var(--ink-dim); line-height: 1.75; max-width: 640px; margin: 0 auto 10px;
   }
-  .site-credit { font-size: 12.5px; margin: 10px 0 0; }
+  .site-credit { font-size: 12.5px; color: var(--crystal-ink); font-weight: 700; letter-spacing: 0.03em; margin: 10px 0 0; }
   .site-credit a {
-    color: var(--crystal-ink); font-weight: 700; letter-spacing: 0.03em; text-decoration: none;
+    color: var(--ink-dim); font-weight: 600; text-decoration: none;
     border-bottom: 1px dashed var(--crystal); transition: border-color 0.15s ease, color 0.15s ease;
   }
   .site-credit a:hover { border-color: transparent; color: var(--accent); }
@@ -692,6 +737,10 @@
   }
 
   .diy-notify { margin-top: 10px; max-width: 60ch; }
+  .footer-notify-grid {
+    display: grid; grid-template-columns: 1fr 1fr; column-gap: 28px; align-items: start;
+  }
+  .footer-notify-grid .diy-notify { max-width: none; }
   .diy-notify summary {
     font-size: 12px; font-weight: 600; color: var(--crystal-ink);
     list-style: none; user-select: none;
@@ -710,6 +759,40 @@
   .reminders-overview-list li:last-child { border-bottom: none; }
   .reminders-overview-list .del-btn { opacity: 0.55; }
   .reminders-overview-list .del-btn:hover { opacity: 1; }
+  .char-manage-list { list-style: none; margin: 12px 0; padding: 0; max-height: 240px; overflow-y: auto; }
+  .char-manage-list li {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 7px 0; border-bottom: 1px solid var(--line);
+  }
+  .char-manage-list li:last-child { border-bottom: none; }
+  .char-name-btn {
+    background: none; border: none; color: var(--ink); font-size: 13.5px; padding: 2px 0; text-align: left;
+  }
+  .char-manage-item.active .char-name-btn { color: var(--crystal-ink); font-weight: 700; }
+  .char-item-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .char-rename-btn, .char-del-btn {
+    width: 20px; height: 20px; font-size: 12px; opacity: 0.55; border: none; background: none; color: var(--ink-dim);
+    padding: 0;
+  }
+  .char-rename-btn:hover { opacity: 1; }
+  .char-del-btn:hover { opacity: 1; color: var(--bad); }
+  .char-edit-form { display: flex; align-items: center; gap: 5px; }
+  .char-rename-input {
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; color: var(--ink);
+    padding: 3px 6px; font-size: 12.5px; font-family: inherit; width: 120px;
+  }
+  .char-save-btn, .char-cancel-btn {
+    border: none; border-radius: 4px; font-size: 12px; width: 20px; height: 20px; flex-shrink: 0;
+    transition: filter 0.15s ease;
+  }
+  .char-save-btn { background: var(--good); color: #fff; }
+  .char-save-btn:hover { filter: brightness(1.12); }
+  .char-cancel-btn { background: var(--panel-2); color: var(--ink-dim); border: 1px solid var(--line); }
+  .char-add-row { display: flex; gap: 8px; }
+  .char-add-row input[type="text"] {
+    flex: 1; background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; color: var(--ink);
+    padding: 6px 8px; font-size: 13px; font-family: inherit;
+  }
   .last-updated {
     font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums;
     margin: 0 0 10px; padding-bottom: 8px; border-bottom: 1px solid var(--line);
@@ -776,7 +859,9 @@
   }
   #copyExportBtn, #confirmImportBtn { background: var(--crystal); color: #fff; border: none; }
   #copyExportBtn:hover, #confirmImportBtn:hover { filter: brightness(1.12); }
-  #closeExportBtn:hover, #closeHelpBtn:hover, #closeImportBtn:hover, #confirmModalCancelBtn:hover { border-color: var(--crystal); }
+  #closeExportBtn:hover, #closeHelpBtn:hover, #closeImportBtn:hover, #confirmModalCancelBtn:hover, #closeCharManageBtn:hover { border-color: var(--crystal); }
+  #charAddBtn { background: var(--crystal); color: #fff; border: none; }
+  #charAddBtn:hover { filter: brightness(1.12); }
   #confirmModalOkBtn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
 
   .celebrate-box {
@@ -821,6 +906,7 @@
     .alarm-add-row { flex-direction: column; align-items: stretch; }
     .alarm-add-row input[type="text"] { width: 100%; }
     .toolbox-add-row input { width: 100%; }
+    .footer-notify-grid { grid-template-columns: 1fr; }
   }
 </style>
 
@@ -856,6 +942,7 @@
         </div>
       </div>
       <div class="clock-row-right">
+        <button type="button" id="charSwitchBtn" class="theme-toggle" title="切換／管理角色">🧑 角色</button>
         <button type="button" id="collapseAllBtn" class="theme-toggle" title="全部收合/展開">▾ 全部</button>
         <button type="button" id="helpBtn" class="theme-toggle" title="使用說明">❓ 說明</button>
         <button type="button" id="themeToggleBtn" class="theme-toggle" title="切換主題">🌓 自動</button>
@@ -961,6 +1048,7 @@
       <label><input type="checkbox" id="backupReminderEnabled"> 啟用「太久沒備份」提醒</label>
       <label>超過 <input type="number" id="backupReminderDays" min="1" max="90"> 天沒匯出就提醒</label>
     </div>
+    <div class="footer-notify-grid">
     <details class="diy-notify">
       <summary>想要主動推播提醒（不用開著網頁也會通知）？</summary>
       <div class="diy-notify-body">
@@ -988,17 +1076,18 @@
       <div class="diy-notify-body">
         <p class="last-updated" id="lastUpdatedLine">最後更新：載入中…</p>
         <ul id="changelogList">
-          <li><strong>頂部新增裝置提示、底部新增免責聲明與製作者</strong>：頂部加了建議用電腦版瀏覽的小提示；底部原本的資料保存說明移到最下面、置中重新排版並加寬，補上瀏覽器提醒在切分頁時的實際使用心得，新增免責聲明（本站與 SQUARE ENIX 無關、純前端不收集資料）跟製作者掛名「Mumu@鳳凰」（連結到脆帳號，歡迎私訊提建議或回報 bug）；更新日誌標題也註明只顯示最新三則。</li>
-          <li><strong>網站改名為「光戰每週小手帳」</strong>：頁面標題跟頂部小標都換了新名字，不再叫「繁中服週常事務表」。</li>
-          <li><strong>工具箱連結支援拖曳排序</strong>：滑鼠直接拖曳卡片就能調整順序，不用再用按鈕一個一個調（手機觸控目前還不支援拖曳，之後再想辦法）。</li>
+          <li><strong>頁尾的說明區塊改成兩欄排版</strong>：「想要主動推播提醒」「顯示的組別」「所有提醒總覽」「更新日誌」這四個收合區塊，桌面版排成左右兩欄，手機版還是維持單欄避免太擠。</li>
+          <li><strong>新增角色切換功能</strong>：右上角多了一顆「🧑 角色」按鈕，點下去可以新增／重新命名／刪除／切換不同角色，每個角色的每週每日清單設定與勾選進度都各自獨立；今日運勢、解答之書、擲骰、工具箱、鬧鐘、便利貼、主題這些共用工具則所有角色共用，不受影響。原本累積的紀錄會自動歸到第一個角色底下，不會不見。</li>
+          <li><strong>深色模式打勾改成金色</strong>：深色模式底下「已完成」的綠色（打勾方塊、chip 底色）換成跟黑金主題搭的琥珀金，不再是綠色；淺色模式的打勾維持原本的綠色不變。</li>
         </ul>
       </div>
     </details>
+    </div>
 
     <div class="site-footer-info">
       <p class="site-disclaimer">這是玩家自己做的小工具，跟 SQUARE ENIX／FINAL FANTASY XIV 官方沒有任何關係，純粹是為了方便記錄自己每週、每日的進度而已。網站本身只是一個網頁，不會把任何資料傳到別的地方——所有勾選跟清單內容都只存在「這個瀏覽器」裡（localStorage），也正因為這樣，換裝置、換瀏覽器或清掉瀏覽器資料都會不見，記得定期用「匯出備份」存一份起來。</p>
-      <p class="site-disclaimer">瀏覽器提醒僅在獨立開啟本頁時可用，分頁切到背景後瀏覽器可能會暫停運作，導致提醒延遲或跳不出來；不過實際用下來，只要瀏覽器有開啟桌面通知權限，切到其他分頁或視窗時提醒通常還是會準時跳出，記得先確認瀏覽器的通知權限有開。真正不用開著網頁也會準時到的提醒，可以考慮使用 Discord 排程。</p>
-      <p class="site-credit"><a href="https://www.threads.com/@ff14_muuuuu" target="_blank" rel="noopener noreferrer">Mumu@鳳凰</a></p>
+      <p class="site-disclaimer">瀏覽器提醒僅在獨立開啟本頁時可用，分頁切到背景後瀏覽器可能會暫停運作，導致提醒延遲或跳不出來；不過實際用下來，只要瀏覽器有開啟桌面通知權限，切到其他分頁或視窗時提醒通常還是會準時跳出，記得先確認瀏覽器的通知權限有開。<br>真正不用開著網頁也會準時到的提醒，可以考慮使用 Discord 排程。</p>
+      <p class="site-credit">Mumu@鳳凰　｜　<a href="https://www.threads.com/@ff14_muuuuu" target="_blank" rel="noopener noreferrer">Threads 帳號</a></p>
       <p class="site-credit-note">有使用建議或抓到 bug，歡迎點上面的連結私訊告訴我。</p>
     </div>
   </footer>
@@ -1037,7 +1126,7 @@
 <div class="modal-overlay" id="exportModal" hidden>
   <div class="modal-box">
     <h3>匯出備份</h3>
-    <p class="modal-hint">複製下面的內容，貼到一個文字檔存成 .json 檔即可備份；之後用「匯入備份」把整份內容貼回來就能還原。</p>
+    <p class="modal-hint">複製下面的內容，貼到一個文字檔存成 .json 檔即可備份；之後用「匯入備份」把整份內容貼回來就能還原。（只會備份目前選擇的角色）</p>
     <textarea id="exportText" readonly></textarea>
     <div class="modal-actions">
       <button type="button" id="copyExportBtn">複製到剪貼簿</button>
@@ -1049,7 +1138,7 @@
 <div class="modal-overlay" id="importModal" hidden>
   <div class="modal-box">
     <h3>匯入備份</h3>
-    <p class="modal-hint">把之前匯出的備份 JSON 內容整段貼到下面，再按「確認匯入」。這會覆蓋目前的清單設定（勾選紀錄不受影響）。</p>
+    <p class="modal-hint">把之前匯出的備份 JSON 內容整段貼到下面，再按「確認匯入」。這會覆蓋目前選擇角色的清單設定與勾選紀錄。</p>
     <textarea id="importText" placeholder="貼上備份 JSON 內容…"></textarea>
     <div class="modal-actions">
       <button type="button" id="confirmImportBtn">確認匯入</button>
@@ -1080,6 +1169,21 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="charManageModal" hidden>
+  <div class="modal-box">
+    <h3>切換／管理角色</h3>
+    <p class="modal-hint">每個角色的每週／每日清單設定與勾選進度都各自獨立；今日運勢、解答之書、擲骰、工具箱、鬧鐘、便利貼、主題這些共用工具則不受影響。</p>
+    <ul class="char-manage-list" id="charManageList"></ul>
+    <div class="char-add-row">
+      <input type="text" id="charAddInput" placeholder="新角色名稱…" maxlength="20">
+      <button type="button" id="charAddBtn">新增角色</button>
+    </div>
+    <div class="modal-actions">
+      <button type="button" id="closeCharManageBtn">關閉</button>
+    </div>
+  </div>
+</div>
+
 <div class="sticky-note" id="stickyNote">
   <div class="sticky-note-header">
     <span>備忘便利貼</span>
@@ -1098,6 +1202,8 @@
 
   var STORAGE_KEY = "ff14weekly.config.v4";
   var NOTIFIED_KEY = "ff14weekly.notified.v4";
+  var CHAR_LIST_KEY = "ff14weekly.characters.v1";
+  var ACTIVE_CHAR_KEY = "ff14weekly.activeCharacter.v1";
   var BACKUP_KEY = "ff14weekly.lastExport.v1";
   var BACKUP_SNOOZE_KEY = "ff14weekly.backupSnoozeUntil.v1";
   var BACKUP_ENABLED_KEY = "ff14weekly.backupReminderEnabled.v1";
@@ -1200,9 +1306,50 @@
     ]
   };
 
+  // ---- characters: each character has its own config/progress/notified state,
+  // while all other tools (fortune, dice, toolbox, alarms, sticky note, theme) stay shared ----
+  function loadCharacters() {
+    try {
+      var raw = JSON.parse(localStorage.getItem(CHAR_LIST_KEY) || "null");
+      if (Array.isArray(raw) && raw.length) return raw;
+    } catch (e) {}
+    return null;
+  }
+  function saveCharacters() { localStorage.setItem(CHAR_LIST_KEY, JSON.stringify(characters)); }
+  function newCharacterId() { return "char_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+
+  // first load after this feature ships: fold any pre-existing flat-keyed data into one character
+  // so nobody loses their current progress
+  function ensureCharacters() {
+    var existing = loadCharacters();
+    if (existing) return existing;
+    var id = newCharacterId();
+    var list = [{ id: id, name: "角色一" }];
+    localStorage.setItem(CHAR_LIST_KEY, JSON.stringify(list));
+    localStorage.setItem(ACTIVE_CHAR_KEY, id);
+    var oldConfig = localStorage.getItem(STORAGE_KEY);
+    if (oldConfig !== null) localStorage.setItem(STORAGE_KEY + "." + id, oldConfig);
+    var oldNotified = localStorage.getItem(NOTIFIED_KEY);
+    if (oldNotified !== null) localStorage.setItem(NOTIFIED_KEY + "." + id, oldNotified);
+    var oldProgressKeys = [];
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k.indexOf("ff14weekly.p.") === 0) oldProgressKeys.push(k);
+    }
+    oldProgressKeys.forEach(function (k) {
+      var rest = k.slice("ff14weekly.p.".length);
+      localStorage.setItem("ff14weekly.p." + id + "." + rest, localStorage.getItem(k));
+      localStorage.removeItem(k);
+    });
+    return list;
+  }
+
+  function configKey() { return STORAGE_KEY + "." + activeCharacterId; }
+  function notifiedKey() { return NOTIFIED_KEY + "." + activeCharacterId; }
+
   function loadConfig() {
     try {
-      var raw = localStorage.getItem(STORAGE_KEY);
+      var raw = localStorage.getItem(configKey());
       if (!raw) return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
       var parsed = JSON.parse(raw);
       if (!parsed || !Array.isArray(parsed.groups)) return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
@@ -1211,12 +1358,12 @@
       return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
     }
   }
-  function saveConfig() { localStorage.setItem(STORAGE_KEY, JSON.stringify(config)); }
+  function saveConfig() { localStorage.setItem(configKey(), JSON.stringify(config)); }
 
   function loadNotified() {
-    try { return JSON.parse(localStorage.getItem(NOTIFIED_KEY) || "{}"); } catch (e) { return {}; }
+    try { return JSON.parse(localStorage.getItem(notifiedKey()) || "{}"); } catch (e) { return {}; }
   }
-  function saveNotified() { localStorage.setItem(NOTIFIED_KEY, JSON.stringify(notified)); }
+  function saveNotified() { localStorage.setItem(notifiedKey(), JSON.stringify(notified)); }
 
   function ensureNotifyDefaults(cfg) {
     cfg.groups.forEach(function (g) {
@@ -1258,24 +1405,30 @@
   }
 
   function dumpProgress() {
+    var prefix = "ff14weekly.p." + activeCharacterId + ".";
     var out = {};
     for (var i = 0; i < localStorage.length; i++) {
       var k = localStorage.key(i);
-      if (k.indexOf("ff14weekly.p.") === 0) out[k] = localStorage.getItem(k);
+      if (k.indexOf(prefix) === 0) out[k] = localStorage.getItem(k);
     }
     return out;
   }
   function restoreProgress(dump) {
+    var prefix = "ff14weekly.p." + activeCharacterId + ".";
     var toRemove = [];
     for (var i = 0; i < localStorage.length; i++) {
       var k = localStorage.key(i);
-      if (k.indexOf("ff14weekly.p.") === 0) toRemove.push(k);
+      if (k.indexOf(prefix) === 0) toRemove.push(k);
     }
     toRemove.forEach(function (k) { localStorage.removeItem(k); });
     if (dump && typeof dump === "object") {
       Object.keys(dump).forEach(function (k) { localStorage.setItem(k, dump[k]); });
     }
   }
+
+  var characters = ensureCharacters();
+  var activeCharacterId = localStorage.getItem(ACTIVE_CHAR_KEY) || characters[0].id;
+  if (!characters.some(function (c) { return c.id === activeCharacterId; })) activeCharacterId = characters[0].id;
 
   var config = applyJobNameFix(ensureNotifyDefaults(loadConfig()));
   saveConfig();
@@ -1285,6 +1438,149 @@
   var expandedDay = {};
   var inlineToggles = {};
   var editingReminderId = null;
+
+  // ---- character switcher: each character has its own config/progress/notified state;
+  // fortune/dice/toolbox/alarms/sticky note/theme stay shared across all characters ----
+  var editingCharId = null;
+  var charSwitchBtn = document.getElementById("charSwitchBtn");
+  var charManageModal = document.getElementById("charManageModal");
+  var charManageList = document.getElementById("charManageList");
+  var charAddInput = document.getElementById("charAddInput");
+  var charAddBtn = document.getElementById("charAddBtn");
+
+  function activeCharacter() {
+    return characters.find(function (c) { return c.id === activeCharacterId; }) || characters[0];
+  }
+  function updateCharSwitchBtn() {
+    if (charSwitchBtn) charSwitchBtn.textContent = "🧑 " + activeCharacter().name;
+  }
+  function switchCharacter(id) {
+    if (id === activeCharacterId) return;
+    if (!characters.some(function (c) { return c.id === id; })) return;
+    activeCharacterId = id;
+    localStorage.setItem(ACTIVE_CHAR_KEY, activeCharacterId);
+    config = applyJobNameFix(ensureNotifyDefaults(loadConfig()));
+    saveConfig();
+    notified = loadNotified();
+    openWeekViews = {};
+    weekOffsets = {};
+    expandedDay = {};
+    inlineToggles = {};
+    editingReminderId = null;
+    lastAllDoneState = null;
+    updateCharSwitchBtn();
+    render();
+    renderGroupVisibility();
+  }
+  function addCharacter(name) {
+    var id = newCharacterId();
+    characters.push({ id: id, name: name });
+    saveCharacters();
+    switchCharacter(id);
+    renderCharManageList();
+  }
+  function renameCharacter(id, name) {
+    var c = characters.find(function (c) { return c.id === id; });
+    if (!c) return;
+    c.name = name;
+    saveCharacters();
+    updateCharSwitchBtn();
+    renderCharManageList();
+  }
+  function deleteCharacter(id) {
+    if (characters.length <= 1) return;
+    var target = characters.find(function (c) { return c.id === id; });
+    if (!target) return;
+    showConfirm("確定要刪除角色「" + target.name + "」嗎？這個角色的清單設定與勾選紀錄都會一併刪除，且無法復原。", function () {
+      characters = characters.filter(function (c) { return c.id !== id; });
+      saveCharacters();
+      localStorage.removeItem(STORAGE_KEY + "." + id);
+      localStorage.removeItem(NOTIFIED_KEY + "." + id);
+      var prefix = "ff14weekly.p." + id + ".";
+      var toRemove = [];
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k.indexOf(prefix) === 0) toRemove.push(k);
+      }
+      toRemove.forEach(function (k) { localStorage.removeItem(k); });
+      if (activeCharacterId === id) {
+        activeCharacterId = characters[0].id;
+        localStorage.setItem(ACTIVE_CHAR_KEY, activeCharacterId);
+        config = applyJobNameFix(ensureNotifyDefaults(loadConfig()));
+        saveConfig();
+        notified = loadNotified();
+        lastAllDoneState = null;
+        render();
+        renderGroupVisibility();
+      }
+      updateCharSwitchBtn();
+      renderCharManageList();
+    });
+  }
+
+  function renderCharManageList() {
+    if (!charManageList) return;
+    charManageList.innerHTML = characters.map(function (c) {
+      var isActive = c.id === activeCharacterId;
+      if (editingCharId === c.id) {
+        return '<li class="char-manage-item char-edit-form">' +
+          '<input type="text" class="char-rename-input" value="' + escapeAttr(c.name) + '" maxlength="20">' +
+          '<button type="button" class="char-save-btn" data-char-save="' + c.id + '">✓</button>' +
+          '<button type="button" class="char-cancel-btn">×</button>' +
+          '</li>';
+      }
+      return '<li class="char-manage-item' + (isActive ? ' active' : '') + '">' +
+        '<button type="button" class="char-name-btn" data-char-switch="' + c.id + '" title="切換到這個角色">' +
+          (isActive ? '● ' : '○ ') + escapeHtml(c.name) +
+        '</button>' +
+        '<span class="char-item-actions">' +
+          '<button type="button" class="char-rename-btn" data-char-edit="' + c.id + '" title="重新命名">✎</button>' +
+          (characters.length > 1 ? '<button type="button" class="char-del-btn" data-char-del="' + c.id + '" title="刪除角色">🗑</button>' : '') +
+        '</span>' +
+        '</li>';
+    }).join("");
+    charManageList.querySelectorAll("[data-char-switch]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        switchCharacter(btn.getAttribute("data-char-switch"));
+        renderCharManageList();
+      });
+    });
+    charManageList.querySelectorAll("[data-char-edit]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        editingCharId = btn.getAttribute("data-char-edit");
+        renderCharManageList();
+      });
+    });
+    charManageList.querySelectorAll("[data-char-del]").forEach(function (btn) {
+      btn.addEventListener("click", function () { deleteCharacter(btn.getAttribute("data-char-del")); });
+    });
+    charManageList.querySelectorAll(".char-cancel-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () { editingCharId = null; renderCharManageList(); });
+    });
+    charManageList.querySelectorAll(".char-save-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var wrap = btn.closest(".char-edit-form");
+        var name = wrap.querySelector(".char-rename-input").value.trim();
+        editingCharId = null;
+        if (name) renameCharacter(btn.getAttribute("data-char-save"), name);
+        else renderCharManageList();
+      });
+    });
+  }
+
+  if (charSwitchBtn) charSwitchBtn.addEventListener("click", function () { renderCharManageList(); charManageModal.hidden = false; });
+  var closeCharManageBtn = document.getElementById("closeCharManageBtn");
+  if (closeCharManageBtn) closeCharManageBtn.addEventListener("click", function () { charManageModal.hidden = true; });
+  if (charManageModal) charManageModal.addEventListener("click", function (e) { if (e.target === charManageModal) charManageModal.hidden = true; });
+  if (charAddBtn) charAddBtn.addEventListener("click", function () {
+    var name = charAddInput.value.trim();
+    if (!name) return;
+    addCharacter(name);
+    charAddInput.value = "";
+  });
+  if (charAddInput) charAddInput.addEventListener("keydown", function (e) { if (e.key === "Enter") charAddBtn.click(); });
+
+  updateCharSwitchBtn();
 
   // ---- theme toggle: auto (follows system) -> light -> dark -> auto ----
   var THEME_KEY = "ff14weekly.theme.v1";
@@ -1351,11 +1647,11 @@
   // ---- progress storage: per item, per period key ----
   function progressKey(itemId, periodTs) { return itemId + "@" + periodTs; }
   function getProgress(itemId, periodTs) {
-    var raw = localStorage.getItem("ff14weekly.p." + progressKey(itemId, periodTs));
+    var raw = localStorage.getItem("ff14weekly.p." + activeCharacterId + "." + progressKey(itemId, periodTs));
     return raw === null ? null : JSON.parse(raw);
   }
   function setProgress(itemId, periodTs, value) {
-    localStorage.setItem("ff14weekly.p." + progressKey(itemId, periodTs), JSON.stringify(value));
+    localStorage.setItem("ff14weekly.p." + activeCharacterId + "." + progressKey(itemId, periodTs), JSON.stringify(value));
   }
 
   function isItemDone(item, value) {
@@ -1552,9 +1848,10 @@
     } else {
       control = '<button type="button" class="chk" aria-checked="' + (done ? "true" : "false") + '" data-item="' + item.id + '" data-period="' + periodTs + '"></button>';
     }
+    var nameW = (item.name.length * 1.05 + 0.8).toFixed(2) + "em";
     return '<div class="item-row' + (done ? ' done' : '') + '" data-group="' + group.id + '" data-item-id="' + item.id + '">' +
       control +
-      '<input class="item-name" data-rename="' + item.id + '" data-group="' + group.id + '" value="' + escapeAttr(item.name) + '">' +
+      '<input class="item-name" style="--name-w:' + nameW + ';" data-rename="' + item.id + '" data-group="' + group.id + '" value="' + escapeAttr(item.name) + '">' +
       targetEdit +
       statusTag(item, val, msLeft) +
       '<button type="button" class="del-btn" data-del="' + item.id + '" data-group="' + group.id + '" title="刪除項目">×</button>' +
@@ -1642,10 +1939,10 @@
 
   function groupCardHtml(group, b, doneCount, total, rows, shiftedNow, idx, groupCount) {
     var collapsed = !!group.collapsed;
-    return '<section class="card' + (collapsed ? ' collapsed' : '') + '" data-group-card="' + group.id + '">' +
+    return '<div class="card-wrap"><section class="card' + (collapsed ? ' collapsed' : '') + '" data-group-card="' + group.id + '">' +
       cardHeadHtml(group, doneCount, total, "剩 ", b.next.getTime() - shiftedNow.getTime(), idx, groupCount) +
       (collapsed ? "" : notifyRuleHtml(group) + rows + addRowHtml(group.id)) +
-      '</section>';
+      '</section></div>';
   }
 
   function dailyGroupCardHtml(group, b, shiftedNow, doneCount, total, idx, groupCount) {
@@ -1752,10 +2049,10 @@
 
     var b2 = groupBoundaries(group, shiftedNow);
     var collapsed = !!group.collapsed;
-    return '<section class="card' + (collapsed ? ' collapsed' : '') + '" data-group-card="' + group.id + '">' +
+    return '<div class="card-wrap"><section class="card' + (collapsed ? ' collapsed' : '') + '" data-group-card="' + group.id + '">' +
       cardHeadHtml(group, doneCount, total, "今日剩 ", b2.next.getTime() - shiftedNow.getTime(), idx, groupCount) +
       (collapsed ? "" : notifyRuleHtml(group) + todayRows + gridHtml + flagHtml + addRowHtml(group.id)) +
-      '</section>';
+      '</section></div>';
   }
 
   function addRowHtml(groupId) {
@@ -2726,7 +3023,7 @@
     }
   }
 
-  var LAST_UPDATED_TEXT = "2026/07/20 (週一) 17:18";
+  var LAST_UPDATED_TEXT = "2026/07/20 (週一) 21:52";
   var lastUpdatedEl = document.getElementById("lastUpdatedLine");
   if (lastUpdatedEl) lastUpdatedEl.textContent = "最後更新：" + LAST_UPDATED_TEXT;
 
