@@ -1,6 +1,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='20' font-size='20'>💎</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><text y='20' font-size='20'>🌟</text></svg>">
 <title>光戰每週小手帳</title>
 <style>
   :root {
@@ -548,6 +548,7 @@
   .tool-block[data-tool-key="toolbox"] {
     width: 100%;
   }
+  .tools-row-move { display: flex; justify-content: flex-end; gap: 2px; margin-bottom: 6px; }
   .tools-row {
     display: flex;
     gap: 16px;
@@ -1101,13 +1102,15 @@
         </div>
       </div>
 
-      <div class="tools-row" data-tool-key="dice-alarm">
-        <div class="tool-block" data-tool-key="dice">
+      <div class="tools-row-wrap" data-tool-key="dice-alarm">
+        <div class="tools-row-move">
+          <button type="button" class="card-move-btn" data-tool-move="up" data-tool="dice-alarm" title="上移">▲</button>
+          <button type="button" class="card-move-btn" data-tool-move="down" data-tool="dice-alarm" title="下移">▼</button>
+        </div>
+        <div class="tools-row">
+        <div class="tool-block">
           <div class="dice-card">
-            <div class="tool-card-head"><h3>擲骰器</h3><div class="card-move">
-              <button type="button" class="card-move-btn" data-tool-move="up" data-tool="dice" title="上移">▲</button>
-              <button type="button" class="card-move-btn" data-tool-move="down" data-tool="dice" title="下移">▼</button>
-            </div></div>
+            <div class="tool-card-head"><h3>擲骰器</h3></div>
             <p class="dice-hint">選門、決定順序、或任何要靠骰大小決定的場合：幫每個選項取名，設定骰子上限，一起骰骰看，最大的贏。</p>
             <div class="dice-config-row">
               <label>骰子上限 <input type="number" id="diceMax" min="2" max="9999"></label>
@@ -1119,12 +1122,9 @@
           </div>
         </div>
 
-        <div class="tool-block" data-tool-key="alarm">
+        <div class="tool-block">
           <div class="alarm-card">
-            <div class="tool-card-head"><h3>鬧鐘</h3><div class="card-move">
-              <button type="button" class="card-move-btn" data-tool-move="up" data-tool="alarm" title="上移">▲</button>
-              <button type="button" class="card-move-btn" data-tool-move="down" data-tool="alarm" title="下移">▼</button>
-            </div></div>
+            <div class="tool-card-head"><h3>鬧鐘</h3></div>
             <p class="dice-hint">用瀏覽器通知提醒自己的事，跟其他組別的提醒一樣：需要獨立分頁開啟（不能嵌在對話裡）、允許通知權限，並保持分頁在前景。</p>
             <div class="alarm-list" id="alarmList"></div>
             <div class="alarm-add-row">
@@ -1134,6 +1134,7 @@
               <button type="button" id="alarmAddBtn">新增</button>
             </div>
           </div>
+        </div>
         </div>
       </div>
 
@@ -1198,9 +1199,9 @@
       <div class="diy-notify-body">
         <p class="last-updated" id="lastUpdatedLine">最後更新：載入中…</p>
         <ul id="changelogList">
+          <li><strong>修好擲骰器＋鬧鐘的並排兩欄會自動散開的問題</strong>：這兩個原本各自有一顆獨立的上下移動按鈕，跟頁面載入時自動排序的機制互相打架，導致每次一開頁面就會被拆開變成上下疊放。現在把「擲骰器＋鬧鐘」當成一整組來移動順序（合併成一顆共用的上下移動鈕），兩欄並排會穩定維持，不會再自己散開。</li>
           <li><strong>修復時尚評鑑抓不到朋友提交內容的問題</strong>：卡片原本沒有真的去 GitHub 抓資料，不管朋友透過 Discord Bot 提交什麼，畫面永遠只顯示「內容還在路上」的預設樣子。現在改成真的會去抓最新資料，並且每 5 分鐘自動重新抓一次，網頁開著不用重新整理也會看到朋友剛提交的內容；順便修掉「By.」後面多一槓的小錯字。</li>
           <li><strong>小工具區塊改成單一卡片</strong>：「小工具」原本是收合標題跟底下的今日運勢／擲骰器等各自獨立一塊，中間留白怎麼調都很大；現在整併成一張跟其他清單卡片一樣的卡片，標題跟內容黏在一起，不會再有奇怪的大空隙。收合按鈕跟上下移動的位置不變。</li>
-          <li><strong>新增時尚評鑑功能</strong>：朋友可以透過 Discord Bot 指令 <code>/時尚評鑑</code> 提交每週的穿搭建議、注意事項、客家指數評分（1-5 星）、圖片和貼文連結，每週二下午 4 點自動更新與重置，右上角倒數距下次更新的時間。</li>
         </ul>
       </div>
     </details>
@@ -2868,7 +2869,7 @@
 
   // ---- 小工具卡片自訂順序 ----
   var TOOL_ORDER_KEY = "ff14weekly.toolOrder.v1";
-  var DEFAULT_TOOL_ORDER = ["fortuneAnswer", "dice", "toolbox", "alarm"];
+  var DEFAULT_TOOL_ORDER = ["fortuneAnswer", "dice-alarm", "toolbox"];
   function loadToolOrder() {
     try {
       var raw = JSON.parse(localStorage.getItem(TOOL_ORDER_KEY));
@@ -3156,7 +3157,7 @@
 
   // 手動維護：每次修改網站程式碼時手動更新這個時間點，不要用 new Date() 抓「現在」——
   // 那樣不管有沒有真的改版，每次載入頁面都會顯示成剛更新過，等於騙人。
-  var LAST_UPDATED_TEXT = "2026/07/21 (週二) 01:37";
+  var LAST_UPDATED_TEXT = "2026/07/21 (週二) 01:48";
   var lastUpdatedEl = document.getElementById("lastUpdatedLine");
   if (lastUpdatedEl) lastUpdatedEl.textContent = "最後更新：" + LAST_UPDATED_TEXT;
 
@@ -3210,20 +3211,6 @@
           saveData();
         } else if (direction === 'down' && nextSib) {
           toolsWrap.parentNode.insertBefore(nextSib, toolsWrap);
-          saveData();
-        }
-      }
-      if (e.target.matches('button[data-tool-move][data-tool="dice"], button[data-tool-move][data-tool="alarm"]')) {
-        var toolsRow = document.querySelector('.tools-row');
-        if (!toolsRow) return;
-        var direction = e.target.getAttribute('data-tool-move');
-        var prevSib = toolsRow.previousElementSibling;
-        var nextSib = toolsRow.nextElementSibling;
-        if (direction === 'up' && prevSib) {
-          toolsRow.parentNode.insertBefore(toolsRow, prevSib);
-          saveData();
-        } else if (direction === 'down' && nextSib) {
-          toolsRow.parentNode.insertBefore(nextSib, toolsRow);
           saveData();
         }
       }
