@@ -1046,13 +1046,14 @@
   <div class="fashion-card-wrap">
     <div class="fashion-card">
       <div class="fashion-head">
-        <div style="flex: 1;">
+        <div style="flex: 1; display: grid; grid-template-columns: max-content 1fr; column-gap: 10px; row-gap: 4px; align-items: center;">
           <div style="display: flex; align-items: center; gap: 8px;">
             <h2 style="display: inline; margin: 0;">✨ 時尚評鑑</h2>
             <button class="fashion-collapse-toggle" data-fashion-collapse title="收起/展開">▾</button>
-            <span style="font-size: 12px; color: var(--ink-dim);" data-fashion-range>2026/07/14 16:00-2026/07/21 15:59</span>
           </div>
-          <div style="font-size: 12px; color: var(--ink-dim); margin-top: 4px;">每週二 16:00 重置</div>
+          <span style="font-size: 12px; color: var(--ink-dim);" data-fashion-range>2026/07/14 16:00-2026/07/21 15:59</span>
+          <div style="font-size: 12px; color: var(--ink-dim);">每週二 16:00 重置</div>
+          <div style="font-size: 11.5px; color: var(--ink-dim); line-height: 1.5;">1. 每週五16:00開啟評分模式　｜　2. 約每週六中午會更新　｜　3. 提供者親測過才會發上來</div>
         </div>
         <div class="card-status-wrap">
           <div class="card-status" style="flex-direction: column; gap: 0;">
@@ -1201,9 +1202,9 @@
       <div class="diy-notify-body">
         <p class="last-updated" id="lastUpdatedLine">最後更新：載入中…</p>
         <ul id="changelogList">
+          <li><strong>時尚評鑑新增規則說明，並修好過期資料不會自動清空的問題</strong>：卡片的「每週二 16:00 重置」旁邊新增一行規則提示（每週五16:00開啟評分模式／約每週六中午會更新／提供者親測過才會發上來），跟週期範圍那一行左右對齊。另外原本重置點過了以後，如果還沒人重新提交，畫面會一直卡著上一週的舊內容；現在改成會比對提交時間跟本週二 16:00 的重置點，只要資料是上週留下的舊資料，就會自動變回「內容還在路上」的預設狀態。</li>
           <li><strong>修好時尚評鑑的日期範圍算錯的問題</strong>：卡片標題旁邊的週期範圍（例如 2026/07/14 16:00-2026/07/21 15:59）原本是用瀏覽器本地時區直接算，跟網站其他地方統一換算成台灣時區的邏輯不一致，導致還沒到週二 16:00 就被算成下一週的範圍。現在改成套用跟其他清單卡片完全一樣的台灣時區換算，範圍跟倒數都會正確對齊每週二 16:00 的重置點。</li>
           <li><strong>修好擲骰器＋鬧鐘的並排兩欄會自動散開的問題</strong>：這兩個原本各自有一顆獨立的上下移動按鈕，跟頁面載入時自動排序的機制互相打架，導致每次一開頁面就會被拆開變成上下疊放。現在把「擲骰器＋鬧鐘」當成一整組來移動順序（合併成一顆共用的上下移動鈕），兩欄並排會穩定維持，不會再自己散開。</li>
-          <li><strong>修復時尚評鑑抓不到朋友提交內容的問題</strong>：卡片原本沒有真的去 GitHub 抓資料，不管朋友透過 Discord Bot 提交什麼，畫面永遠只顯示「內容還在路上」的預設樣子。現在改成真的會去抓最新資料，並且每 5 分鐘自動重新抓一次，網頁開著不用重新整理也會看到朋友剛提交的內容。</li>
         </ul>
       </div>
     </details>
@@ -1223,7 +1224,7 @@
     <h3>使用說明</h3>
     <div class="help-body">
       <p><strong>這是什麼</strong>：追蹤 FF14 繁中服每週/每日固定事項的清單，包含週間事項（天書、幻巧戰、老主顧）、時尚評鑑（每週二 16:00 更新）、仙人彩、日隨、籌備任務、友好部族，各自依照重置時間自動倒數與重置勾選狀態；下方還附了幾個小工具。</p>
-      <p><strong>時尚評鑑</strong>：每週二下午 4 點自動更新。使用 Discord Bot 指令 <code style="background: var(--panel-2); padding: 2px 6px; border-radius: 4px;">/時尚評鑑</code> 讓朋友提交穿搭建議、注意事項、客家指數評分（1-5 星）、圖片和貼文連結。卡片會實時顯示最新內容，並在右上角倒數距下次更新的時間。</p>
+      <p><strong>時尚評鑑</strong>：每週二下午 4 點自動更新。使用 Discord Bot 指令 <code style="background: var(--panel-2); padding: 2px 6px; border-radius: 4px;">/時尚評鑑</code> 讓朋友提交穿搭建議、注意事項、客家指數評分（1-5 星）、圖片和貼文連結。卡片會實時顯示最新內容，並在右上角倒數距下次更新的時間。運作規則：每週五 16:00 開啟評分模式、約每週六中午會更新、提供者親測過才會發上來。每週二 16:00 一到，若本週還沒有人重新提交，卡片會自動變回「內容還在路上」的預設狀態，不會卡著上一週的舊內容。</p>
       <p><strong>打勾與清單管理</strong>：點方框打勾／取消；點名稱可以直接改名；項目旁的 × 可以刪除（手機上會直接常駐顯示，電腦滑鼠移過去才會淡入）；「+ 新增項目」可以自己加新的一項（勾選、次數計數、或不會重置的追蹤標記三種類型）。</p>
       <p><strong>計數項目</strong>：友好部族、次數類項目用 － / ＋調整，也有「MAX」一鍵設成上限、「歸零」一鍵清空，兩個都會先跳確認再執行，避免手滑。</p>
       <p><strong>批次操作</strong>：籌備任務、友好部族這類多項目的組別，上方有「全部勾選」「全部清空」，「全部清空」一樣會先確認。</p>
@@ -3163,7 +3164,7 @@
 
   // 手動維護：每次修改網站程式碼時手動更新這個時間點，不要用 new Date() 抓「現在」——
   // 那樣不管有沒有真的改版，每次載入頁面都會顯示成剛更新過，等於騙人。
-  var LAST_UPDATED_TEXT = "2026/07/21 (週二) 03:18";
+  var LAST_UPDATED_TEXT = "2026/07/21 (週二) 18:30";
   var lastUpdatedEl = document.getElementById("lastUpdatedLine");
   if (lastUpdatedEl) lastUpdatedEl.textContent = "最後更新：" + LAST_UPDATED_TEXT;
 
@@ -3223,7 +3224,18 @@
     });
   }
 
+  function fashionPeriodStartMs() {
+    var shiftedNow = taipeiShift(new Date());
+    var start = lastWeeklyBoundary(shiftedNow, 2, 16);
+    return start.getTime() - TAIPEI_OFFSET_MS;
+  }
+
   function renderFashionJudging(data) {
+    if (data && data.updatedAt) {
+      var updatedMs = new Date(data.updatedAt).getTime();
+      // 提交時間早於本週二 16:00 的重置點，代表是上一週的舊資料，本週還沒人提交，直接當成沒有資料處理
+      if (!isNaN(updatedMs) && updatedMs < fashionPeriodStartMs()) data = null;
+    }
     data = data || {};
     var hakkaIndex = data.hakkaIndex || 0;
     var stars = '';
