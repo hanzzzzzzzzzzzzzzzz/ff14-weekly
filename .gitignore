@@ -1,0 +1,31 @@
+# === 機密 / 敏感檔（最重要，絕對不要傳上 GitHub）===
+# Discord Bot 的 token、任何 API key、環境變數都放這類檔案，務必忽略
+.env
+.env.*
+*.env
+config.json
+secrets.json
+*token*
+*secret*
+*.key
+*.pem
+
+# === 本機備份 / 暫存版本（不需要公開）===
+*BEFORE*.html
+*-backup*.html
+*.bak
+*.tmp
+*~
+
+# === 作業系統自動產生的垃圾檔 ===
+.DS_Store          # macOS
+Thumbs.db          # Windows
+desktop.ini        # Windows
+
+# === 編輯器 / IDE 設定 ===
+.vscode/
+.idea/
+
+# === Node.js（如果 Discord Bot 用 discord.js 且放同一個 repo）===
+node_modules/
+npm-debug.log*
