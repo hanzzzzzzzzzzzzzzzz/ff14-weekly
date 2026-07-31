@@ -904,6 +904,119 @@
   .celebrate-box .modal-actions { justify-content: center; }
   #celebrateCloseBtn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
 
+  /* ---- back-filling past days inside the week overview ---- */
+  .expand-detail-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .expand-hint { font-size: 11px; font-weight: 400; color: var(--ink-dim); }
+  .expand-bulk { display: flex; gap: 6px; margin-left: auto; }
+  .expand-bulk .bulk-btn { padding: 2px 8px; font-size: 11px; }
+  .expand-detail-rows { grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); gap: 4px 20px; }
+  .expand-row .chk { width: 18px; height: 18px; border-radius: 5px; }
+  .expand-row .chk[aria-checked="true"]::after { left: 5px; top: 1px; width: 5px; height: 9px; border-width: 2px; }
+  .expand-row .counter { gap: 4px; }
+  .expand-row .counter button { width: 20px; height: 20px; font-size: 12px; }
+  .expand-row .counter .count-val { font-size: 12px; min-width: 36px; }
+  .expand-row.is-future-row { opacity: 0.45; }
+
+  /* ---- user-created lists ---- */
+  .add-group-row { display: flex; justify-content: center; margin-top: 16px; }
+  #addGroupBtn {
+    background: var(--panel); border: 1px dashed var(--crystal); color: var(--crystal-ink);
+    clip-path: var(--chamfer-sm); padding: 8px 18px; font-size: 13px; font-weight: 600;
+    transition: background-color 0.15s ease;
+  }
+  #addGroupBtn:hover { background: rgba(44, 125, 118, 0.12); }
+  .group-admin {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    margin: 2px 0 8px; padding-bottom: 8px; border-bottom: 1px dashed var(--line);
+  }
+  .group-rename {
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; color: var(--ink);
+    padding: 4px 8px; font-size: 12.5px; font-family: inherit; flex: 1; min-width: 120px;
+  }
+  .group-rename:focus { outline: 1.5px solid var(--crystal); }
+  .group-del-btn {
+    background: none; border: 1px solid var(--line); color: var(--ink-dim);
+    clip-path: var(--chamfer-sm); padding: 4px 10px; font-size: 11.5px;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .group-del-btn:hover { border-color: var(--bad); color: var(--bad); }
+  .field-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+  .field-row label { font-size: 12px; color: var(--ink-dim); font-weight: 600; }
+  .field-row input, .field-row select {
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; color: var(--ink);
+    padding: 6px 9px; font-size: 13px; font-family: inherit;
+  }
+  .field-row[hidden] { display: none; }
+
+  /* ---- calendar ---- */
+  .modal-box-cal { max-width: 780px; }
+  .cal-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+  .cal-title {
+    font-family: Georgia, "Iowan Old Style", "Noto Serif TC", serif; font-size: 16.5px; font-weight: 700;
+    font-variant-numeric: tabular-nums; color: var(--ink);
+  }
+  .cal-nav { display: flex; align-items: center; gap: 6px; }
+  .cal-nav button {
+    border: 1px solid var(--line); background: var(--panel-2); color: var(--ink);
+    clip-path: var(--chamfer-sm); padding: 4px 10px; font-size: 12px; transition: border-color 0.15s ease;
+  }
+  .cal-nav button:hover { border-color: var(--crystal); }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-wd { text-align: center; font-size: 11px; color: var(--ink-dim); font-weight: 600; padding: 2px 0; }
+  .cal-cell {
+    min-height: 74px; background: var(--panel-2); border: 1px solid var(--line); clip-path: var(--chamfer-sm);
+    padding: 4px 5px; display: flex; flex-direction: column; gap: 2px; text-align: left; overflow: hidden;
+    transition: border-color 0.15s ease;
+  }
+  .cal-cell:hover { border-color: var(--crystal); }
+  .cal-cell.is-other { opacity: 0.38; }
+  .cal-cell.is-today { border-color: var(--crystal); box-shadow: 0 0 0 1px var(--crystal) inset; }
+  .cal-cell.is-selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+  .cal-daynum { font-size: 11.5px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink); }
+  .cal-ev {
+    font-size: 10.5px; line-height: 1.4; padding: 1px 5px; border-radius: 4px; color: #fff;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .cal-more { font-size: 10px; color: var(--ink-dim); }
+  .cal-day-panel { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 10px; }
+  .cal-day-title { font-size: 13.5px; font-weight: 700; color: var(--crystal-ink); margin-bottom: 6px; }
+  .cal-ev-list { display: flex; flex-direction: column; }
+  .cal-ev-empty { font-size: 12.5px; color: var(--ink-dim); opacity: 0.75; padding: 4px 0 8px; }
+  .cal-ev-row { display: flex; align-items: flex-start; gap: 9px; padding: 7px 0; border-bottom: 1px solid var(--line); }
+  .cal-ev-row:last-child { border-bottom: none; }
+  .cal-ev-time {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-variant-numeric: tabular-nums;
+    font-size: 12px; color: var(--ink-dim); min-width: 42px; flex-shrink: 0; padding-top: 2px;
+  }
+  .cal-ev-main { flex: 1; min-width: 0; }
+  .cal-ev-title-row { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+  .cal-ev-title { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+  .cal-ev-cat { font-size: 10.5px; padding: 1px 8px; border-radius: 999px; color: #fff; flex-shrink: 0; }
+  .cal-ev-note { font-size: 12px; color: var(--ink-dim); white-space: pre-wrap; margin-top: 3px; line-height: 1.5; }
+  .cal-ev-actions { display: flex; gap: 2px; flex-shrink: 0; }
+  .cal-ev-edit {
+    width: 20px; height: 20px; font-size: 11px; opacity: 0.55; border: none; background: none;
+    color: var(--ink-dim); padding: 0; transition: opacity 0.15s ease, color 0.15s ease;
+  }
+  .cal-ev-edit:hover { opacity: 1; color: var(--crystal-ink); }
+  .cal-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-top: 12px; }
+  .cal-form input, .cal-form select, .cal-form textarea {
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 6px; color: var(--ink);
+    padding: 6px 9px; font-size: 13px; font-family: inherit; width: 100%;
+  }
+  .cal-form textarea { height: 60px; resize: vertical; font-family: inherit; font-size: 12.5px; }
+  .cal-form-full { grid-column: 1 / -1; }
+  .cal-form-actions { grid-column: 1 / -1; display: flex; gap: 8px; }
+  .cal-form-actions button {
+    clip-path: var(--chamfer-sm); padding: 6px 16px; font-size: 13px; font-weight: 600; border: none;
+    background: var(--crystal); color: #fff; transition: filter 0.15s ease;
+  }
+  .cal-form-actions button:hover { filter: brightness(1.12); }
+  .cal-form-actions .cal-form-cancel {
+    background: var(--panel-2); color: var(--ink-dim); border: 1px solid var(--line);
+  }
+  .cal-form-actions .cal-form-cancel:hover { border-color: var(--crystal); filter: none; }
+
   /* mobile-only tweaks — everything above this stays exactly as-is on desktop */
   @media (max-width: 600px) {
     .page { padding: 20px 14px 48px; }
@@ -929,6 +1042,11 @@
     .dice-config-row input[type="text"] { width: 100%; }
     .sticky-note { width: min(220px, calc(100vw - 32px)); right: 10px; bottom: 10px; }
     .sticky-note textarea { height: 90px; }
+    .cal-cell { min-height: 56px; padding: 3px; }
+    .cal-daynum { font-size: 10.5px; }
+    .cal-ev { font-size: 9px; padding: 1px 3px; }
+    .cal-wd { font-size: 10px; }
+    .cal-form { grid-template-columns: 1fr; }
     .toolbox-add-row { flex-direction: column; align-items: stretch; }
     .alarm-add-row { flex-direction: column; align-items: stretch; }
     .alarm-add-row input[type="text"] { width: 100%; }
@@ -1027,6 +1145,7 @@
       </div>
       <div class="clock-row-right">
         <button type="button" id="charSwitchBtn" class="theme-toggle" title="切換／管理角色">🧑 角色</button>
+        <button type="button" id="calendarBtn" class="theme-toggle" title="行事曆">📅 行事曆</button>
         <button type="button" id="collapseAllBtn" class="theme-toggle" title="全部收合/展開">▾ 全部</button>
         <button type="button" id="helpBtn" class="theme-toggle" title="使用說明">❓ 說明</button>
         <button type="button" id="themeToggleBtn" class="theme-toggle" title="切換主題">🌓 自動</button>
@@ -1042,6 +1161,10 @@
   </div>
 
   <main id="main"></main>
+
+  <div class="add-group-row">
+    <button type="button" id="addGroupBtn">＋ 新增自訂清單</button>
+  </div>
 
   <div class="fashion-card-wrap">
     <div class="fashion-card">
@@ -1202,9 +1325,9 @@
       <div class="diy-notify-body">
         <p class="last-updated" id="lastUpdatedLine">最後更新：載入中…</p>
         <ul id="changelogList">
+          <li><strong>新增三個功能：補勾過去的日子、行事曆、自訂清單</strong>：一、日隨那類每日清單的「本週紀錄與完成度」，現在點開某一天之後可以直接在裡面補勾，忘記勾的進度不用再放棄了（可以補到本月月初，未來的日期不能勾，另外附「整天勾選／整天清空」）。二、右上角多了「📅 行事曆」按鈕，可以像記事本一樣新增事件，有日期、時間、事件種類（副本、活動、生產採集等六種顏色標籤）跟備註，月曆上直接看得到，事件會一起進備份。三、清單最下面多了「＋ 新增自訂清單」，可以自己開一個跟日隨、籌備任務同級的清單，重置方式自己挑（每天／每週／不自動重置），名稱隨時可改，也可以整個刪掉。另外順手修好一個既有問題：一週檢視把「哪一天」對到「哪個重置週期」的算法原本固定往前推一天，對 23:00 重置的日隨是對的，但對 04:00 重置的籌備任務會整個錯開一天（晚上打的勾會顯示在隔天那格）。現在改成看重置時間落在一天的哪半邊來判斷，籌備任務的長條圖會往前修正一天到正確的位置，補勾也才會寫到你真正想補的那天。</li>
           <li><strong>修好備份匯入到別的瀏覽器或裝置時，勾選紀錄跟「本週紀錄與完成度」會整個不見的問題</strong>：備份檔裡的勾選紀錄會連著「這台裝置的角色編號」一起存起來，而這個編號是每個瀏覽器各自隨機產生的，所以匯到另一台裝置時，資料雖然有寫進去，卻被放在新瀏覽器讀不到的位置——結果就是清單設定有還原，但所有打勾的紀錄跟日隨的「本週紀錄與完成度」長條圖全部變成空的、0%。現在匯入時會自動把紀錄改掛到目前選擇的角色底下，換裝置、換瀏覽器或清過快取後匯入都能完整還原，以前匯出的舊備份檔也一樣救得回來。另外匯入成功的提示訊息現在會顯示「還原了幾筆勾選紀錄」，如果顯示 0 筆就代表是備份檔本身沒存到，可以馬上分辨問題出在哪一邊。</li>
           <li><strong>時尚評鑑新增規則說明，並修好過期資料不會自動清空的問題</strong>：卡片的「每週二 16:00 重置」旁邊新增一行規則提示（每週五16:00開啟評分模式／約每週六中午會更新／提供者親測過才會發上來），跟週期範圍那一行左右對齊。另外原本重置點過了以後，如果還沒人重新提交，畫面會一直卡著上一週的舊內容；現在改成會比對提交時間跟本週二 16:00 的重置點，只要資料是上週留下的舊資料，就會自動變回「內容還在路上」的預設狀態。</li>
-          <li><strong>修好時尚評鑑的日期範圍算錯的問題</strong>：卡片標題旁邊的週期範圍（例如 2026/07/14 16:00-2026/07/21 15:59）原本是用瀏覽器本地時區直接算，跟網站其他地方統一換算成台灣時區的邏輯不一致，導致還沒到週二 16:00 就被算成下一週的範圍。現在改成套用跟其他清單卡片完全一樣的台灣時區換算，範圍跟倒數都會正確對齊每週二 16:00 的重置點。</li>
         </ul>
       </div>
     </details>
@@ -1228,13 +1351,15 @@
       <p><strong>打勾與清單管理</strong>：點方框打勾／取消；點名稱可以直接改名；項目旁的 × 可以刪除（手機上會直接常駐顯示，電腦滑鼠移過去才會淡入）；「+ 新增項目」可以自己加新的一項（勾選、次數計數、或不會重置的追蹤標記三種類型）。</p>
       <p><strong>計數項目</strong>：友好部族、次數類項目用 － / ＋調整，也有「MAX」一鍵設成上限、「歸零」一鍵清空，兩個都會先跳確認再執行，避免手滑。</p>
       <p><strong>批次操作</strong>：籌備任務、友好部族這類多項目的組別，上方有「全部勾選」「全部清空」，「全部清空」一樣會先確認。</p>
-      <p><strong>每日組別的一週檢視</strong>：日隨、籌備任務、友好部族這種每天重置的組別，下方有一排本週七天的迷你完成度，點任一天可以展開看那天各項目的明細，用 ◀ ▶ 可以切換到其他週。</p>
+      <p><strong>每日組別的一週檢視／補勾過去的日子</strong>：日隨、籌備任務、友好部族這種每天重置的組別，下方有一排本週七天的迷你完成度，點任一天可以展開看那天各項目的明細，用 ◀ ▶ 可以切換到同一個月的其他週。展開後的明細是<u>可以直接勾的</u>——忘記勾的那天回頭補登就好，計數類項目也能補調數字，右邊還有「整天勾選／整天清空」。可以補到本月月初（◀ 到月初就會停），未來的日期不能勾。</p>
+      <p><strong>自訂清單</strong>：清單最下面的「＋ 新增自訂清單」可以開一個跟日隨、籌備任務同級的全新清單，內容完全由你決定。重置方式有三種：每天固定時間重置、每週固定某天重置（兩種都只支援整點）、或「不自動重置」——後者不會倒數、也不算進「本輪進度」，適合當長期待辦，要清空時自己按「全部清空」。自訂清單的名稱可以隨時在卡片上直接改，也可以按「刪除這個清單」整個移除（裡面的勾選紀錄會一起刪掉，無法復原）。按 footer 的「還原預設清單」不會動到你自己建的清單。</p>
+      <p><strong>行事曆</strong>：右上角「📅 行事曆」會開一個月曆彈窗，可以新增事件並填寫日期、時間（不填就是整天）、事件種類（副本／團本、遊戲活動、生產採集、交易／市場、約團／聚會、其他，各有顏色）跟備註。月曆格子裡直接顯示當天事件，點格子看那天的完整清單，事件可以用 ✎ 編輯、× 刪除。行事曆是所有角色共用的，內容會一起存進「匯出備份」。注意行事曆事件不會發瀏覽器通知，要提醒請用各組別的「+ 新增提醒」或小工具區的鬧鐘。</p>
       <p><strong>暫時隱藏群組</strong>：標題旁邊的 ▾ 可以把整組收起來（還是會計入進度）；頂部「▾ 全部」可以一次收合或展開所有組別。</p>
       <p><strong>不需要的組別直接關閉</strong>：footer 的「顯示的組別」可以把整個不玩的內容（例如已經不刷的籌備任務）關掉，關掉後倒數卡片、清單卡片、提醒都不會出現，也不會算進「本輪進度」，跟暫時收合不同，這是真的不追蹤了；隨時可以再打開，設定不會遺失。</p>
       <p><strong>自訂排列順序</strong>：每個組別卡片右上角的 ▲▼ 可以調整這些卡片在頁面上的先後順序，頂部倒數卡片也有對應的 ◀▶ 可以直接調整；小工具區塊裡的每張卡片（今日運勢＋解答之書合併成一張、擲骰器、工具箱、鬧鐘）右上角也有各自的 ▲▼，可以獨立調整順序。順序都會記住。</p>
       <p><strong>提醒設定</strong>：每組可以「+ 新增提醒」設定幾點幾分跳瀏覽器通知，週間性質的組可以選星期幾重複，也可以指定「特定日期」讓提醒只跳一次；點提醒標籤本身可以直接改時間，不用刪掉重建。footer 的「所有提醒總覽」集中列出目前設定的所有提醒，可以直接在那邊刪除。<u>瀏覽器提醒有限制</u>：只有獨立分頁開著（不能是嵌在 claude.ai 對話裡）、而且分頁要保持在前景，切到其他分頁/視窗可能會被瀏覽器暫停檢查而跳不出來。真正不管有沒有開網頁都會準時到的提醒，請用 Discord 排程（如果你有設定的話）。</p>
       <p><strong>全部完成的小驚喜</strong>：本輪事項（不含友好部族的累計進度）全部完成的瞬間，會跳出一個小彈窗，隨機顯示一句 FF14 風味的祝福。</p>
-      <p><strong>資料保存與備份</strong>：所有勾選狀態、清單設定都只存在「這個瀏覽器」的本機儲存空間，換裝置、換瀏覽器、清瀏覽器資料都會遺失。請定期用「匯出備份」複製一份 JSON 存起來，之後可以用「匯入備份」貼回來完整還原（含過去每一天的勾選紀錄，所以日隨的「本週紀錄與完成度」也會一起回來）。匯出的是「目前選擇的角色」那一份，匯入時會蓋掉當下選擇角色的清單設定與勾選紀錄，並自動掛到該角色底下，所以換到別台裝置、別的瀏覽器，或清過快取之後再匯入都能正常還原。匯入成功時的提示會告訴你「還原了幾筆勾選紀錄」，如果那邊顯示 0 筆，代表是備份檔本身就沒存到紀錄，要回原本那台裝置重新匯出一次。也可以開啟「太久沒備份」提醒，自訂超過幾天沒匯出就提示你。</p>
+      <p><strong>資料保存與備份</strong>：所有勾選狀態、清單設定都只存在「這個瀏覽器」的本機儲存空間，換裝置、換瀏覽器、清瀏覽器資料都會遺失。請定期用「匯出備份」複製一份 JSON 存起來，之後可以用「匯入備份」貼回來完整還原（含過去每一天的勾選紀錄，所以日隨的「本週紀錄與完成度」也會一起回來）。匯出的是「目前選擇的角色」那一份，匯入時會蓋掉當下選擇角色的清單設定與勾選紀錄，並自動掛到該角色底下，所以換到別台裝置、別的瀏覽器，或清過快取之後再匯入都能正常還原。匯入成功時的提示會告訴你「還原了幾筆勾選紀錄」，如果那邊顯示 0 筆，代表是備份檔本身就沒存到紀錄，要回原本那台裝置重新匯出一次。備份內容包含清單設定（含你自己建的自訂清單）、所有勾選紀錄、工具箱、鬧鐘與行事曆事件。也可以開啟「太久沒備份」提醒，自訂超過幾天沒匯出就提示你。</p>
       <p><strong>主題</strong>：右上角「🌓」可以在自動（跟隨系統）、淺色、深色之間切換，選擇會記住。</p>
       <p><strong>今日運勢</strong>：清單下方的小卡片，按「抽今日運勢」隨機抽一句大吉～凶的籤詩，一天只能抽一次，抽過會記住結果到隔天重置。</p>
       <p><strong>解答之書</strong>：按「翻開解答之書」隨時能翻，給你一句模稜兩可的答案，沒有次數限制，純粹好玩。</p>
@@ -1270,6 +1395,69 @@
     <div class="modal-actions">
       <button type="button" id="confirmImportBtn">確認匯入</button>
       <button type="button" id="closeImportBtn">關閉</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addGroupModal" hidden>
+  <div class="modal-box">
+    <h3>新增自訂清單</h3>
+    <p class="modal-hint">建立一個屬於你自己的清單，跟「日隨」「籌備任務」那些卡片同一級。內容要記什麼、什麼時候重置都你決定。</p>
+    <div class="field-row">
+      <label for="newGroupName">清單名稱</label>
+      <input type="text" id="newGroupName" maxlength="20" placeholder="例如：本週想做的事、討伐手帳、練生產">
+    </div>
+    <div class="field-row">
+      <label for="newGroupKind">重置方式</label>
+      <select id="newGroupKind">
+        <option value="manual">不自動重置（自己按「全部清空」）</option>
+        <option value="daily">每天固定時間重置</option>
+        <option value="weekly">每週固定時間重置</option>
+      </select>
+    </div>
+    <div class="field-row" id="newGroupWeekdayRow" hidden>
+      <label for="newGroupWeekday">星期幾重置</label>
+      <select id="newGroupWeekday"></select>
+    </div>
+    <div class="field-row" id="newGroupTimeRow" hidden>
+      <label for="newGroupTime">重置時間（台灣時間，只支援整點）</label>
+      <input type="time" id="newGroupTime" value="04:00" step="3600">
+    </div>
+    <div class="modal-actions">
+      <button type="button" id="confirmAddGroupBtn">建立清單</button>
+      <button type="button" id="closeAddGroupBtn">取消</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="calendarModal" hidden>
+  <div class="modal-box modal-box-cal">
+    <div class="cal-head">
+      <span class="cal-title" id="calTitle">—</span>
+      <span class="cal-nav">
+        <button type="button" id="calPrevBtn" title="上個月">◀</button>
+        <button type="button" id="calTodayBtn">今天</button>
+        <button type="button" id="calNextBtn" title="下個月">▶</button>
+      </span>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="cal-day-panel">
+      <div class="cal-day-title" id="calDayTitle">—</div>
+      <div class="cal-ev-list" id="calDayList"></div>
+      <div class="cal-form">
+        <input type="text" id="calEvTitle" class="cal-form-full" maxlength="60" placeholder="事件名稱，例如：絕神兵首戰">
+        <input type="date" id="calEvDate">
+        <input type="time" id="calEvTime" title="時間（選填，不填就是整天）">
+        <select id="calEvCat"></select>
+        <textarea id="calEvNote" class="cal-form-full" maxlength="500" placeholder="備註（選填）：集合地點、隊伍成員、要帶什麼…"></textarea>
+        <div class="cal-form-actions">
+          <button type="button" id="calSaveBtn">新增事件</button>
+          <button type="button" id="calCancelEditBtn" class="cal-form-cancel" hidden>取消編輯</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button type="button" id="closeCalendarBtn">關閉</button>
     </div>
   </div>
 </div>
@@ -1340,8 +1528,24 @@
   var BACKUP_ENABLED_KEY = "ff14weekly.backupReminderEnabled.v1";
   var BACKUP_DAYS_KEY = "ff14weekly.backupReminderDays.v1";
   var BACKUP_SNOOZE_MS = 3 * 86400000;
+  var CALENDAR_KEY = "ff14weekly.calendar.v1";
   var TAIPEI_OFFSET_MS = 8 * 3600 * 1000;
   var NOTIFY_WINDOW_MS = 3 * 3600 * 1000;
+  // groups that never reset store their progress under one fixed period instead of a timestamp,
+  // the same trick "sticky" already uses for flag items
+  var MANUAL_PERIOD = "manual";
+  var CAL_CATEGORIES = [
+    { id: "raid", name: "副本／團本", color: "#7c5cd6" },
+    { id: "event", name: "遊戲活動", color: "#d98324" },
+    { id: "craft", name: "生產採集", color: "#3d7a41" },
+    { id: "trade", name: "交易／市場", color: "#a9762c" },
+    { id: "social", name: "約團／聚會", color: "#2c7d76" },
+    { id: "other", name: "其他", color: "#6b7280" }
+  ];
+  function calCategory(id) {
+    for (var i = 0; i < CAL_CATEGORIES.length; i++) if (CAL_CATEGORIES[i].id === id) return CAL_CATEGORIES[i];
+    return CAL_CATEGORIES[CAL_CATEGORIES.length - 1];
+  }
 
   var DEFAULT_CONFIG = {
     groups: [
@@ -1768,6 +1972,8 @@
     return d;
   }
   function groupBoundaries(group, shiftedNow) {
+    // manual groups have no reset clock at all — callers must use MANUAL_PERIOD instead
+    if (group.kind === "manual") return null;
     var last = group.kind === "weekly"
       ? lastWeeklyBoundary(shiftedNow, group.weekday, group.hour)
       : lastDailyBoundary(shiftedNow, group.hour);
@@ -1790,6 +1996,14 @@
     return shiftedDate.getUTCFullYear() + "-" + pad2(shiftedDate.getUTCMonth() + 1) + "-" + pad2(shiftedDate.getUTCDate());
   }
   function weekdayLabel(n) { return ["日", "一", "二", "三", "四", "五", "六"][n]; }
+  // Which calendar day a daily reset period belongs to in the week overview.
+  // A period runs [day@hour, day+1@hour), so it should be filed under whichever calendar day
+  // holds most of it: an early reset (04:00) belongs to the day it starts on, a late one
+  // (23:00) spills into — and belongs to — the next day.
+  function dailyPeriodTsForDay(group, dayDate) {
+    var base = makeShifted(dayDate.getUTCFullYear(), dayDate.getUTCMonth(), dayDate.getUTCDate(), group.hour, 0, 0).getTime();
+    return group.hour < 12 ? base : base - 86400000;
+  }
   function mondayOfYMD(y, mo, d) {
     var base = makeShifted(y, mo, d, 0, 0, 0);
     var wd = base.getUTCDay();
@@ -1883,6 +2097,21 @@
     config.groups.forEach(function (group) {
       if (group.enabled === false) return;
       var visIdx = visibleGroups.indexOf(group);
+
+      if (group.kind === "manual") {
+        // nothing to count down to, so this group gets no countdown chip, and it stays out of
+        // "本輪進度" — it belongs to no reset cycle, so it would otherwise block that forever
+        var manualDone = 0;
+        var manualRows = group.items.map(function (item) {
+          var mVal = getProgress(item.id, MANUAL_PERIOD);
+          var mDone = isItemDone(item, mVal);
+          if (mDone) manualDone++;
+          return itemRowHtml(group, item, null, mVal, mDone, MANUAL_PERIOD);
+        }).join("");
+        mainHtml += manualGroupCardHtml(group, manualDone, group.items.length, manualRows, visIdx, visibleGroups.length);
+        return;
+      }
+
       var b = groupBoundaries(group, shiftedNow);
       var remainMs = b.next.getTime() - shiftedNow.getTime();
       var periodMs = group.kind === "weekly" ? 7 * 86400000 : 86400000;
@@ -1985,7 +2214,7 @@
 
   function itemRowHtml(group, item, b, val, done, dateOverrideTs) {
     var periodTs = dateOverrideTs !== undefined ? dateOverrideTs : b.last.getTime();
-    var msLeft = b.next.getTime() - Date.now();
+    var msLeft = b ? b.next.getTime() - Date.now() : Infinity;
     var control;
     var targetEdit = "";
     if (item.type === "counter") {
@@ -2025,10 +2254,14 @@
     }).join("");
   }
 
-  function bulkActionsHtml(groupId, scope) {
+  // periodTs/label are optional: without them the buttons act on the group's current period
+  function bulkActionsHtml(groupId, scope, periodTs, label) {
+    var attrs = ' data-bulk-group="' + groupId + '" data-bulk-scope="' + scope + '"' +
+      (periodTs !== undefined ? ' data-bulk-period="' + periodTs + '"' : '') +
+      (label ? ' data-bulk-label="' + escapeAttr(label) + '"' : '');
     return '<div class="bulk-actions">' +
-      '<button type="button" class="bulk-btn" data-bulk-group="' + groupId + '" data-bulk-scope="' + scope + '" data-bulk-value="on">全部勾選</button>' +
-      '<button type="button" class="bulk-btn" data-bulk-group="' + groupId + '" data-bulk-scope="' + scope + '" data-bulk-value="off">全部清空</button>' +
+      '<button type="button" class="bulk-btn"' + attrs + ' data-bulk-value="on">全部勾選</button>' +
+      '<button type="button" class="bulk-btn"' + attrs + ' data-bulk-value="off">全部清空</button>' +
       '</div>';
   }
 
@@ -2089,12 +2322,38 @@
       '</div></div>';
   }
 
+  // rename/delete controls, only on lists the user created themselves
+  function groupAdminHtml(group) {
+    if (!group.custom) return "";
+    return '<div class="group-admin">' +
+      '<input type="text" class="group-rename" data-group-rename="' + group.id + '" maxlength="20" value="' + escapeAttr(group.title) + '" title="修改清單名稱">' +
+      '<button type="button" class="group-del-btn" data-group-del="' + group.id + '">刪除這個清單</button>' +
+      '</div>';
+  }
+
   function groupCardHtml(group, b, doneCount, total, rows, shiftedNow, idx, groupCount) {
     var collapsed = !!group.collapsed;
     return '<div class="card-wrap"><section class="card' + (collapsed ? ' collapsed' : '') + '" data-group-card="' + group.id + '">' +
       cardHeadHtml(group, doneCount, total, "剩 ", b.next.getTime() - shiftedNow.getTime(), idx, groupCount) +
-      (collapsed ? "" : notifyRuleHtml(group) + rows + addRowHtml(group.id)) +
+      (collapsed ? "" : groupAdminHtml(group) + notifyRuleHtml(group) + rows + addRowHtml(group.id)) +
       '</section></div>';
+  }
+
+  function manualGroupCardHtml(group, doneCount, total, rows, idx, groupCount) {
+    var collapsed = !!group.collapsed;
+    var head = '<div class="card-head">' +
+      '<div><h2>' + escapeHtml(group.title) +
+      ' <button type="button" class="collapse-toggle" data-collapse="' + group.id + '" title="' + (collapsed ? "展開這組" : "暫時隱藏這組") + '">' + (collapsed ? "▸" : "▾") + '</button>' +
+      '</h2><div class="reset-label">' + escapeHtml(group.resetLabel || "不會自動重置") + '</div></div>' +
+      '<div class="card-status-wrap"><div class="card-status">' +
+      '<div class="progress-frac">' + doneCount + ' / ' + total + '</div>' +
+      '<div class="until">手動清空</div>' +
+      '</div>' + groupMoveHtml(group, idx, groupCount) + '</div></div>';
+    var body = groupAdminHtml(group) + notifyRuleHtml(group) +
+      (total ? bulkActionsHtml(group.id, "manual", MANUAL_PERIOD, group.title) : "") +
+      rows + addRowHtml(group.id);
+    return '<div class="card-wrap"><section class="card' + (collapsed ? ' collapsed' : '') + '" data-group-card="' + group.id + '">' +
+      head + (collapsed ? "" : body) + '</section></div>';
   }
 
   function dailyGroupCardHtml(group, b, shiftedNow, doneCount, total, idx, groupCount) {
@@ -2145,10 +2404,10 @@
       var miniCells = days.map(function (d, idx) {
         var dKey = taipeiDateKey(d);
         var dOne = 0, dTotal = 0;
+        var dPeriodTs = dailyPeriodTsForDay(group, d);
         gridItems.forEach(function (item) {
-          var pTs = makeShifted(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), group.hour, 0, 0).getTime() - 86400000;
           dTotal++;
-          if (isItemDone(item, getProgress(item.id, pTs))) dOne++;
+          if (isItemDone(item, getProgress(item.id, dPeriodTs))) dOne++;
         });
         var pct = dTotal ? Math.round((dOne / dTotal) * 100) : 0;
         var isToday = dKey === todayKey;
@@ -2167,15 +2426,41 @@
       var expandHtml = "";
       if (expandedIdx !== null) {
         var ed = days[expandedIdx];
+        var edKey = taipeiDateKey(ed);
+        var edFuture = edKey > todayKey;
+        var edIsToday = edKey === todayKey;
         var edLabel = pad2(ed.getUTCMonth() + 1) + "/" + pad2(ed.getUTCDate()) + "（週" + weekdayLabel(ed.getUTCDay()) + "）";
+        var edPeriodTs = dailyPeriodTsForDay(group, ed);
         var expandRows = gridItems.map(function (item) {
-          var pTs = makeShifted(ed.getUTCFullYear(), ed.getUTCMonth(), ed.getUTCDate(), group.hour, 0, 0).getTime() - 86400000;
-          var val = getProgress(item.id, pTs);
+          var val = getProgress(item.id, edPeriodTs);
           var done = isItemDone(item, val);
-          var statusText = item.type === "counter" ? ((typeof val === "number" ? val : 0) + " / " + item.target) : (done ? "已完成" : "未完成");
-          return '<div class="expand-row"><span class="expand-dot' + (done ? " on" : "") + '"></span><span class="expand-status' + (done ? " on" : "") + '">' + statusText + '</span><span class="expand-name">' + escapeHtml(item.name) + '</span></div>';
+          var control;
+          if (edFuture) {
+            control = '<span class="expand-dot' + (done ? " on" : "") + '"></span>';
+          } else if (item.type === "counter") {
+            var count = typeof val === "number" ? val : 0;
+            control = '<div class="counter" data-item="' + item.id + '" data-period="' + edPeriodTs + '" data-target="' + item.target + '" data-item-name="' + escapeAttr(item.name) + '">' +
+              '<button type="button" data-act="dec">–</button>' +
+              '<span class="count-val">' + count + ' / ' + item.target + '</span>' +
+              '<button type="button" data-act="inc">+</button>' +
+              '<button type="button" class="counter-max-btn" data-act="max" title="設成上限">MAX</button>' +
+              '<button type="button" class="counter-zero-btn" data-act="zero" title="歸零">歸零</button></div>';
+          } else {
+            control = '<button type="button" class="chk" aria-checked="' + (done ? "true" : "false") + '" data-item="' + item.id + '" data-period="' + edPeriodTs + '"></button>';
+          }
+          var statusText = item.type === "counter" ? "" : (done ? "已完成" : "未完成");
+          return '<div class="expand-row' + (edFuture ? " is-future-row" : "") + '">' + control +
+            (statusText ? '<span class="expand-status' + (done ? " on" : "") + '">' + statusText + '</span>' : "") +
+            '<span class="expand-name">' + escapeHtml(item.name) + '</span></div>';
         }).join("");
-        expandHtml = '<div class="expand-detail"><div class="expand-detail-title">' + edLabel + '</div><div class="expand-detail-rows">' + expandRows + '</div></div>';
+        var edHint = edFuture ? '<span class="expand-hint">未來的日期還不能勾</span>'
+          : (edIsToday ? '' : '<span class="expand-hint">可以補登這天忘記勾的進度</span>');
+        var edBulk = edFuture ? "" : '<span class="expand-bulk">' +
+          '<button type="button" class="bulk-btn" data-bulk-group="' + group.id + '" data-bulk-scope="day" data-bulk-period="' + edPeriodTs + '" data-bulk-label="' + escapeAttr(edLabel) + '" data-bulk-value="on">整天勾選</button>' +
+          '<button type="button" class="bulk-btn" data-bulk-group="' + group.id + '" data-bulk-scope="day" data-bulk-period="' + edPeriodTs + '" data-bulk-label="' + escapeAttr(edLabel) + '" data-bulk-value="off">整天清空</button>' +
+          '</span>';
+        expandHtml = '<div class="expand-detail"><div class="expand-detail-title">' + edLabel + edHint + edBulk + '</div>' +
+          '<div class="expand-detail-rows">' + expandRows + '</div></div>';
       }
 
       var isOpen = !!openWeekViews[group.id];
@@ -2223,12 +2508,50 @@
 
   // ---- event binding ----
   function bindRowEvents() {
+    mainEl.querySelectorAll("[data-group-rename]").forEach(function (input) {
+      input.addEventListener("change", function () {
+        var group = config.groups.find(function (g) { return g.id === input.getAttribute("data-group-rename"); });
+        if (!group) return;
+        var name = input.value.trim();
+        if (!name) { input.value = group.title; return; }
+        group.title = name;
+        saveConfig(); render(); renderGroupVisibility();
+      });
+    });
+    mainEl.querySelectorAll("[data-group-del]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var groupId = btn.getAttribute("data-group-del");
+        var group = config.groups.find(function (g) { return g.id === groupId; });
+        if (!group) return;
+        showConfirm("確定要刪除「" + group.title + "」整個清單嗎？裡面的項目與勾選紀錄都會一起消失，無法復原。", function () {
+          config.groups = config.groups.filter(function (g) { return g.id !== groupId; });
+          // drop this list's stored progress so deleted lists don't leave junk behind
+          var prefix = "ff14weekly.p." + activeCharacterId + ".";
+          var itemIds = group.items.map(function (it) { return it.id; });
+          var toRemove = [];
+          for (var i = 0; i < localStorage.length; i++) {
+            var k = localStorage.key(i);
+            if (k.indexOf(prefix) !== 0) continue;
+            var rest = k.slice(prefix.length);
+            var at = rest.lastIndexOf("@");
+            if (at > 0 && itemIds.indexOf(rest.slice(0, at)) !== -1) toRemove.push(k);
+          }
+          toRemove.forEach(function (k) { localStorage.removeItem(k); });
+          saveConfig(); render(); renderGroupVisibility();
+          showToast("已刪除「" + group.title + "」");
+        });
+      });
+    });
     mainEl.querySelectorAll("[data-bulk-group]").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var group = config.groups.find(function (g) { return g.id === btn.getAttribute("data-bulk-group"); });
         if (!group) return;
         var scope = btn.getAttribute("data-bulk-scope");
         var value = btn.getAttribute("data-bulk-value") === "on";
+        // an explicit period lets these buttons target a back-filled day or a manual list;
+        // periods are only ever concatenated into a key, so the raw attribute string is fine
+        var bulkPeriod = btn.getAttribute("data-bulk-period");
+        var bulkLabel = btn.getAttribute("data-bulk-label");
         function applyBulk() {
           if (scope === "flag") {
             group.items.forEach(function (item) {
@@ -2236,19 +2559,20 @@
               setProgress(item.id, "sticky", value);
             });
           } else {
-            var shiftedNow = taipeiShift(new Date());
-            var b = groupBoundaries(group, shiftedNow);
+            var periodTs = bulkPeriod;
+            if (periodTs === null) periodTs = groupBoundaries(group, taipeiShift(new Date())).last.getTime();
             group.items.forEach(function (item) {
               if (item.type === "flag") return;
-              if (item.type === "counter") setProgress(item.id, b.last.getTime(), value ? item.target : 0);
-              else setProgress(item.id, b.last.getTime(), value);
+              if (item.type === "counter") setProgress(item.id, periodTs, value ? item.target : 0);
+              else setProgress(item.id, periodTs, value);
             });
           }
           render();
         }
+        var what = bulkLabel ? group.title + "」的「" + bulkLabel : group.title;
         var msg = value
-          ? "確定要將「" + group.title + "」全部勾選/設成完成嗎？"
-          : "確定要清空「" + group.title + "」目前的全部勾選/進度嗎？此動作無法復原。";
+          ? "確定要將「" + what + "」全部勾選/設成完成嗎？"
+          : "確定要清空「" + what + "」的全部勾選/進度嗎？此動作無法復原。";
         showConfirm(msg, applyBulk);
       });
     });
@@ -2460,11 +2784,262 @@
   }
 
 
+  // ---- user-created lists ----
+  var addGroupModal = document.getElementById("addGroupModal");
+  var newGroupName = document.getElementById("newGroupName");
+  var newGroupKind = document.getElementById("newGroupKind");
+  var newGroupWeekdayRow = document.getElementById("newGroupWeekdayRow");
+  var newGroupWeekday = document.getElementById("newGroupWeekday");
+  var newGroupTimeRow = document.getElementById("newGroupTimeRow");
+  var newGroupTime = document.getElementById("newGroupTime");
+  newGroupWeekday.innerHTML = weekdayOptionsHtml(2);
+
+  function syncAddGroupFields() {
+    var kind = newGroupKind.value;
+    newGroupWeekdayRow.hidden = kind !== "weekly";
+    newGroupTimeRow.hidden = kind === "manual";
+  }
+  newGroupKind.addEventListener("change", syncAddGroupFields);
+
+  document.getElementById("addGroupBtn").addEventListener("click", function () {
+    newGroupName.value = "";
+    newGroupKind.value = "manual";
+    newGroupTime.value = "04:00";
+    newGroupWeekday.value = "2";
+    syncAddGroupFields();
+    addGroupModal.hidden = false;
+    newGroupName.focus();
+  });
+  document.getElementById("closeAddGroupBtn").addEventListener("click", function () { addGroupModal.hidden = true; });
+  addGroupModal.addEventListener("click", function (e) { if (e.target === addGroupModal) addGroupModal.hidden = true; });
+
+  document.getElementById("confirmAddGroupBtn").addEventListener("click", function () {
+    var name = newGroupName.value.trim();
+    if (!name) { newGroupName.focus(); showToast("請先輸入清單名稱"); return; }
+    var kind = newGroupKind.value;
+    var parts = (newGroupTime.value || "04:00").split(":");
+    var hour = Number(parts[0]) || 0;
+    var group = {
+      id: "grp_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      title: name,
+      kind: kind,
+      custom: true,
+      notifyRules: [],
+      items: []
+    };
+    if (kind === "manual") {
+      group.resetLabel = "不會自動重置";
+    } else if (kind === "weekly") {
+      group.weekday = Number(newGroupWeekday.value);
+      group.hour = hour;
+      group.resetLabel = "每週" + weekdayLabel(group.weekday) + " " + pad2(hour) + ":00 重置";
+    } else {
+      group.hour = hour;
+      group.resetLabel = "每日 " + pad2(hour) + ":00 重置";
+    }
+    config.groups.push(group);
+    saveConfig();
+    addGroupModal.hidden = true;
+    render();
+    renderGroupVisibility();
+    showToast("已建立「" + name + "」，可以開始新增項目了");
+  });
+
+  // ---- calendar: shared across characters, like the toolbox and alarms ----
+  function loadCalendar() {
+    try {
+      var raw = JSON.parse(localStorage.getItem(CALENDAR_KEY));
+      return Array.isArray(raw) ? raw : [];
+    } catch (e) { return []; }
+  }
+  function saveCalendar() { localStorage.setItem(CALENDAR_KEY, JSON.stringify(calendarEvents)); }
+  function calEventsOn(dateKey) {
+    return calendarEvents.filter(function (ev) { return ev.date === dateKey; }).sort(function (a, b) {
+      // untimed events sort last within their day
+      return (a.time || "99:99").localeCompare(b.time || "99:99");
+    });
+  }
+
+  var calendarEvents = loadCalendar();
+  var calViewY = 0, calViewM = 0;
+  var calSelectedKey = null;
+  var calEditingId = null;
+
+  var calendarModal = document.getElementById("calendarModal");
+  var calEvTitle = document.getElementById("calEvTitle");
+  var calEvDate = document.getElementById("calEvDate");
+  var calEvTime = document.getElementById("calEvTime");
+  var calEvCat = document.getElementById("calEvCat");
+  var calEvNote = document.getElementById("calEvNote");
+  var calSaveBtn = document.getElementById("calSaveBtn");
+  var calCancelEditBtn = document.getElementById("calCancelEditBtn");
+
+  calEvCat.innerHTML = CAL_CATEGORIES.map(function (c) {
+    return '<option value="' + c.id + '">' + escapeHtml(c.name) + '</option>';
+  }).join("");
+
+  function calResetForm() {
+    calEditingId = null;
+    calEvTitle.value = "";
+    calEvTime.value = "";
+    calEvNote.value = "";
+    calEvCat.value = CAL_CATEGORIES[0].id;
+    calEvDate.value = calSelectedKey || "";
+    calSaveBtn.textContent = "新增事件";
+    calCancelEditBtn.hidden = true;
+  }
+
+  function renderCalendar() {
+    var todayKey = taipeiDateKey(taipeiShift(new Date()));
+    document.getElementById("calTitle").textContent = calViewY + " 年 " + (calViewM + 1) + " 月";
+
+    var first = new Date(Date.UTC(calViewY, calViewM, 1));
+    var startWd = (first.getUTCDay() + 6) % 7;  // grid starts on Monday, same as the week overview
+    var start = new Date(first.getTime() - startWd * 86400000);
+
+    var html = ["一", "二", "三", "四", "五", "六", "日"].map(function (w) {
+      return '<div class="cal-wd">' + w + '</div>';
+    }).join("");
+    for (var i = 0; i < 42; i++) {
+      var d = new Date(start.getTime() + i * 86400000);
+      var key = taipeiDateKey(d);
+      var evs = calEventsOn(key);
+      var chips = evs.slice(0, 3).map(function (ev) {
+        var cat = calCategory(ev.cat);
+        var label = (ev.time ? ev.time + " " : "") + ev.title;
+        return '<span class="cal-ev" style="background:' + cat.color + '" title="' + escapeAttr(label) + '">' + escapeHtml(label) + '</span>';
+      }).join("");
+      var more = evs.length > 3 ? '<span class="cal-more">還有 ' + (evs.length - 3) + ' 項</span>' : "";
+      var cls = "cal-cell" + (d.getUTCMonth() !== calViewM ? " is-other" : "") +
+        (key === todayKey ? " is-today" : "") + (key === calSelectedKey ? " is-selected" : "");
+      html += '<button type="button" class="' + cls + '" data-cal-day="' + key + '">' +
+        '<span class="cal-daynum">' + d.getUTCDate() + '</span>' + chips + more + '</button>';
+    }
+    var grid = document.getElementById("calGrid");
+    grid.innerHTML = html;
+    grid.querySelectorAll("[data-cal-day]").forEach(function (cell) {
+      cell.addEventListener("click", function () {
+        calSelectedKey = cell.getAttribute("data-cal-day");
+        calResetForm();
+        renderCalendar();
+      });
+    });
+
+    renderCalendarDay(todayKey);
+  }
+
+  function renderCalendarDay(todayKey) {
+    var parts = calSelectedKey.split("-");
+    var d = new Date(Date.UTC(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2])));
+    document.getElementById("calDayTitle").textContent =
+      Number(parts[1]) + "/" + Number(parts[2]) + "（週" + weekdayLabel(d.getUTCDay()) + "）" + (calSelectedKey === todayKey ? "・今天" : "");
+
+    var evs = calEventsOn(calSelectedKey);
+    var listEl = document.getElementById("calDayList");
+    listEl.innerHTML = evs.length ? evs.map(function (ev) {
+      var cat = calCategory(ev.cat);
+      return '<div class="cal-ev-row">' +
+        '<span class="cal-ev-time">' + (ev.time || "整天") + '</span>' +
+        '<span class="cal-ev-main"><span class="cal-ev-title-row">' +
+        '<span class="cal-ev-title">' + escapeHtml(ev.title) + '</span>' +
+        '<span class="cal-ev-cat" style="background:' + cat.color + '">' + escapeHtml(cat.name) + '</span>' +
+        '</span>' + (ev.note ? '<div class="cal-ev-note">' + escapeHtml(ev.note) + '</div>' : "") + '</span>' +
+        '<span class="cal-ev-actions">' +
+        '<button type="button" class="cal-ev-edit" data-cal-edit="' + ev.id + '" title="編輯這個事件">✎</button>' +
+        '<button type="button" class="del-btn" data-cal-del="' + ev.id + '" title="刪除這個事件">×</button>' +
+        '</span></div>';
+    }).join("") : '<div class="cal-ev-empty">這天還沒有任何事件。</div>';
+
+    listEl.querySelectorAll("[data-cal-del]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var id = btn.getAttribute("data-cal-del");
+        var ev = calendarEvents.find(function (e) { return e.id === id; });
+        showConfirm("確定要刪除「" + (ev ? ev.title : "") + "」嗎？", function () {
+          calendarEvents = calendarEvents.filter(function (e) { return e.id !== id; });
+          saveCalendar();
+          calResetForm();
+          renderCalendar();
+        });
+      });
+    });
+    listEl.querySelectorAll("[data-cal-edit]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var ev = calendarEvents.find(function (e) { return e.id === btn.getAttribute("data-cal-edit"); });
+        if (!ev) return;
+        calEditingId = ev.id;
+        calEvTitle.value = ev.title;
+        calEvDate.value = ev.date;
+        calEvTime.value = ev.time || "";
+        calEvCat.value = ev.cat;
+        calEvNote.value = ev.note || "";
+        calSaveBtn.textContent = "儲存修改";
+        calCancelEditBtn.hidden = false;
+        calEvTitle.focus();
+      });
+    });
+
+    if (!calEditingId) calEvDate.value = calSelectedKey;
+  }
+
+  function calGoTo(dateKey) {
+    calSelectedKey = dateKey;
+    calViewY = Number(dateKey.slice(0, 4));
+    calViewM = Number(dateKey.slice(5, 7)) - 1;
+  }
+
+  document.getElementById("calendarBtn").addEventListener("click", function () {
+    calGoTo(calSelectedKey || taipeiDateKey(taipeiShift(new Date())));
+    calResetForm();
+    calendarModal.hidden = false;
+    renderCalendar();
+  });
+  document.getElementById("closeCalendarBtn").addEventListener("click", function () { calendarModal.hidden = true; });
+  calendarModal.addEventListener("click", function (e) { if (e.target === calendarModal) calendarModal.hidden = true; });
+  document.getElementById("calPrevBtn").addEventListener("click", function () {
+    calViewM--; if (calViewM < 0) { calViewM = 11; calViewY--; }
+    renderCalendar();
+  });
+  document.getElementById("calNextBtn").addEventListener("click", function () {
+    calViewM++; if (calViewM > 11) { calViewM = 0; calViewY++; }
+    renderCalendar();
+  });
+  document.getElementById("calTodayBtn").addEventListener("click", function () {
+    calGoTo(taipeiDateKey(taipeiShift(new Date())));
+    calResetForm();
+    renderCalendar();
+  });
+  calCancelEditBtn.addEventListener("click", function () {
+    calResetForm();
+    renderCalendar();
+  });
+  calSaveBtn.addEventListener("click", function () {
+    var title = calEvTitle.value.trim();
+    if (!title) { calEvTitle.focus(); showToast("請先輸入事件名稱"); return; }
+    var date = calEvDate.value || calSelectedKey;
+    var fields = { title: title, date: date, time: calEvTime.value || "", cat: calEvCat.value, note: calEvNote.value.trim() };
+    if (calEditingId) {
+      var editingId = calEditingId;
+      calendarEvents = calendarEvents.map(function (ev) {
+        if (ev.id !== editingId) return ev;
+        return { id: ev.id, title: fields.title, date: fields.date, time: fields.time, cat: fields.cat, note: fields.note };
+      });
+      showToast("已更新事件");
+    } else {
+      fields.id = "ev_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+      calendarEvents.push(fields);
+      showToast("已新增事件");
+    }
+    saveCalendar();
+    calGoTo(date);
+    calResetForm();
+    renderCalendar();
+  });
+
   var exportModal = document.getElementById("exportModal");
   var exportText = document.getElementById("exportText");
 
   document.getElementById("exportBtn").addEventListener("click", function () {
-    var payload = { config: config, progress: dumpProgress(), toolbox: toolboxLinks, alarms: alarms, exportedAt: new Date().toISOString() };
+    var payload = { config: config, progress: dumpProgress(), toolbox: toolboxLinks, alarms: alarms, calendar: calendarEvents, exportedAt: new Date().toISOString() };
     exportText.value = JSON.stringify(payload, null, 2);
     exportModal.hidden = false;
     exportText.focus();
@@ -2507,6 +3082,7 @@
       var restored = hasProgress ? restoreProgress(parsed.progress) : 0;
       if (parsed && Array.isArray(parsed.toolbox)) { toolboxLinks = parsed.toolbox; saveToolbox(); renderToolbox(); }
       if (parsed && Array.isArray(parsed.alarms)) { alarms = parsed.alarms; saveAlarms(); renderAlarms(); }
+      if (parsed && Array.isArray(parsed.calendar)) { calendarEvents = parsed.calendar; saveCalendar(); }
       render();
       renderGroupVisibility();
       importModal.hidden = true;
@@ -2521,8 +3097,11 @@
   importModal.addEventListener("click", function (e) { if (e.target === importModal) importModal.hidden = true; });
 
   document.getElementById("resetBtn").addEventListener("click", function () {
-    showConfirm("確定要還原成預設清單嗎？自訂項目與名稱修改都會被覆蓋（勾選紀錄不受影響）。", function () {
+    showConfirm("確定要還原成預設清單嗎？預設清單裡的自訂項目與名稱修改會被覆蓋（勾選紀錄與你自己新增的自訂清單不受影響）。", function () {
+      // lists the user created themselves aren't part of the defaults, so restoring must not eat them
+      var keepCustom = config.groups.filter(function (g) { return g.custom; });
       config = ensureNotifyDefaults(JSON.parse(JSON.stringify(DEFAULT_CONFIG)));
+      config.groups = config.groups.concat(keepCustom);
       saveConfig();
       render();
       renderGroupVisibility();
@@ -2596,13 +3175,15 @@
         // tolerate up to 10 minutes late in case background-tab timer throttling delayed this check
         if (diffMin < 0 || diffMin > 10) return;
         var b = groupBoundaries(group, shiftedNow);
-        var key = "notify@" + group.id + "@" + rule.id + "@" + b.last.getTime();
+        // manual lists have no period, so key the "already fired" flag by day instead
+        var periodTs = b ? b.last.getTime() : MANUAL_PERIOD;
+        var key = "notify@" + group.id + "@" + rule.id + "@" + (b ? b.last.getTime() : todayKey);
         if (!notified[key]) {
           notified[key] = true;
           saveNotified();
           var pending = group.items.filter(function (item) {
             if (item.type === "flag") return false;
-            return !isItemDone(item, getProgress(item.id, b.last.getTime()));
+            return !isItemDone(item, getProgress(item.id, periodTs));
           });
           if (pending.length) {
             try {
@@ -3189,7 +3770,7 @@
 
   // 手動維護：每次修改網站程式碼時手動更新這個時間點，不要用 new Date() 抓「現在」——
   // 那樣不管有沒有真的改版，每次載入頁面都會顯示成剛更新過，等於騙人。
-  var LAST_UPDATED_TEXT = "2026/08/01 (週六) 01:07";
+  var LAST_UPDATED_TEXT = "2026/08/01 (週六) 04:39";
   var lastUpdatedEl = document.getElementById("lastUpdatedLine");
   if (lastUpdatedEl) lastUpdatedEl.textContent = "最後更新：" + LAST_UPDATED_TEXT;
 
