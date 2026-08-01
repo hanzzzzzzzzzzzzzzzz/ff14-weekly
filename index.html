@@ -25,6 +25,9 @@
     --tape: rgba(169, 118, 44, 0.28);
     --tape-line: rgba(169, 118, 44, 0.45);
     --grid-line: rgba(28, 36, 32, 0.07);
+    --cal-hover-fill: rgba(44, 125, 118, 0.10);
+    --cal-today-fill: rgba(44, 125, 118, 0.18);
+    --cal-selected-fill: rgba(169, 118, 44, 0.24);
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
@@ -50,6 +53,9 @@
       --tape: rgba(220, 172, 92, 0.32);
       --tape-line: rgba(220, 172, 92, 0.5);
       --grid-line: rgba(240, 220, 170, 0.07);
+      --cal-hover-fill: rgba(212, 175, 106, 0.10);
+      --cal-today-fill: rgba(212, 175, 106, 0.20);
+      --cal-selected-fill: rgba(220, 172, 92, 0.32);
       color-scheme: dark;
     }
   }
@@ -58,14 +64,18 @@
     --line: rgba(28, 36, 32, 0.12); --accent: #a9762c; --accent-ink: #5c3f14; --crystal: #2c7d76; --crystal-ink: #12433f;
     --good: #3d7a41; --good-bg: #d9e6d6; --warn: #a86a13; --warn-bg: rgba(168, 106, 19, 0.14);
     --bad: #ad4444; --bad-bg: rgba(173, 68, 68, 0.14); --card-ring: rgba(169, 118, 44, 0.16);
-    --tape: rgba(169, 118, 44, 0.28); --tape-line: rgba(169, 118, 44, 0.45); --grid-line: rgba(28, 36, 32, 0.07); color-scheme: light;
+    --tape: rgba(169, 118, 44, 0.28); --tape-line: rgba(169, 118, 44, 0.45); --grid-line: rgba(28, 36, 32, 0.07);
+    --cal-hover-fill: rgba(44, 125, 118, 0.10); --cal-today-fill: rgba(44, 125, 118, 0.18); --cal-selected-fill: rgba(169, 118, 44, 0.24);
+    color-scheme: light;
   }
   :root[data-theme="dark"] {
     --paper: #15120e; --panel: #1f1a13; --panel-2: #2b2419; --ink: #f0e6d2; --ink-dim: #b8a888;
     --line: rgba(240, 220, 170, 0.14); --accent: #dcac5c; --accent-ink: #f4dba8; --crystal: #d4af6a; --crystal-ink: #f0d9a8;
     --good: #c9a227; --good-bg: #443b1b; --warn: #d9a44b; --warn-bg: rgba(217, 164, 75, 0.16);
     --bad: #e08080; --bad-bg: rgba(224, 128, 128, 0.16); --card-ring: rgba(220, 172, 92, 0.28);
-    --tape: rgba(220, 172, 92, 0.32); --tape-line: rgba(220, 172, 92, 0.5); --grid-line: rgba(240, 220, 170, 0.07); color-scheme: dark;
+    --tape: rgba(220, 172, 92, 0.32); --tape-line: rgba(220, 172, 92, 0.5); --grid-line: rgba(240, 220, 170, 0.07);
+    --cal-hover-fill: rgba(212, 175, 106, 0.10); --cal-today-fill: rgba(212, 175, 106, 0.20); --cal-selected-fill: rgba(220, 172, 92, 0.32);
+    color-scheme: dark;
   }
 
   * { box-sizing: border-box; }
@@ -966,13 +976,27 @@
   .cal-cell {
     min-height: 74px; background: var(--panel-2); border: 1px solid var(--line); clip-path: var(--chamfer-sm);
     padding: 4px 5px; display: flex; flex-direction: column; gap: 2px; text-align: left; overflow: hidden;
-    transition: border-color 0.15s ease;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
   }
-  .cal-cell:hover { border-color: var(--crystal); }
+  /* Three states have to stay tellable apart at a glance, so each one uses a different kind of
+     cue rather than just a different colour: hover = light wash, today = solid badge on the
+     number, selected = strong fill + double ring. They also stack without fighting each other. */
+  .cal-cell:hover { border-color: var(--crystal); background: var(--cal-hover-fill); }
   .cal-cell.is-other { opacity: 0.38; }
-  .cal-cell.is-today { border-color: var(--crystal); box-shadow: 0 0 0 1px var(--crystal) inset; }
-  .cal-cell.is-selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+  .cal-cell.is-today { border-color: var(--crystal); background: var(--cal-today-fill); }
+  .cal-cell.is-selected {
+    border-color: var(--accent); background: var(--cal-selected-fill);
+    box-shadow: 0 0 0 2px var(--accent) inset;
+  }
+  /* those two carry their own fill, which would otherwise swallow the hover wash and leave
+     them as the only cells with no pointer feedback — brighten instead of recolouring */
+  .cal-cell.is-today:hover, .cal-cell.is-selected:hover { filter: brightness(1.08); }
   .cal-daynum { font-size: 11.5px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink); }
+  .cal-cell.is-today .cal-daynum {
+    background: var(--crystal); color: var(--panel);
+    width: 19px; height: 19px; border-radius: 999px; align-self: flex-start;
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
   .cal-ev {
     font-size: 10.5px; line-height: 1.4; padding: 1px 5px; border-radius: 4px; color: #fff;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -1070,6 +1094,7 @@
     .sticky-note textarea { height: 90px; }
     .cal-cell { min-height: 56px; padding: 3px; }
     .cal-daynum { font-size: 10.5px; }
+    .cal-cell.is-today .cal-daynum { width: 16px; height: 16px; }
     .cal-ev { font-size: 9px; padding: 1px 3px; }
     .cal-wd { font-size: 10px; }
     .cal-form { grid-template-columns: 1fr; }
@@ -1351,8 +1376,8 @@
       <div class="diy-notify-body">
         <p class="last-updated" id="lastUpdatedLine">最後更新：載入中…</p>
         <ul id="changelogList">
+          <li><strong>行事曆的日期標示改得更明顯</strong>：原本「今天」「目前點選的那天」都只有外框變色，格子本身沒有差別，很難一眼看出滑鼠點在哪。現在改成三種狀態各用不同方式標示：<u>今天</u>的日期數字變成實心圓形標記、格子也帶淡色底；<u>目前點選的那天</u>整格填上明顯的底色再加一圈粗外框；<u>滑鼠移過去</u>的格子會即時變色。三種同時出現也不會互相蓋掉，滑到「今天」或「已選取」那格一樣看得到反應。</li>
           <li><strong>新增「新功能公告」彈窗</strong>：有比較大的功能更新時，一進網站會跳一個公告視窗，簡單說明新功能在哪裡、能做什麼，看完可以勾「不要再顯示這則公告」把它關掉。公告的已讀狀態記的是「哪一則公告」而不是單純的看過／沒看過，所以之後有新公告時還是會再跳一次，不會因為關過一次就永遠看不到新的。</li>
-          <li><strong>新增三個功能：補勾過去的日子、行事曆、自訂清單</strong>：一、日隨那類每日清單的「本週紀錄與完成度」，現在點開某一天之後可以直接在裡面補勾，忘記勾的進度不用再放棄了（可以補到本月月初，未來的日期不能勾，另外附「整天勾選／整天清空」）。二、右上角多了「📅 行事曆」按鈕，可以像記事本一樣新增事件，有日期、時間、事件種類（副本、活動、生產採集等六種顏色標籤）跟備註，月曆上直接看得到，事件會一起進備份。三、清單最下面多了「＋ 新增自訂清單」，可以自己開一個跟日隨、籌備任務同級的清單，重置方式自己挑（每天／每週／不自動重置），名稱隨時可改，也可以整個刪掉。另外順手修好一個既有問題：一週檢視把「哪一天」對到「哪個重置週期」的算法原本固定往前推一天，對 23:00 重置的日隨是對的，但對 04:00 重置的籌備任務會整個錯開一天（晚上打的勾會顯示在隔天那格）。現在改成看重置時間落在一天的哪半邊來判斷，籌備任務的長條圖會往前修正一天到正確的位置，補勾也才會寫到你真正想補的那天。</li>
           <li><strong>修好備份匯入到別的瀏覽器或裝置時，勾選紀錄跟「本週紀錄與完成度」會整個不見的問題</strong>：備份檔裡的勾選紀錄會連著「這台裝置的角色編號」一起存起來，而這個編號是每個瀏覽器各自隨機產生的，所以匯到另一台裝置時，資料雖然有寫進去，卻被放在新瀏覽器讀不到的位置——結果就是清單設定有還原，但所有打勾的紀錄跟日隨的「本週紀錄與完成度」長條圖全部變成空的、0%。現在匯入時會自動把紀錄改掛到目前選擇的角色底下，換裝置、換瀏覽器或清過快取後匯入都能完整還原，以前匯出的舊備份檔也一樣救得回來。另外匯入成功的提示訊息現在會顯示「還原了幾筆勾選紀錄」，如果顯示 0 筆就代表是備份檔本身沒存到，可以馬上分辨問題出在哪一邊。</li>
         </ul>
       </div>
@@ -1379,7 +1404,7 @@
       <p><strong>批次操作</strong>：籌備任務、友好部族這類多項目的組別，上方有「全部勾選」「全部清空」，「全部清空」一樣會先確認。</p>
       <p><strong>每日組別的一週檢視／補勾過去的日子</strong>：日隨、籌備任務、友好部族這種每天重置的組別，下方有一排本週七天的迷你完成度，點任一天可以展開看那天各項目的明細，用 ◀ ▶ 可以切換到同一個月的其他週。展開後的明細是<u>可以直接勾的</u>——忘記勾的那天回頭補登就好，計數類項目也能補調數字，右邊還有「整天勾選／整天清空」。可以補到本月月初（◀ 到月初就會停），未來的日期不能勾。</p>
       <p><strong>自訂清單</strong>：清單最下面的「＋ 新增自訂清單」可以開一個跟日隨、籌備任務同級的全新清單，內容完全由你決定。重置方式有三種：每天固定時間重置、每週固定某天重置（兩種都只支援整點）、或「不自動重置」——後者不會倒數、也不算進「本輪進度」，適合當長期待辦，要清空時自己按「全部清空」。自訂清單的名稱可以隨時在卡片上直接改，也可以按「刪除這個清單」整個移除（裡面的勾選紀錄會一起刪掉，無法復原）。按 footer 的「還原預設清單」不會動到你自己建的清單。</p>
-      <p><strong>行事曆</strong>：右上角「📅 行事曆」會開一個月曆彈窗，可以新增事件並填寫日期、時間（不填就是整天）、事件種類（副本／團本、遊戲活動、生產採集、交易／市場、約團／聚會、其他，各有顏色）跟備註。月曆格子裡直接顯示當天事件，點格子看那天的完整清單，事件可以用 ✎ 編輯、× 刪除。行事曆是所有角色共用的，內容會一起存進「匯出備份」。注意行事曆事件不會發瀏覽器通知，要提醒請用各組別的「+ 新增提醒」或小工具區的鬧鐘。</p>
+      <p><strong>行事曆</strong>：右上角「📅 行事曆」會開一個月曆彈窗，可以新增事件並填寫日期、時間（不填就是整天）、事件種類（副本／團本、遊戲活動、生產採集、交易／市場、約團／聚會、其他，各有顏色）跟備註。月曆格子裡直接顯示當天事件，點格子看那天的完整清單，事件可以用 ✎ 編輯、× 刪除。月曆上「今天」的日期是實心圓形標記加淡色底、「目前點選的那天」整格會填上底色再加一圈粗外框，滑鼠移過去的格子也會即時變色，三種狀態一眼就分得出來。行事曆是所有角色共用的，內容會一起存進「匯出備份」。注意行事曆事件不會發瀏覽器通知，要提醒請用各組別的「+ 新增提醒」或小工具區的鬧鐘。</p>
       <p><strong>暫時隱藏群組</strong>：標題旁邊的 ▾ 可以把整組收起來（還是會計入進度）；頂部「▾ 全部」可以一次收合或展開所有組別。</p>
       <p><strong>不需要的組別直接關閉</strong>：footer 的「顯示的組別」可以把整個不玩的內容（例如已經不刷的籌備任務）關掉，關掉後倒數卡片、清單卡片、提醒都不會出現，也不會算進「本輪進度」，跟暫時收合不同，這是真的不追蹤了；隨時可以再打開，設定不會遺失。</p>
       <p><strong>自訂排列順序</strong>：每個組別卡片右上角的 ▲▼ 可以調整這些卡片在頁面上的先後順序，頂部倒數卡片也有對應的 ◀▶ 可以直接調整；小工具區塊裡的每張卡片（今日運勢＋解答之書合併成一張、擲骰器、工具箱、鬧鐘）右上角也有各自的 ▲▼，可以獨立調整順序。順序都會記住。</p>
@@ -3835,7 +3860,7 @@
 
   // 手動維護：每次修改網站程式碼時手動更新這個時間點，不要用 new Date() 抓「現在」——
   // 那樣不管有沒有真的改版，每次載入頁面都會顯示成剛更新過，等於騙人。
-  var LAST_UPDATED_TEXT = "2026/08/01 (週六) 17:34";
+  var LAST_UPDATED_TEXT = "2026/08/01 (週六) 17:55";
   var lastUpdatedEl = document.getElementById("lastUpdatedLine");
   if (lastUpdatedEl) lastUpdatedEl.textContent = "最後更新：" + LAST_UPDATED_TEXT;
 
