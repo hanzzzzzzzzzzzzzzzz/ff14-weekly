@@ -1163,6 +1163,11 @@
   .announce-icon { font-size: 17px; line-height: 1.35; flex-shrink: 0; }
   .announce-body { flex: 1; min-width: 0; }
   .announce-title { font-size: 14px; font-weight: 700; color: var(--crystal-ink); }
+  .announce-new {
+    display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+    color: #fff; background: var(--bad); border-radius: 999px; padding: 1px 7px;
+    vertical-align: 1px; margin-left: 4px;
+  }
   .announce-where {
     display: block; font-size: 11.5px; color: var(--ink-dim); margin: 3px 0 5px;
     padding-left: 8px; border-left: 2px solid var(--accent);
@@ -1491,7 +1496,7 @@
       <div class="diy-notify-body">
         <p class="last-updated" id="lastUpdatedLine">最後更新：載入中…</p>
         <ul id="changelogList">
-          <li><strong>行事曆改成整頁月曆＋懸浮側欄</strong>：月曆現在<u>佔滿整個視窗寬度</u>，格子變大很多，事件名稱不會再被截成幾個字。點任一天，<u>月曆會滑向左邊縮小、填寫欄位從右邊推出來</u>（不是蓋在上面，所以七天的欄位都還看得到），按 × 關掉之後月曆會再展開回滿版；不用再往下捲找表單。另外月曆格子原本會把時間跟名稱擠在一起導致名稱被切掉，現在格子裡<u>只顯示事件名稱</u>，時間改放在滑鼠提示與右側清單裡，每格最多顯示 4 筆。自訂倒數也改成<u>兩欄排列</u>比較省空間，釘選的倒數按 ✎ 會直接跳到行事曆對應的事件開始編輯。</li>
+          <li><strong>行事曆改成整頁月曆＋推開式側欄</strong>：月曆現在<u>佔滿整個視窗寬度</u>，格子變大很多，事件名稱不會再被截成幾個字。點任一天，<u>月曆會滑向左邊縮小、填寫欄位從右邊推出來</u>（不是蓋在上面，所以七天的欄位都還看得到），按 × 關掉之後月曆會再展開回滿版；不用再往下捲找表單。另外月曆格子原本會把時間跟名稱擠在一起導致名稱被切掉，現在格子裡<u>只顯示事件名稱</u>，時間改放在滑鼠提示與右側清單裡，每格最多顯示 4 筆。自訂倒數也改成<u>兩欄排列</u>比較省空間，釘選的倒數按 ✎ 會直接跳到行事曆對應的事件開始編輯。</li>
           <li><strong>倒數列可以自己新增倒數了</strong>：上方那排倒數卡片原本只有各清單的重置倒數，現在最後面多了一顆「＋ 新增倒數」，可以自己加想追蹤的時間點。兩種類型：<u>單次</u>（倒數到某個日期時間，例如版本更新、活動結束）跟<u>重複</u>（每天或每週固定時間，例如固定團）。自訂的倒數會用<u>細長條橫列</u>顯示，跟上面那排方形的重置倒數卡片明顯區隔，而且橫向空間夠，日期時間不會被截掉。這些自訂倒數自成一組，標題列點一下就能<u>整組收合</u>起來（收合狀態會記住）；收合時標題列還是會顯示「最近的那一個」剩多久，不會完全看不到。倒數會自動依剩餘時間排序，快到的排前面，已到期的沉到最後。另外行事曆的事件旁邊多了一顆 📌，點下去就會把那個事件釘到倒數列，不用重新輸入一次；在倒數列按 × 只是取消釘選，不會刪掉行事曆的事件。倒數歸零後會顯示「已到期」並變色停在那裡，不會自動消失，要清掉自己按 ×。自訂倒數也會一起進備份。</li>
           <li><strong>修好備份匯入到別的瀏覽器或裝置時，勾選紀錄跟「本週紀錄與完成度」會整個不見的問題</strong>：備份檔裡的勾選紀錄會連著「這台裝置的角色編號」一起存起來，而這個編號是每個瀏覽器各自隨機產生的，所以匯到另一台裝置時，資料雖然有寫進去，卻被放在新瀏覽器讀不到的位置——結果就是清單設定有還原，但所有打勾的紀錄跟日隨的「本週紀錄與完成度」長條圖全部變成空的、0%。現在匯入時會自動把紀錄改掛到目前選擇的角色底下，換裝置、換瀏覽器或清過快取後匯入都能完整還原，以前匯出的舊備份檔也一樣救得回來。另外匯入成功的提示訊息現在會顯示「還原了幾筆勾選紀錄」，如果顯示 0 筆就代表是備份檔本身沒存到，可以馬上分辨問題出在哪一邊。</li>
         </ul>
@@ -1605,15 +1610,23 @@
 <div class="modal-overlay" id="announceModal" hidden>
   <div class="modal-box modal-box-wide announce-box">
     <div class="announce-badge">新功能公告</div>
-    <h3>這次更新新增了三個功能</h3>
-    <p class="modal-hint">簡單說明一下各在哪裡、能做什麼。</p>
+    <h3>最近新增／改版的功能</h3>
+    <p class="modal-hint">簡單說明一下各在哪裡、能做什麼。標「新」的是這一批剛加的。</p>
     <ul class="announce-list">
       <li class="announce-item">
-        <span class="announce-icon">✏️</span>
+        <span class="announce-icon">⏳</span>
         <div class="announce-body">
-          <div class="announce-title">可以補勾忘記勾的日子了</div>
-          <span class="announce-where">位置：日隨／籌備任務／友好部族卡片裡的「本週紀錄與完成度」</span>
-          <p class="announce-desc">點開某一天之後，那天的明細現在可以<strong>直接勾</strong>，計數類的項目也能補調數字，右邊還有「整天勾選／整天清空」。用 ◀ ▶ 可以翻到同一個月的其他週，最多補到本月月初；未來的日期會變灰，不能勾。</p>
+          <div class="announce-title">自訂倒數 <span class="announce-new">新</span></div>
+          <span class="announce-where">位置：頁面上方那排倒數卡片，最後面的「＋ 新增倒數」</span>
+          <p class="announce-desc">除了各清單的重置倒數，現在可以加自己想追蹤的時間點。兩種類型：<strong>單次</strong>（倒數到某個日期時間，例如版本更新、活動結束）跟<strong>重複</strong>（每天或每週固定時間，到了自動跳下一輪，例如固定團）。行事曆的事件旁邊有一顆 📌，點下去就能把那個事件釘到倒數列，不用重打一次。自訂倒數自成一組，點標題可以整組收合，收合時還是看得到最近的那一個。</p>
+        </div>
+      </li>
+      <li class="announce-item">
+        <span class="announce-icon">💾</span>
+        <div class="announce-body">
+          <div class="announce-title">備份升級成「整個網站的完整快照」 <span class="announce-new">新</span></div>
+          <span class="announce-where">位置：頁面最下面的「匯出備份」</span>
+          <p class="announce-desc">以前的備份只存「目前選擇的那個角色」，換裝置匯入後<strong>其他角色會整個不見</strong>，便利貼、小工具排序、主題也都沒被存到。現在一次備份所有角色的清單與勾選紀錄，加上行事曆、自訂倒數、工具箱、鬧鐘、便利貼、小工具排序、主題、擲骰名單。<strong>建議重新匯出一份新的備份</strong>取代舊檔（以前匯出的舊檔還是可以匯入，只是內容比較少）。</p>
         </div>
       </li>
       <li class="announce-item">
@@ -1621,7 +1634,15 @@
         <div class="announce-body">
           <div class="announce-title">行事曆</div>
           <span class="announce-where">位置：畫面右上角的「📅 行事曆」按鈕</span>
-          <p class="announce-desc">點開是一個月曆。可以新增事件，填日期、時間（不填就是整天）、事件種類（副本／團本、遊戲活動、生產採集、交易／市場、約團／聚會、其他，各有顏色）跟備註。月曆格子裡直接看得到當天的事件，點格子看完整清單，事件可以編輯或刪除。行事曆是所有角色共用的，內容會一起存進「匯出備份」。</p>
+          <p class="announce-desc">可以新增事件，填日期、時間（不填就是整天）、事件種類（副本／團本、遊戲活動、生產採集、交易／市場、約團／聚會、其他，各有顏色）跟備註。月曆佔滿整個視窗，點任一天，月曆會滑向左邊縮小、填寫欄位從右邊推出來，關掉再展開回去。今天的日期是實心圓標記，目前點選的那天整格會填色。行事曆所有角色共用，也會進備份。</p>
+        </div>
+      </li>
+      <li class="announce-item">
+        <span class="announce-icon">✏️</span>
+        <div class="announce-body">
+          <div class="announce-title">可以補勾忘記勾的日子了</div>
+          <span class="announce-where">位置：日隨／籌備任務／友好部族卡片裡的「本週紀錄與完成度」</span>
+          <p class="announce-desc">點開某一天之後，那天的明細可以<strong>直接勾</strong>，計數類的項目也能補調數字，右邊還有「整天勾選／整天清空」。用 ◀ ▶ 可以翻到同一個月的其他週，最多補到本月月初；未來的日期會變灰，不能勾。</p>
         </div>
       </li>
       <li class="announce-item">
@@ -4422,7 +4443,7 @@
 
   // 手動維護：每次修改網站程式碼時手動更新這個時間點，不要用 new Date() 抓「現在」——
   // 那樣不管有沒有真的改版，每次載入頁面都會顯示成剛更新過，等於騙人。
-  var LAST_UPDATED_TEXT = "2026/08/02 (週日) 01:55";
+  var LAST_UPDATED_TEXT = "2026/08/02 (週日) 02:00";
   var lastUpdatedEl = document.getElementById("lastUpdatedLine");
   if (lastUpdatedEl) lastUpdatedEl.textContent = "最後更新：" + LAST_UPDATED_TEXT;
 
@@ -4604,7 +4625,8 @@
   // next announcement is just bumping ANNOUNCE_ID — everyone sees the new one once, even if
   // they ticked "don't show again" on the previous one.
   var ANNOUNCE_KEY = "ff14weekly.announceDismissed.v1";
-  var ANNOUNCE_ID = "2026-08-01-backfill-calendar-customlists";
+  // bumped so everyone sees the new round once, even if they dismissed the previous announcement
+  var ANNOUNCE_ID = "2026-08-02-countdowns-backup-calendar";
   var announceModal = document.getElementById("announceModal");
   var announceDontShow = document.getElementById("announceDontShow");
   function closeAnnounce() {
