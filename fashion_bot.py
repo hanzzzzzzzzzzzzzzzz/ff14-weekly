@@ -4,6 +4,8 @@ import requests
 import json
 import base64
 import os
+import sys
+import time
 from datetime import datetime, timezone
 from dotenv import load_dotenv
 
@@ -15,8 +17,14 @@ GITHUB_OWNER = "hanzzzzzzzzzzzzzzzz"
 GITHUB_REPO = "ff14-weekly"
 GITHUB_FILE = "fashion-judging.json"
 
+# 被 Discord/Cloudflare 限流時，重試前要等多久（秒）。可用環境變數覆蓋。
+RATE_LIMIT_SLEEP = int(os.getenv('RATE_LIMIT_SLEEP', '900'))   # 15 分鐘
+GENERIC_ERROR_SLEEP = int(os.getenv('GENERIC_ERROR_SLEEP', '60'))
+
+# 這個 bot 只用 slash command，不讀訊息內容。
+# message_content 是「特權意圖」，沒用到就別開——一旦在 Developer Portal 被關掉，
+# 開著它會讓 bot 一啟動就崩潰，變成另一個重啟迴圈。
 intents = discord.Intents.default()
-intents.message_content = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
@@ -158,12 +166,12 @@ class FashionJudgingModal(discord.ui.Modal, title="更新時尚評鑑"):
 
 @bot.event
 async def on_ready():
-    print(f'{bot.user} 已連接到 Discord！')
+    print(f'{bot.user} 已連接到 Discord！', flush=True)
     try:
         synced = await bot.tree.sync()
-        print(f"已同步 {len(synced)} 個指令")
+        print(f"已同步 {len(synced)} 個指令", flush=True)
     except Exception as e:
-        print(f"同步指令時出錯：{e}")
+        print(f"同步指令時出錯：{e}", flush=True)
 
 
 @bot.tree.command(name="時尚評鑑", description="更新時尚評鑑資訊（會跳出表單，直接帶出目前內容，穿搭建議/注意事項可以換行）")
@@ -179,4 +187,40 @@ async def fashion_judging(
     await interaction.response.send_modal(FashionJudgingModal(image_url=image_url, image_url2=image_url2))
 
 
-bot.run(DISCORD_TOKEN)
+def sleep_then_exit(seconds, reason):
+    """在容器裡「睡著」等一段時間，再讓程式結束。
+
+    重點是「睡在程式結束之前」。部署平台看到程式結束就會馬上重開一份，
+    如果登入失敗當下直接結束，就會變成每秒好幾次的重試風暴——而 Discord 前面的
+    Cloudflare 是用 IP 計算次數的，重試風暴只會不斷延長那個 IP 的封鎖時間，
+    讓它永遠解不開。先睡再結束，重試頻率就被壓成「每 N 秒一次」。
+    """
+    print(f"[啟動失敗] {reason}", flush=True)
+    print(f"[啟動失敗] 等待 {seconds} 秒後再重試，避免把限流時間越拖越長。", flush=True)
+    time.sleep(seconds)
+    sys.exit(1)
+
+
+if __name__ == "__main__":
+    if not DISCORD_TOKEN:
+        # token 沒設定的話重試幾百次也不會變好，直接停下來等人去修設定
+        print("[設定錯誤] 找不到 DISCORD_TOKEN 環境變數，請到部署平台的環境變數設定。", flush=True)
+        sleep_then_exit(3600, "缺少 DISCORD_TOKEN")
+
+    try:
+        bot.run(DISCORD_TOKEN)
+    except discord.LoginFailure:
+        # token 是錯的，重試沒有意義，睡久一點避免無意義的請求
+        sleep_then_exit(3600, "DISCORD_TOKEN 無效或已失效，請重新產生後更新環境變數。")
+    except discord.PrivilegedIntentsRequired:
+        sleep_then_exit(3600, "程式要求了未在 Developer Portal 開啟的特權意圖。")
+    except discord.HTTPException as e:
+        if e.status == 429:
+            sleep_then_exit(
+                RATE_LIMIT_SLEEP,
+                "被 Discord/Cloudflare 限流（429 / Cloudflare 1015）。"
+                "這通常是這台主機的對外 IP 被暫時封鎖，等一段時間就會自己解開。"
+            )
+        sleep_then_exit(GENERIC_ERROR_SLEEP, f"Discord 回傳 HTTP {e.status}：{e}")
+    except Exception as e:
+        sleep_then_exit(GENERIC_ERROR_SLEEP, f"未預期的錯誤：{type(e).__name__}: {e}")
