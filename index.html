@@ -1376,8 +1376,8 @@
       <div class="diy-notify-body">
         <p class="last-updated" id="lastUpdatedLine">最後更新：載入中…</p>
         <ul id="changelogList">
+          <li><strong>匯出備份改成整個網站的完整快照</strong>：原本的備份只包含「目前選擇的那個角色」，而且便利貼、小工具排序、主題、擲骰名單這些都沒被存到 —— 換裝置匯入之後，其他角色會整個不見，便利貼裡記的東西也沒了。現在改成一次備份<u>所有角色</u>的清單與勾選紀錄，加上行事曆、工具箱、鬧鐘、便利貼、小工具排序、主題、擲骰名單，等於整個網站的完整快照。匯入時的提示也會告訴你「幾個角色、還原幾筆紀錄」。以前匯出的舊備份檔一樣可以匯入，不用重新匯出。</li>
           <li><strong>行事曆的日期標示改得更明顯</strong>：原本「今天」「目前點選的那天」都只有外框變色，格子本身沒有差別，很難一眼看出滑鼠點在哪。現在改成三種狀態各用不同方式標示：<u>今天</u>的日期數字變成實心圓形標記、格子也帶淡色底；<u>目前點選的那天</u>整格填上明顯的底色再加一圈粗外框；<u>滑鼠移過去</u>的格子會即時變色。三種同時出現也不會互相蓋掉，滑到「今天」或「已選取」那格一樣看得到反應。</li>
-          <li><strong>新增「新功能公告」彈窗</strong>：有比較大的功能更新時，一進網站會跳一個公告視窗，簡單說明新功能在哪裡、能做什麼，看完可以勾「不要再顯示這則公告」把它關掉。公告的已讀狀態記的是「哪一則公告」而不是單純的看過／沒看過，所以之後有新公告時還是會再跳一次，不會因為關過一次就永遠看不到新的。</li>
           <li><strong>修好備份匯入到別的瀏覽器或裝置時，勾選紀錄跟「本週紀錄與完成度」會整個不見的問題</strong>：備份檔裡的勾選紀錄會連著「這台裝置的角色編號」一起存起來，而這個編號是每個瀏覽器各自隨機產生的，所以匯到另一台裝置時，資料雖然有寫進去，卻被放在新瀏覽器讀不到的位置——結果就是清單設定有還原，但所有打勾的紀錄跟日隨的「本週紀錄與完成度」長條圖全部變成空的、0%。現在匯入時會自動把紀錄改掛到目前選擇的角色底下，換裝置、換瀏覽器或清過快取後匯入都能完整還原，以前匯出的舊備份檔也一樣救得回來。另外匯入成功的提示訊息現在會顯示「還原了幾筆勾選紀錄」，如果顯示 0 筆就代表是備份檔本身沒存到，可以馬上分辨問題出在哪一邊。</li>
         </ul>
       </div>
@@ -1411,7 +1411,7 @@
       <p><strong>提醒設定</strong>：每組可以「+ 新增提醒」設定幾點幾分跳瀏覽器通知，週間性質的組可以選星期幾重複，也可以指定「特定日期」讓提醒只跳一次；點提醒標籤本身可以直接改時間，不用刪掉重建。footer 的「所有提醒總覽」集中列出目前設定的所有提醒，可以直接在那邊刪除。<u>瀏覽器提醒有限制</u>：只有獨立分頁開著（不能是嵌在 claude.ai 對話裡）、而且分頁要保持在前景，切到其他分頁/視窗可能會被瀏覽器暫停檢查而跳不出來。真正不管有沒有開網頁都會準時到的提醒，請用 Discord 排程（如果你有設定的話）。</p>
       <p><strong>新功能公告</strong>：有比較大的更新時，一進網站會自動跳一個公告視窗，說明新功能在哪裡、能做什麼。看完勾「不要再顯示這則公告」再關閉就不會再跳。之後若有新的公告還是會再跳一次（記住的是「哪一則公告看過了」，不是單純的看過／沒看過），所以不用擔心關掉之後就錯過後續更新。</p>
       <p><strong>全部完成的小驚喜</strong>：本輪事項（不含友好部族的累計進度）全部完成的瞬間，會跳出一個小彈窗，隨機顯示一句 FF14 風味的祝福。</p>
-      <p><strong>資料保存與備份</strong>：所有勾選狀態、清單設定都只存在「這個瀏覽器」的本機儲存空間，換裝置、換瀏覽器、清瀏覽器資料都會遺失。請定期用「匯出備份」複製一份 JSON 存起來，之後可以用「匯入備份」貼回來完整還原（含過去每一天的勾選紀錄，所以日隨的「本週紀錄與完成度」也會一起回來）。匯出的是「目前選擇的角色」那一份，匯入時會蓋掉當下選擇角色的清單設定與勾選紀錄，並自動掛到該角色底下，所以換到別台裝置、別的瀏覽器，或清過快取之後再匯入都能正常還原。匯入成功時的提示會告訴你「還原了幾筆勾選紀錄」，如果那邊顯示 0 筆，代表是備份檔本身就沒存到紀錄，要回原本那台裝置重新匯出一次。備份內容包含清單設定（含你自己建的自訂清單）、所有勾選紀錄、工具箱、鬧鐘與行事曆事件。也可以開啟「太久沒備份」提醒，自訂超過幾天沒匯出就提示你。</p>
+      <p><strong>資料保存與備份</strong>：所有勾選狀態、清單設定都只存在「這個瀏覽器」的本機儲存空間，換裝置、換瀏覽器、清瀏覽器資料都會遺失。請定期用「匯出備份」複製一份 JSON 存起來，之後可以用「匯入備份」貼回來完整還原（含過去每一天的勾選紀錄，所以日隨的「本週紀錄與完成度」也會一起回來）。備份是<u>整個網站的完整快照</u>：<strong>所有角色</strong>的清單設定（含你自己建的自訂清單）與勾選紀錄，加上行事曆、工具箱、鬧鐘、便利貼內容、小工具排序、主題設定、擲骰名單。匯入會覆蓋這個瀏覽器上的全部內容，所以換裝置、換瀏覽器或清過快取之後匯入都能完整還原。匯入成功時的提示會告訴你「幾個角色、還原了幾筆勾選紀錄」，如果顯示 0 筆，代表是備份檔本身就沒存到紀錄，要回原本那台裝置重新匯出一次。以前匯出的舊格式備份也還是可以匯入（只是舊格式本來就只存了一個角色）。也可以開啟「太久沒備份」提醒，自訂超過幾天沒匯出就提示你。</p>
       <p><strong>主題</strong>：右上角「🌓」可以在自動（跟隨系統）、淺色、深色之間切換，選擇會記住。</p>
       <p><strong>今日運勢</strong>：清單下方的小卡片，按「抽今日運勢」隨機抽一句大吉～凶的籤詩，一天只能抽一次，抽過會記住結果到隔天重置。</p>
       <p><strong>解答之書</strong>：按「翻開解答之書」隨時能翻，給你一句模稜兩可的答案，沒有次數限制，純粹好玩。</p>
@@ -1430,7 +1430,7 @@
 <div class="modal-overlay" id="exportModal" hidden>
   <div class="modal-box">
     <h3>匯出備份</h3>
-    <p class="modal-hint">複製下面的內容，貼到一個文字檔存成 .json 檔即可備份；之後用「匯入備份」把整份內容貼回來就能還原。（只會備份目前選擇的角色）</p>
+    <p class="modal-hint">複製下面的內容，貼到一個文字檔存成 .json 檔即可備份；之後用「匯入備份」把整份內容貼回來就能還原。這份備份包含<strong>所有角色</strong>的清單設定與勾選紀錄，以及行事曆、工具箱、鬧鐘、便利貼、小工具排序、主題等共用內容。</p>
     <textarea id="exportText" readonly></textarea>
     <div class="modal-actions">
       <button type="button" id="copyExportBtn">複製到剪貼簿</button>
@@ -1442,7 +1442,7 @@
 <div class="modal-overlay" id="importModal" hidden>
   <div class="modal-box">
     <h3>匯入備份</h3>
-    <p class="modal-hint">把之前匯出的備份 JSON 內容整段貼到下面，再按「確認匯入」。這會覆蓋目前選擇角色的清單設定與勾選紀錄。</p>
+    <p class="modal-hint">把之前匯出的備份 JSON 內容整段貼到下面，再按「確認匯入」。這會<strong>覆蓋這個瀏覽器上的所有角色與紀錄</strong>，請先確認手邊這份備份是你要的那一份。以前匯出的舊格式備份也還是可以匯入。</p>
     <textarea id="importText" placeholder="貼上備份 JSON 內容…"></textarea>
     <div class="modal-actions">
       <button type="button" id="confirmImportBtn">確認匯入</button>
@@ -1871,6 +1871,78 @@
       });
     }
     return restored;
+  }
+
+  // ---- whole-site backup (v2) ----
+  // v1 backups only carried the active character, so restoring on a new device silently lost
+  // every other character plus the sticky note, tool order, theme and so on. v2 dumps every
+  // character and all the shared tools. Progress is stored with the character prefix stripped
+  // so the character id lives in exactly one place and can't drift out of sync.
+  function progressPrefixFor(charId) { return "ff14weekly.p." + charId + "."; }
+
+  function dumpProgressFor(charId) {
+    var prefix = progressPrefixFor(charId);
+    var out = {};
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k.indexOf(prefix) === 0) out[k.slice(prefix.length)] = localStorage.getItem(k);
+    }
+    return out;
+  }
+
+  function restoreProgressFor(charId, dump) {
+    var prefix = progressPrefixFor(charId);
+    var toRemove = [];
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k.indexOf(prefix) === 0) toRemove.push(k);
+    }
+    toRemove.forEach(function (k) { localStorage.removeItem(k); });
+    var n = 0;
+    if (dump && typeof dump === "object") {
+      Object.keys(dump).forEach(function (suffix) {
+        if (!suffix) return;
+        localStorage.setItem(prefix + suffix, dump[suffix]);
+        n++;
+      });
+    }
+    return n;
+  }
+
+  function dumpSharedTools() {
+    return {
+      toolbox: toolboxLinks,
+      alarms: alarms,
+      calendar: calendarEvents,
+      toolOrder: toolOrder,
+      stickyNote: localStorage.getItem(STICKY_NOTE_KEY) || "",
+      theme: currentTheme,
+      fortune: localStorage.getItem(FORTUNE_KEY),
+      dice: localStorage.getItem(DICE_KEY),
+      backupReminderEnabled: localStorage.getItem(BACKUP_ENABLED_KEY),
+      backupReminderDays: localStorage.getItem(BACKUP_DAYS_KEY)
+    };
+  }
+
+  function restoreSharedTools(s) {
+    if (!s || typeof s !== "object") return;
+    if (Array.isArray(s.toolbox)) { toolboxLinks = s.toolbox; saveToolbox(); renderToolbox(); }
+    if (Array.isArray(s.alarms)) { alarms = s.alarms; saveAlarms(); renderAlarms(); }
+    if (Array.isArray(s.calendar)) { calendarEvents = s.calendar; saveCalendar(); }
+    if (Array.isArray(s.toolOrder)) { toolOrder = s.toolOrder; saveToolOrder(); applyToolOrder(); }
+    if (typeof s.stickyNote === "string") {
+      localStorage.setItem(STICKY_NOTE_KEY, s.stickyNote);
+      if (stickyNoteTextEl) stickyNoteTextEl.value = s.stickyNote;
+    }
+    if (typeof s.theme === "string" && THEME_CYCLE.indexOf(s.theme) !== -1) {
+      currentTheme = s.theme;
+      localStorage.setItem(THEME_KEY, currentTheme);
+      applyTheme(currentTheme);
+    }
+    if (typeof s.fortune === "string") { localStorage.setItem(FORTUNE_KEY, s.fortune); renderFortuneCard(); }
+    if (typeof s.dice === "string") { localStorage.setItem(DICE_KEY, s.dice); renderDiceList(); }
+    if (typeof s.backupReminderEnabled === "string") localStorage.setItem(BACKUP_ENABLED_KEY, s.backupReminderEnabled);
+    if (typeof s.backupReminderDays === "string") localStorage.setItem(BACKUP_DAYS_KEY, s.backupReminderDays);
   }
 
   var characters = ensureCharacters();
@@ -3129,7 +3201,24 @@
   var exportText = document.getElementById("exportText");
 
   document.getElementById("exportBtn").addEventListener("click", function () {
-    var payload = { config: config, progress: dumpProgress(), toolbox: toolboxLinks, alarms: alarms, calendar: calendarEvents, exportedAt: new Date().toISOString() };
+    saveConfig();  // make sure the in-memory config for the active character is on disk first
+    var charData = {};
+    characters.forEach(function (c) {
+      charData[c.id] = {
+        name: c.name,
+        config: localStorage.getItem(STORAGE_KEY + "." + c.id),
+        notified: localStorage.getItem(NOTIFIED_KEY + "." + c.id),
+        progress: dumpProgressFor(c.id)
+      };
+    });
+    var payload = {
+      backupVersion: 2,
+      exportedAt: new Date().toISOString(),
+      characters: characters,
+      activeCharacterId: activeCharacterId,
+      charData: charData,
+      shared: dumpSharedTools()
+    };
     exportText.value = JSON.stringify(payload, null, 2);
     exportModal.hidden = false;
     exportText.focus();
@@ -3164,21 +3253,53 @@
   document.getElementById("confirmImportBtn").addEventListener("click", function () {
     try {
       var parsed = JSON.parse(importText.value);
-      var cfg = parsed && parsed.config ? parsed.config : parsed;
-      if (!cfg || !Array.isArray(cfg.groups)) throw new Error("bad format");
-      config = ensureNotifyDefaults(cfg);
-      saveConfig();
-      var hasProgress = !!(parsed && parsed.progress);
-      var restored = hasProgress ? restoreProgress(parsed.progress) : 0;
-      if (parsed && Array.isArray(parsed.toolbox)) { toolboxLinks = parsed.toolbox; saveToolbox(); renderToolbox(); }
-      if (parsed && Array.isArray(parsed.alarms)) { alarms = parsed.alarms; saveAlarms(); renderAlarms(); }
-      if (parsed && Array.isArray(parsed.calendar)) { calendarEvents = parsed.calendar; saveCalendar(); }
+      if (!parsed || typeof parsed !== "object") throw new Error("bad format");
+      var restored = 0, charCount = 0, hasProgress = false;
+
+      if (parsed.backupVersion >= 2 && Array.isArray(parsed.characters) && parsed.charData) {
+        // v2: every character plus all the shared tools
+        if (!parsed.characters.length) throw new Error("bad format");
+        characters = parsed.characters.map(function (c) { return { id: c.id, name: c.name }; });
+        saveCharacters();
+        parsed.characters.forEach(function (c) {
+          var d = parsed.charData[c.id];
+          if (!d) return;
+          charCount++;
+          if (typeof d.config === "string" && d.config) localStorage.setItem(STORAGE_KEY + "." + c.id, d.config);
+          if (typeof d.notified === "string" && d.notified) localStorage.setItem(NOTIFIED_KEY + "." + c.id, d.notified);
+          if (d.progress) { hasProgress = true; restored += restoreProgressFor(c.id, d.progress); }
+        });
+        activeCharacterId = characters.some(function (c) { return c.id === parsed.activeCharacterId; })
+          ? parsed.activeCharacterId : characters[0].id;
+        localStorage.setItem(ACTIVE_CHAR_KEY, activeCharacterId);
+        restoreSharedTools(parsed.shared);
+        config = applyJobNameFix(ensureNotifyDefaults(loadConfig()));
+        notified = loadNotified();
+        saveConfig();
+      } else {
+        // v1: only ever held the active character's list + checks, plus a few shared tools
+        var cfg = parsed.config ? parsed.config : parsed;
+        if (!cfg || !Array.isArray(cfg.groups)) throw new Error("bad format");
+        config = ensureNotifyDefaults(cfg);
+        saveConfig();
+        charCount = 1;
+        hasProgress = !!parsed.progress;
+        if (hasProgress) restored = restoreProgress(parsed.progress);
+        if (Array.isArray(parsed.toolbox)) { toolboxLinks = parsed.toolbox; saveToolbox(); renderToolbox(); }
+        if (Array.isArray(parsed.alarms)) { alarms = parsed.alarms; saveAlarms(); renderAlarms(); }
+        if (Array.isArray(parsed.calendar)) { calendarEvents = parsed.calendar; saveCalendar(); }
+      }
+
+      updateCharSwitchBtn();
+      renderCharManageList();
       render();
       renderGroupVisibility();
       importModal.hidden = true;
-      // say how many checks came back: "0 筆" means the backup file itself has none,
+      // say how much actually came back: "0 筆" means the backup file itself has none,
       // which is a very different problem from them not showing up afterwards
-      showToast(hasProgress ? "已匯入備份（還原 " + restored + " 筆勾選紀錄）" : "已匯入備份（這份備份沒有勾選紀錄）");
+      showToast(hasProgress
+        ? "已匯入備份（" + charCount + " 個角色、還原 " + restored + " 筆勾選紀錄）"
+        : "已匯入備份（這份備份沒有勾選紀錄）");
     } catch (err) {
       showToast("匯入失敗：內容格式不正確");
     }
@@ -3860,7 +3981,7 @@
 
   // 手動維護：每次修改網站程式碼時手動更新這個時間點，不要用 new Date() 抓「現在」——
   // 那樣不管有沒有真的改版，每次載入頁面都會顯示成剛更新過，等於騙人。
-  var LAST_UPDATED_TEXT = "2026/08/01 (週六) 17:55";
+  var LAST_UPDATED_TEXT = "2026/08/01 (週六) 19:19";
   var lastUpdatedEl = document.getElementById("lastUpdatedLine");
   if (lastUpdatedEl) lastUpdatedEl.textContent = "最後更新：" + LAST_UPDATED_TEXT;
 
