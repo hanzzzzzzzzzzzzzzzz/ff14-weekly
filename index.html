@@ -1017,6 +1017,32 @@
   }
   .cal-form-actions .cal-form-cancel:hover { border-color: var(--crystal); filter: none; }
 
+  /* ---- new-feature announcement ---- */
+  .announce-box { max-width: 600px; }
+  .announce-badge {
+    display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    color: #fff; background: var(--crystal); clip-path: var(--chamfer-sm);
+    padding: 3px 10px; margin-bottom: 8px;
+  }
+  .announce-list { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .announce-item {
+    display: flex; gap: 10px; background: var(--panel-2); clip-path: var(--chamfer-sm); padding: 10px 12px;
+  }
+  .announce-icon { font-size: 17px; line-height: 1.35; flex-shrink: 0; }
+  .announce-body { flex: 1; min-width: 0; }
+  .announce-title { font-size: 14px; font-weight: 700; color: var(--crystal-ink); }
+  .announce-where {
+    display: block; font-size: 11.5px; color: var(--ink-dim); margin: 3px 0 5px;
+    padding-left: 8px; border-left: 2px solid var(--accent);
+  }
+  .announce-desc { font-size: 12.5px; color: var(--ink); line-height: 1.6; margin: 0; }
+  .announce-dismiss {
+    display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--ink-dim);
+    margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line);
+  }
+  #closeAnnounceBtn { background: var(--crystal); color: #fff; border: none; }
+  #closeAnnounceBtn:hover { filter: brightness(1.12); }
+
   /* mobile-only tweaks — everything above this stays exactly as-is on desktop */
   @media (max-width: 600px) {
     .page { padding: 20px 14px 48px; }
@@ -1325,9 +1351,9 @@
       <div class="diy-notify-body">
         <p class="last-updated" id="lastUpdatedLine">最後更新：載入中…</p>
         <ul id="changelogList">
+          <li><strong>新增「新功能公告」彈窗</strong>：有比較大的功能更新時，一進網站會跳一個公告視窗，簡單說明新功能在哪裡、能做什麼，看完可以勾「不要再顯示這則公告」把它關掉。公告的已讀狀態記的是「哪一則公告」而不是單純的看過／沒看過，所以之後有新公告時還是會再跳一次，不會因為關過一次就永遠看不到新的。</li>
           <li><strong>新增三個功能：補勾過去的日子、行事曆、自訂清單</strong>：一、日隨那類每日清單的「本週紀錄與完成度」，現在點開某一天之後可以直接在裡面補勾，忘記勾的進度不用再放棄了（可以補到本月月初，未來的日期不能勾，另外附「整天勾選／整天清空」）。二、右上角多了「📅 行事曆」按鈕，可以像記事本一樣新增事件，有日期、時間、事件種類（副本、活動、生產採集等六種顏色標籤）跟備註，月曆上直接看得到，事件會一起進備份。三、清單最下面多了「＋ 新增自訂清單」，可以自己開一個跟日隨、籌備任務同級的清單，重置方式自己挑（每天／每週／不自動重置），名稱隨時可改，也可以整個刪掉。另外順手修好一個既有問題：一週檢視把「哪一天」對到「哪個重置週期」的算法原本固定往前推一天，對 23:00 重置的日隨是對的，但對 04:00 重置的籌備任務會整個錯開一天（晚上打的勾會顯示在隔天那格）。現在改成看重置時間落在一天的哪半邊來判斷，籌備任務的長條圖會往前修正一天到正確的位置，補勾也才會寫到你真正想補的那天。</li>
           <li><strong>修好備份匯入到別的瀏覽器或裝置時，勾選紀錄跟「本週紀錄與完成度」會整個不見的問題</strong>：備份檔裡的勾選紀錄會連著「這台裝置的角色編號」一起存起來，而這個編號是每個瀏覽器各自隨機產生的，所以匯到另一台裝置時，資料雖然有寫進去，卻被放在新瀏覽器讀不到的位置——結果就是清單設定有還原，但所有打勾的紀錄跟日隨的「本週紀錄與完成度」長條圖全部變成空的、0%。現在匯入時會自動把紀錄改掛到目前選擇的角色底下，換裝置、換瀏覽器或清過快取後匯入都能完整還原，以前匯出的舊備份檔也一樣救得回來。另外匯入成功的提示訊息現在會顯示「還原了幾筆勾選紀錄」，如果顯示 0 筆就代表是備份檔本身沒存到，可以馬上分辨問題出在哪一邊。</li>
-          <li><strong>時尚評鑑新增規則說明，並修好過期資料不會自動清空的問題</strong>：卡片的「每週二 16:00 重置」旁邊新增一行規則提示（每週五16:00開啟評分模式／約每週六中午會更新／提供者親測過才會發上來），跟週期範圍那一行左右對齊。另外原本重置點過了以後，如果還沒人重新提交，畫面會一直卡著上一週的舊內容；現在改成會比對提交時間跟本週二 16:00 的重置點，只要資料是上週留下的舊資料，就會自動變回「內容還在路上」的預設狀態。</li>
         </ul>
       </div>
     </details>
@@ -1358,6 +1384,7 @@
       <p><strong>不需要的組別直接關閉</strong>：footer 的「顯示的組別」可以把整個不玩的內容（例如已經不刷的籌備任務）關掉，關掉後倒數卡片、清單卡片、提醒都不會出現，也不會算進「本輪進度」，跟暫時收合不同，這是真的不追蹤了；隨時可以再打開，設定不會遺失。</p>
       <p><strong>自訂排列順序</strong>：每個組別卡片右上角的 ▲▼ 可以調整這些卡片在頁面上的先後順序，頂部倒數卡片也有對應的 ◀▶ 可以直接調整；小工具區塊裡的每張卡片（今日運勢＋解答之書合併成一張、擲骰器、工具箱、鬧鐘）右上角也有各自的 ▲▼，可以獨立調整順序。順序都會記住。</p>
       <p><strong>提醒設定</strong>：每組可以「+ 新增提醒」設定幾點幾分跳瀏覽器通知，週間性質的組可以選星期幾重複，也可以指定「特定日期」讓提醒只跳一次；點提醒標籤本身可以直接改時間，不用刪掉重建。footer 的「所有提醒總覽」集中列出目前設定的所有提醒，可以直接在那邊刪除。<u>瀏覽器提醒有限制</u>：只有獨立分頁開著（不能是嵌在 claude.ai 對話裡）、而且分頁要保持在前景，切到其他分頁/視窗可能會被瀏覽器暫停檢查而跳不出來。真正不管有沒有開網頁都會準時到的提醒，請用 Discord 排程（如果你有設定的話）。</p>
+      <p><strong>新功能公告</strong>：有比較大的更新時，一進網站會自動跳一個公告視窗，說明新功能在哪裡、能做什麼。看完勾「不要再顯示這則公告」再關閉就不會再跳。之後若有新的公告還是會再跳一次（記住的是「哪一則公告看過了」，不是單純的看過／沒看過），所以不用擔心關掉之後就錯過後續更新。</p>
       <p><strong>全部完成的小驚喜</strong>：本輪事項（不含友好部族的累計進度）全部完成的瞬間，會跳出一個小彈窗，隨機顯示一句 FF14 風味的祝福。</p>
       <p><strong>資料保存與備份</strong>：所有勾選狀態、清單設定都只存在「這個瀏覽器」的本機儲存空間，換裝置、換瀏覽器、清瀏覽器資料都會遺失。請定期用「匯出備份」複製一份 JSON 存起來，之後可以用「匯入備份」貼回來完整還原（含過去每一天的勾選紀錄，所以日隨的「本週紀錄與完成度」也會一起回來）。匯出的是「目前選擇的角色」那一份，匯入時會蓋掉當下選擇角色的清單設定與勾選紀錄，並自動掛到該角色底下，所以換到別台裝置、別的瀏覽器，或清過快取之後再匯入都能正常還原。匯入成功時的提示會告訴你「還原了幾筆勾選紀錄」，如果那邊顯示 0 筆，代表是備份檔本身就沒存到紀錄，要回原本那台裝置重新匯出一次。備份內容包含清單設定（含你自己建的自訂清單）、所有勾選紀錄、工具箱、鬧鐘與行事曆事件。也可以開啟「太久沒備份」提醒，自訂超過幾天沒匯出就提示你。</p>
       <p><strong>主題</strong>：右上角「🌓」可以在自動（跟隨系統）、淺色、深色之間切換，選擇會記住。</p>
@@ -1395,6 +1422,44 @@
     <div class="modal-actions">
       <button type="button" id="confirmImportBtn">確認匯入</button>
       <button type="button" id="closeImportBtn">關閉</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="announceModal" hidden>
+  <div class="modal-box modal-box-wide announce-box">
+    <div class="announce-badge">新功能公告</div>
+    <h3>這次更新新增了三個功能</h3>
+    <p class="modal-hint">簡單說明一下各在哪裡、能做什麼。</p>
+    <ul class="announce-list">
+      <li class="announce-item">
+        <span class="announce-icon">✏️</span>
+        <div class="announce-body">
+          <div class="announce-title">可以補勾忘記勾的日子了</div>
+          <span class="announce-where">位置：日隨／籌備任務／友好部族卡片裡的「本週紀錄與完成度」</span>
+          <p class="announce-desc">點開某一天之後，那天的明細現在可以<strong>直接勾</strong>，計數類的項目也能補調數字，右邊還有「整天勾選／整天清空」。用 ◀ ▶ 可以翻到同一個月的其他週，最多補到本月月初；未來的日期會變灰，不能勾。</p>
+        </div>
+      </li>
+      <li class="announce-item">
+        <span class="announce-icon">📅</span>
+        <div class="announce-body">
+          <div class="announce-title">行事曆</div>
+          <span class="announce-where">位置：畫面右上角的「📅 行事曆」按鈕</span>
+          <p class="announce-desc">點開是一個月曆。可以新增事件，填日期、時間（不填就是整天）、事件種類（副本／團本、遊戲活動、生產採集、交易／市場、約團／聚會、其他，各有顏色）跟備註。月曆格子裡直接看得到當天的事件，點格子看完整清單，事件可以編輯或刪除。行事曆是所有角色共用的，內容會一起存進「匯出備份」。</p>
+        </div>
+      </li>
+      <li class="announce-item">
+        <span class="announce-icon">➕</span>
+        <div class="announce-body">
+          <div class="announce-title">自訂清單</div>
+          <span class="announce-where">位置：所有清單卡片的最下面，「＋ 新增自訂清單」按鈕</span>
+          <p class="announce-desc">可以開一個跟日隨、籌備任務同級的全新清單，要記什麼都可以。重置方式自己挑：每天固定時間、每週固定某天、或「不自動重置」（適合當長期待辦，要清空時自己按「全部清空」）。名稱隨時可以在卡片上直接改，也可以整個刪掉。</p>
+        </div>
+      </li>
+    </ul>
+    <label class="announce-dismiss"><input type="checkbox" id="announceDontShow"> 我看完了，不要再顯示這則公告</label>
+    <div class="modal-actions">
+      <button type="button" id="closeAnnounceBtn">關閉</button>
     </div>
   </div>
 </div>
@@ -3770,7 +3835,7 @@
 
   // 手動維護：每次修改網站程式碼時手動更新這個時間點，不要用 new Date() 抓「現在」——
   // 那樣不管有沒有真的改版，每次載入頁面都會顯示成剛更新過，等於騙人。
-  var LAST_UPDATED_TEXT = "2026/08/01 (週六) 04:39";
+  var LAST_UPDATED_TEXT = "2026/08/01 (週六) 17:34";
   var lastUpdatedEl = document.getElementById("lastUpdatedLine");
   if (lastUpdatedEl) lastUpdatedEl.textContent = "最後更新：" + LAST_UPDATED_TEXT;
 
@@ -3946,6 +4011,22 @@
 
   setInterval(updateFashionCountdown, 1000);
   updateFashionCountdown();
+
+  // ---- new-feature announcement ----
+  // What gets stored is the announcement's id, not a true/false flag. That way shipping the
+  // next announcement is just bumping ANNOUNCE_ID — everyone sees the new one once, even if
+  // they ticked "don't show again" on the previous one.
+  var ANNOUNCE_KEY = "ff14weekly.announceDismissed.v1";
+  var ANNOUNCE_ID = "2026-08-01-backfill-calendar-customlists";
+  var announceModal = document.getElementById("announceModal");
+  var announceDontShow = document.getElementById("announceDontShow");
+  function closeAnnounce() {
+    if (announceDontShow.checked) localStorage.setItem(ANNOUNCE_KEY, ANNOUNCE_ID);
+    announceModal.hidden = true;
+  }
+  document.getElementById("closeAnnounceBtn").addEventListener("click", closeAnnounce);
+  announceModal.addEventListener("click", function (e) { if (e.target === announceModal) closeAnnounce(); });
+  if (localStorage.getItem(ANNOUNCE_KEY) !== ANNOUNCE_ID) announceModal.hidden = false;
 
   initFashionMoveButtons();
   loadFashionJudging();
