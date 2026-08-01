@@ -204,10 +204,13 @@
   }
   .backup-banner button:hover { border-color: var(--crystal); }
 
-  .countdown-strip {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 10px; margin-top: 16px;
-  }
+  .countdown-strip { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  /* flex-wrap, not grid auto-fit: the reset cards must fill the row whatever their count.
+     With a grid, the full-width children below (the custom-countdown header and add button)
+     span every track, which stops auto-fit from collapsing the unused ones — so hiding a
+     group left a visible empty slot. Flex has no tracks, so each row always fills. */
+  .cc-groups { display: flex; flex-wrap: wrap; gap: 10px; }
+  .cc-groups > .countdown-chip { flex: 1 1 150px; min-width: 0; }
   .countdown-chip {
     display: flex; flex-direction: column; justify-content: space-between;
     background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-sm);
@@ -863,7 +866,7 @@
   .sticky-note-header button:hover { color: var(--ink); }
   .sticky-note-body { padding: 0 10px 10px; }
   .sticky-note textarea {
-    width: 100%; height: 120px; resize: vertical; background: var(--panel-2); color: var(--ink);
+    width: 100%; height: 120px; resize: none; background: var(--panel-2); color: var(--ink);
     border: 1px solid var(--line); border-radius: 8px; padding: 8px; font-size: 12.5px; font-family: inherit;
   }
 
@@ -1074,7 +1077,6 @@
      different shape makes them instantly tellable apart from the reset countdowns above.
      grid-column: 1 / -1 makes them span the whole strip without needing a second container. */
   .cd-group-head {
-    grid-column: 1 / -1;
     display: flex; align-items: center; gap: 8px; min-width: 0;
     background: none; border: none; border-top: 1px dashed var(--line);
     padding: 10px 2px 0; color: var(--ink-dim); font-size: 12px; font-weight: 600; text-align: left;
@@ -1092,10 +1094,7 @@
   }
   /* two columns, filled left-to-right then down. A lone row on the last line spans both
      columns so it never looks like half a layout — that also covers the single-item case. */
-  .cd-grid {
-    grid-column: 1 / -1;
-    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;
-  }
+  .cd-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
   .cd-grid > .cd-row:last-child:nth-child(odd) { grid-column: 1 / -1; }
   /* never wrap: wrapping dumped the action buttons onto a second line at the bottom-left.
      The name and date shrink (with ellipsis) instead, while time/bar/buttons stay pinned right. */
@@ -1135,7 +1134,6 @@
   .cc-mini-btn:hover { opacity: 1; color: var(--crystal-ink); }
   .cc-mini-btn.cc-del:hover { color: var(--bad); }
   .cc-add {
-    grid-column: 1 / -1;
     display: flex; align-items: center; justify-content: center; gap: 6px;
     background: none; border: 1px dashed var(--accent); color: var(--accent-ink);
     clip-path: var(--chamfer-sm); padding: 7px 12px; font-size: 12.5px; font-weight: 600;
@@ -1180,6 +1178,55 @@
   #closeAnnounceBtn { background: var(--crystal); color: #fff; border: none; }
   #closeAnnounceBtn:hover { filter: brightness(1.12); }
 
+  /* ---- left side navigation ---- */
+  .page-nav {
+    position: fixed; left: 12px; top: 50%; transform: translateY(-50%); z-index: 20;
+    display: flex; flex-direction: column; gap: 6px; width: 132px;
+    background: var(--panel); border: 1px solid var(--line); clip-path: var(--chamfer-sm);
+    padding: 8px; box-shadow: var(--shadow); max-height: 84vh; overflow-y: auto;
+  }
+  .page-nav.collapsed { width: auto; padding: 6px; }
+  .page-nav.collapsed .page-nav-list, .page-nav.collapsed .page-nav-jump { display: none; }
+  .page-nav-toggle {
+    background: none; border: none; color: var(--ink-dim); font-size: 13px; padding: 3px;
+    align-self: flex-start; transition: color 0.15s ease;
+  }
+  .page-nav-toggle:hover { color: var(--crystal-ink); }
+  .page-nav-jump { display: flex; gap: 4px; }
+  .page-nav-jump button {
+    flex: 1; background: var(--panel-2); border: 1px solid var(--line); color: var(--ink);
+    clip-path: var(--chamfer-sm); padding: 4px 0; font-size: 13px; line-height: 1;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .page-nav-jump button:hover { border-color: var(--crystal); color: var(--crystal-ink); }
+  .page-nav-list { display: flex; flex-direction: column; gap: 1px; }
+  .page-nav-btn {
+    background: none; border: none; color: var(--ink-dim); text-align: left; width: 100%;
+    font-size: 12px; padding: 5px 7px; border-radius: 6px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .page-nav-btn:hover { background: var(--panel-2); color: var(--crystal-ink); }
+  /* leave a little breathing room when a section is scrolled to */
+  .card-wrap, .fashion-card-wrap, .extra-tools-card-wrap { scroll-margin-top: 14px; }
+
+  /* ---- sticky note: custom resize grip in the top-left corner ----
+     The note is pinned to the bottom-right, so growing it expands left and up. The native
+     handle sits bottom-right, which is the one corner that can't grow — dragging it just
+     pushed the note off-screen. A top-left grip drags in the direction it actually grows. */
+  .sticky-note { position: fixed; }
+  .sticky-resize {
+    position: absolute; top: 0; left: 0; width: 20px; height: 20px; z-index: 2;
+    background: none; border: none; padding: 0; color: var(--ink-dim); opacity: 0.45;
+    cursor: nwse-resize; touch-action: none; transition: opacity 0.15s ease, color 0.15s ease;
+  }
+  .sticky-resize::before {
+    content: ""; position: absolute; top: 6px; left: 6px; width: 8px; height: 8px;
+    border-top: 2px solid currentColor; border-left: 2px solid currentColor;
+  }
+  .sticky-resize:hover { opacity: 1; color: var(--crystal); }
+  .sticky-note.collapsed .sticky-resize { display: none; }
+
   /* mobile-only tweaks — everything above this stays exactly as-is on desktop */
   @media (max-width: 600px) {
     .page { padding: 20px 14px 48px; }
@@ -1203,6 +1250,7 @@
     .backup-banner { flex-direction: column; align-items: stretch; text-align: center; }
     .dice-config-row { flex-direction: column; align-items: stretch; }
     .dice-config-row input[type="text"] { width: 100%; }
+    .page-nav { display: none; }
     .sticky-note { width: min(220px, calc(100vw - 32px)); right: 10px; bottom: 10px; }
     .sticky-note textarea { height: 90px; }
     .cd-grid { grid-template-columns: 1fr; }
@@ -1496,9 +1544,9 @@
       <div class="diy-notify-body">
         <p class="last-updated" id="lastUpdatedLine">最後更新：載入中…</p>
         <ul id="changelogList">
-          <li><strong>行事曆改成整頁月曆＋推開式側欄</strong>：月曆現在<u>佔滿整個視窗寬度</u>，格子變大很多，事件名稱不會再被截成幾個字。點任一天，<u>月曆會滑向左邊縮小、填寫欄位從右邊推出來</u>（不是蓋在上面，所以七天的欄位都還看得到），按 × 關掉之後月曆會再展開回滿版；不用再往下捲找表單。另外月曆格子原本會把時間跟名稱擠在一起導致名稱被切掉，現在格子裡<u>只顯示事件名稱</u>，時間改放在滑鼠提示與右側清單裡，每格最多顯示 4 筆。自訂倒數也改成<u>兩欄排列</u>比較省空間，釘選的倒數按 ✎ 會直接跳到行事曆對應的事件開始編輯。</li>
+          <li><strong>新增左側頁面導覽，便利貼可以自己調大小</strong>：畫面左邊多了一排導覽，點「友好部族」「小工具」這些名稱就會直接跳到那一區，不用自己慢慢捲；上面還有「⤒ 回到最上面」「⤓ 移到最下面」兩顆按鈕。導覽可以用 ☰ 收合起來，狀態會記住（視窗比較窄時預設收著，免得擋到內容；手機上不顯示）。另外便利貼的縮放把手<u>從右下角移到左上角</u>——便利貼固定在畫面右下角，本來就是往左上方長大，把手放右下角等於往它長不動的那一角拉；現在從左上角拖曳，大小會記住，在把手上點兩下可以還原成預設大小。</li>
+          <li><strong>修好關掉某個組別後，上方倒數卡片會空一格的問題</strong>：在「顯示的組別」關掉某一組（例如不刷友好部族了）之後，上方那排倒數卡片不會自動補滿，右邊會留下一塊空白。原因是後來新增的「自訂倒數」標題列與「＋ 新增倒數」按鈕會橫跨整排，導致原本「用不到的欄位自動收起來」的機制失效。現在改成不管有幾張卡片都會平均撐滿整個橫排。</li>
           <li><strong>倒數列可以自己新增倒數了</strong>：上方那排倒數卡片原本只有各清單的重置倒數，現在最後面多了一顆「＋ 新增倒數」，可以自己加想追蹤的時間點。兩種類型：<u>單次</u>（倒數到某個日期時間，例如版本更新、活動結束）跟<u>重複</u>（每天或每週固定時間，例如固定團）。自訂的倒數會用<u>細長條橫列</u>顯示，跟上面那排方形的重置倒數卡片明顯區隔，而且橫向空間夠，日期時間不會被截掉。這些自訂倒數自成一組，標題列點一下就能<u>整組收合</u>起來（收合狀態會記住）；收合時標題列還是會顯示「最近的那一個」剩多久，不會完全看不到。倒數會自動依剩餘時間排序，快到的排前面，已到期的沉到最後。另外行事曆的事件旁邊多了一顆 📌，點下去就會把那個事件釘到倒數列，不用重新輸入一次；在倒數列按 × 只是取消釘選，不會刪掉行事曆的事件。倒數歸零後會顯示「已到期」並變色停在那裡，不會自動消失，要清掉自己按 ×。自訂倒數也會一起進備份。</li>
-          <li><strong>修好備份匯入到別的瀏覽器或裝置時，勾選紀錄跟「本週紀錄與完成度」會整個不見的問題</strong>：備份檔裡的勾選紀錄會連著「這台裝置的角色編號」一起存起來，而這個編號是每個瀏覽器各自隨機產生的，所以匯到另一台裝置時，資料雖然有寫進去，卻被放在新瀏覽器讀不到的位置——結果就是清單設定有還原，但所有打勾的紀錄跟日隨的「本週紀錄與完成度」長條圖全部變成空的、0%。現在匯入時會自動把紀錄改掛到目前選擇的角色底下，換裝置、換瀏覽器或清過快取後匯入都能完整還原，以前匯出的舊備份檔也一樣救得回來。另外匯入成功的提示訊息現在會顯示「還原了幾筆勾選紀錄」，如果顯示 0 筆就代表是備份檔本身沒存到，可以馬上分辨問題出在哪一邊。</li>
         </ul>
       </div>
     </details>
@@ -1537,7 +1585,8 @@
       <p><strong>今日運勢</strong>：清單下方的小卡片，按「抽今日運勢」隨機抽一句大吉～凶的籤詩，一天只能抽一次，抽過會記住結果到隔天重置。</p>
       <p><strong>解答之書</strong>：按「翻開解答之書」隨時能翻，給你一句模稜兩可的答案，沒有次數限制，純粹好玩。</p>
       <p><strong>擲骰器</strong>：選門、決定順序這類要骰大小的場合，可以幫每個選項取名、設定骰子上限，按「骰骰子！」讓所有名目各自骰一次，骰到最大的會標示出來；名目跟骰子上限會記住，不用重新輸入。點名目文字可以直接改名，打錯字不用刪掉重加。</p>
-      <p><strong>懸浮便利貼</strong>：右下角常駐一張便利貼，可以隨手記東西（市場板價格、隊友暱稱等），內容自動存起來；按「－」可以收合成一個小標籤，不擋畫面。</p>
+      <p><strong>懸浮便利貼</strong>：右下角常駐一張便利貼，可以隨手記東西（市場板價格、隊友暱稱等），內容自動存起來；按「－」可以收合成一個小標籤，不擋畫面。<u>左上角</u>有一個小小的直角把手，拖曳可以調整便利貼大小（因為便利貼固定在右下角，是往左上方變大的，所以把手放在左上角），調好的大小會記住；在把手上<u>點兩下</u>可以還原成預設大小。</p>
+      <p><strong>左側頁面導覽</strong>：畫面左邊有一排導覽，點清單名稱（例如「友好部族」「小工具」）就會直接捲到那一區，另外有「⤒ 回到最上面」「⤓ 移到最下面」兩顆按鈕。按 ☰ 可以把導覽收合成一個小標籤，收合狀態會記住；視窗寬度不夠時預設是收著的（避免擋到內容），手機上則不顯示。導覽的清單會跟著「顯示的組別」與你自己新增的自訂清單自動更新。</p>
       <p><strong>工具箱</strong>：最下面可以自己新增常用網站的連結卡片（名稱、網址、簡介），點名稱會開新分頁，內容會包含在「匯出備份」裡一起保存。卡片右上角的「✎」可以直接編輯名稱/網址/介紹，不用刪掉重加；卡片可以直接拖曳調整順序（滑鼠拖動即可，手機觸控目前不支援拖曳排序）。</p>
       <p><strong>鬧鐘</strong>：自訂任何時間點的瀏覽器通知，可加標籤、設定「只響一次」（響過就自動刪除）或每天重複；點時間或標籤可以直接修改，不用刪掉重建。跟其他提醒一樣，需要獨立分頁開啟、允許通知權限、並保持分頁在前景才會準時跳出。</p>
       <p><strong>小工具收合區</strong>：今日運勢、解答之書、擲骰器、工具箱、鬧鐘這五個附加功能收在一個可展開/收合的區塊裡（預設收起），點標題列展開，減少不需要時佔用的畫面空間；展開/收合狀態會記住。</p>
@@ -1614,19 +1663,27 @@
     <p class="modal-hint">簡單說明一下各在哪裡、能做什麼。標「新」的是這一批剛加的。</p>
     <ul class="announce-list">
       <li class="announce-item">
-        <span class="announce-icon">⏳</span>
+        <span class="announce-icon">🧭</span>
         <div class="announce-body">
-          <div class="announce-title">自訂倒數 <span class="announce-new">新</span></div>
-          <span class="announce-where">位置：頁面上方那排倒數卡片，最後面的「＋ 新增倒數」</span>
-          <p class="announce-desc">除了各清單的重置倒數，現在可以加自己想追蹤的時間點。兩種類型：<strong>單次</strong>（倒數到某個日期時間，例如版本更新、活動結束）跟<strong>重複</strong>（每天或每週固定時間，到了自動跳下一輪，例如固定團）。行事曆的事件旁邊有一顆 📌，點下去就能把那個事件釘到倒數列，不用重打一次。自訂倒數自成一組，點標題可以整組收合，收合時還是看得到最近的那一個。</p>
+          <div class="announce-title">左側頁面導覽、一鍵到頂／到底 <span class="announce-new">新</span></div>
+          <span class="announce-where">位置：畫面左邊那一排</span>
+          <p class="announce-desc">點清單名稱（例如「友好部族」「小工具」）就會直接捲到那一區，不用自己慢慢滑。上面還有 <strong>⤒ 回到最上面</strong>、<strong>⤓ 移到最下面</strong>兩顆按鈕。按 ☰ 可以把它收合成小標籤，收合狀態會記住。導覽的項目會跟著「顯示的組別」與你自己新增的自訂清單自動更新。（視窗比較窄時預設是收著的，手機上不顯示。）</p>
         </div>
       </li>
       <li class="announce-item">
-        <span class="announce-icon">💾</span>
+        <span class="announce-icon">📝</span>
         <div class="announce-body">
-          <div class="announce-title">備份升級成「整個網站的完整快照」 <span class="announce-new">新</span></div>
-          <span class="announce-where">位置：頁面最下面的「匯出備份」</span>
-          <p class="announce-desc">以前的備份只存「目前選擇的那個角色」，換裝置匯入後<strong>其他角色會整個不見</strong>，便利貼、小工具排序、主題也都沒被存到。現在一次備份所有角色的清單與勾選紀錄，加上行事曆、自訂倒數、工具箱、鬧鐘、便利貼、小工具排序、主題、擲骰名單。<strong>建議重新匯出一份新的備份</strong>取代舊檔（以前匯出的舊檔還是可以匯入，只是內容比較少）。</p>
+          <div class="announce-title">便利貼可以自己調大小了 <span class="announce-new">新</span></div>
+          <span class="announce-where">位置：右下角便利貼的<strong>左上角</strong></span>
+          <p class="announce-desc">左上角有一個小小的直角把手，拖曳就能調整便利貼大小。放左上角是因為便利貼固定在畫面右下角，本來就是往左上方變大的，把手放在那一角拖起來方向才對。調好的大小會記住，在把手上<strong>點兩下</strong>可以還原成預設大小。</p>
+        </div>
+      </li>
+      <li class="announce-item">
+        <span class="announce-icon">⏳</span>
+        <div class="announce-body">
+          <div class="announce-title">自訂倒數</div>
+          <span class="announce-where">位置：頁面上方那排倒數卡片，最後面的「＋ 新增倒數」</span>
+          <p class="announce-desc">除了各清單的重置倒數，現在可以加自己想追蹤的時間點。兩種類型：<strong>單次</strong>（倒數到某個日期時間，例如版本更新、活動結束）跟<strong>重複</strong>（每天或每週固定時間，到了自動跳下一輪，例如固定團）。行事曆的事件旁邊有一顆 📌，點下去就能把那個事件釘到倒數列，不用重打一次。自訂倒數自成一組，點標題可以整組收合，收合時還是看得到最近的那一個。</p>
         </div>
       </li>
       <li class="announce-item">
@@ -1773,7 +1830,17 @@
   <img src="" alt="">
 </div>
 
+<div class="page-nav" id="pageNav">
+  <button type="button" class="page-nav-toggle" id="pageNavToggle" title="收合／展開頁面導覽">☰</button>
+  <div class="page-nav-jump">
+    <button type="button" id="navTopBtn" title="回到最上面">⤒</button>
+    <button type="button" id="navBottomBtn" title="移到最下面">⤓</button>
+  </div>
+  <div class="page-nav-list" id="pageNavList"></div>
+</div>
+
 <div class="sticky-note" id="stickyNote">
+  <button type="button" class="sticky-resize" id="stickyResize" title="拖曳這裡調整便利貼大小"></button>
   <div class="sticky-note-header">
     <span>備忘便利貼</span>
     <button type="button" id="stickyNoteToggle" title="收合便利貼">－</button>
@@ -2582,6 +2649,10 @@
       }
     });
 
+    // wrap the reset cards in their own flex row so the custom-countdown blocks below
+    // (which are full width) can't interfere with how those cards share the width
+    stripHtml = '<div class="cc-groups">' + stripHtml + '</div>';
+
     var cdList = sortedCountdowns(shiftedNow);
     var addBtnHtml = '<button type="button" class="cc-add" id="addCountdownBtn">＋ 新增倒數</button>';
     if (cdList.length) {
@@ -2683,8 +2754,55 @@
       });
     }
 
+    renderPageNav();
     bindRowEvents();
   }
+
+  // ---- left side navigation ----
+  var PAGE_NAV_KEY = "ff14weekly.pageNavOpen.v1";
+  var pageNavEl = document.getElementById("pageNav");
+  var pageNavStored = localStorage.getItem(PAGE_NAV_KEY);
+  // no stored choice yet: start open only when there is side room for it, so it never
+  // lands on top of the content on a narrow laptop
+  var pageNavOpen = pageNavStored === null ? window.innerWidth >= 1150 : pageNavStored === "1";
+
+  function applyPageNavState() {
+    pageNavEl.className = "page-nav" + (pageNavOpen ? "" : " collapsed");
+    document.getElementById("pageNavToggle").textContent = pageNavOpen ? "☰" : "»";
+  }
+
+  function renderPageNav() {
+    var listEl = document.getElementById("pageNavList");
+    if (!listEl) return;
+    var items = config.groups.filter(function (g) { return g.enabled !== false; }).map(function (g) {
+      return { label: g.title, sel: '[data-group-card="' + g.id + '"]' };
+    });
+    items.push({ label: "時尚評鑑", sel: ".fashion-card-wrap" });
+    items.push({ label: "小工具", sel: ".extra-tools-card-wrap" });
+    listEl.innerHTML = items.map(function (it) {
+      return '<button type="button" class="page-nav-btn" data-nav-target="' + escapeAttr(it.sel) +
+        '" title="' + escapeAttr(it.label) + '">' + escapeHtml(it.label) + '</button>';
+    }).join("");
+    listEl.querySelectorAll("[data-nav-target]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var target = document.querySelector(btn.getAttribute("data-nav-target"));
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+  }
+
+  document.getElementById("pageNavToggle").addEventListener("click", function () {
+    pageNavOpen = !pageNavOpen;
+    localStorage.setItem(PAGE_NAV_KEY, pageNavOpen ? "1" : "0");
+    applyPageNavState();
+  });
+  document.getElementById("navTopBtn").addEventListener("click", function () {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+  document.getElementById("navBottomBtn").addEventListener("click", function () {
+    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" });
+  });
+  applyPageNavState();
 
   function renderGroupVisibility() {
     var groupVisibilityEl = document.getElementById("groupVisibilityList");
@@ -4132,6 +4250,62 @@
     stickyNoteTextEl.addEventListener("input", function () {
       localStorage.setItem(STICKY_NOTE_KEY, stickyNoteTextEl.value);
     });
+
+    // Custom resize grip in the TOP-LEFT corner. The note is pinned bottom-right, so its
+    // width grows leftwards and its height upwards — dragging up/left is the direction it
+    // actually expands. The native textarea handle sits bottom-right, the one corner that
+    // is pinned, which made resizing feel backwards.
+    var STICKY_SIZE_KEY = "ff14weekly.stickyNoteSize.v1";
+    var stickyResizeEl = document.getElementById("stickyResize");
+
+    function applyStickySize(w, h) {
+      var maxW = Math.max(200, window.innerWidth - 40);
+      var maxH = Math.max(80, window.innerHeight - 160);
+      w = Math.max(200, Math.min(maxW, w));
+      h = Math.max(70, Math.min(maxH, h));
+      stickyNoteEl.style.width = w + "px";
+      stickyNoteTextEl.style.height = h + "px";
+      return { w: w, h: h };
+    }
+
+    try {
+      var savedSize = JSON.parse(localStorage.getItem(STICKY_SIZE_KEY));
+      if (savedSize && savedSize.w && savedSize.h) applyStickySize(savedSize.w, savedSize.h);
+    } catch (e) {}
+
+    if (stickyResizeEl) {
+      var stickyDrag = null;
+      stickyResizeEl.addEventListener("pointerdown", function (e) {
+        e.preventDefault();
+        stickyDrag = {
+          x: e.clientX, y: e.clientY,
+          w: stickyNoteEl.getBoundingClientRect().width,
+          h: stickyNoteTextEl.getBoundingClientRect().height
+        };
+        stickyResizeEl.setPointerCapture(e.pointerId);
+      });
+      stickyResizeEl.addEventListener("pointermove", function (e) {
+        if (!stickyDrag) return;
+        // dragging left/up increases the size, hence the reversed subtraction
+        applyStickySize(stickyDrag.w + (stickyDrag.x - e.clientX), stickyDrag.h + (stickyDrag.y - e.clientY));
+      });
+      function endStickyDrag() {
+        if (!stickyDrag) return;
+        stickyDrag = null;
+        localStorage.setItem(STICKY_SIZE_KEY, JSON.stringify({
+          w: stickyNoteEl.getBoundingClientRect().width,
+          h: stickyNoteTextEl.getBoundingClientRect().height
+        }));
+      }
+      stickyResizeEl.addEventListener("pointerup", endStickyDrag);
+      stickyResizeEl.addEventListener("pointercancel", endStickyDrag);
+      stickyResizeEl.addEventListener("dblclick", function () {
+        stickyNoteEl.style.width = "";
+        stickyNoteTextEl.style.height = "";
+        localStorage.removeItem(STICKY_SIZE_KEY);
+        showToast("便利貼大小已還原");
+      });
+    }
   }
 
   var extraToolsCard = document.getElementById("extraToolsDetails");
@@ -4443,7 +4617,7 @@
 
   // 手動維護：每次修改網站程式碼時手動更新這個時間點，不要用 new Date() 抓「現在」——
   // 那樣不管有沒有真的改版，每次載入頁面都會顯示成剛更新過，等於騙人。
-  var LAST_UPDATED_TEXT = "2026/08/02 (週日) 02:00";
+  var LAST_UPDATED_TEXT = "2026/08/02 (週日) 02:20";
   var lastUpdatedEl = document.getElementById("lastUpdatedLine");
   if (lastUpdatedEl) lastUpdatedEl.textContent = "最後更新：" + LAST_UPDATED_TEXT;
 
@@ -4626,7 +4800,7 @@
   // they ticked "don't show again" on the previous one.
   var ANNOUNCE_KEY = "ff14weekly.announceDismissed.v1";
   // bumped so everyone sees the new round once, even if they dismissed the previous announcement
-  var ANNOUNCE_ID = "2026-08-02-countdowns-backup-calendar";
+  var ANNOUNCE_ID = "2026-08-02-pagenav-stickyresize";
   var announceModal = document.getElementById("announceModal");
   var announceDontShow = document.getElementById("announceDontShow");
   function closeAnnounce() {
