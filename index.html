@@ -1009,6 +1009,19 @@
     border-color: var(--accent); border-style: dashed;
     box-shadow: 0 0 0 2px var(--accent) inset; background: var(--cal-selected-fill);
   }
+  .cal-repeat-box {
+    display: flex; flex-direction: column; gap: 7px;
+    background: var(--panel-2); clip-path: var(--chamfer-sm); padding: 9px 10px;
+  }
+  .cal-repeat-box[hidden] { display: none; }
+  .cal-ev-repeat { font-size: 11px; flex-shrink: 0; }
+  .scope-actions { display: flex; flex-direction: column; gap: 7px; margin-top: 4px; }
+  .scope-actions button {
+    text-align: left; padding: 10px 14px; font-size: 13.5px; font-weight: 600;
+    background: var(--panel-2); border: 1px solid var(--line); color: var(--ink);
+    clip-path: var(--chamfer-sm); transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .scope-actions button:hover { border-color: var(--crystal); background: rgba(44, 125, 118, 0.12); }
   .cal-select-bar { background: rgba(44, 125, 118, 0.14); border-color: var(--crystal); color: var(--crystal-ink); }
   #calSelectDeleteBtn { background: var(--bad); border-color: var(--bad); color: #fff; }
   #calSelectExportBtn { background: var(--crystal); border-color: var(--crystal); color: #fff; }
@@ -1638,8 +1651,8 @@
       <div class="diy-notify-body">
         <p class="last-updated" id="lastUpdatedLine">最後更新：載入中…</p>
         <ul id="changelogList">
+          <li><strong>行事曆事件可以設定重複，編輯或刪除時能選擇套用範圍</strong>：新增事件時多了「重複」欄位，可以設成<u>每週指定星期幾</u>（可複選，附平日／週末／每天快捷鍵）或<u>每隔幾天</u>，再選一個「重複到」的結束日期，就會一次把整段期間的事件都建好，固定團、每週活動不用一個一個加。另外<u>不是用「重複」建立的也算</u>——只要行事曆上有多個<u>同名</u>的事件（例如你用複製貼上做出來的），它們一樣會被當成同一組。同組的事件在清單上會有 🔁 標記。編輯或刪除其中任何一項時，會跳出三個選項讓你選：<u>只套用這一項</u>／<u>這一項與之後的</u>／<u>全部（含之前的）</u>，改錯或想調整整組都很方便（改日期只會套用在你正在編輯的那一項，其他項會保留各自原本的日期）。重複的設定是在新增時決定的，之後想改重複方式請把整組刪掉重建。</li>
           <li><strong>行事曆新增多選刪除，還可以把選取的事件分享給別人</strong>：按行事曆右上角的「☑ 多選」進入多選模式，<u>點事件可以單獨選取、點日期空白處會一次選取那天全部</u>，被選到的會打勾並加粗（多選模式下每天的事件會全部顯示，不會被「還有 N 項」藏起來）。選好之後可以<u>一次刪除</u>，或是<u>匯出成一段文字</u>傳給朋友——對方按「📥 匯入」貼上就能加進他自己的行事曆，會連事件的時間、分類（含顏色）、備註、提醒設定一起帶過去。匯入是「加入」不是覆蓋，不會動到對方原本的行事曆，重複的事件也會自動略過。分享檔只包含你選取的那些事件，不含勾選紀錄或其他任何個人資料。</li>
-          <li><strong>行事曆可以複製事件貼到多天，分類的名稱與顏色也能自己改</strong>：事件旁邊多了一顆 ⧉ 複製鈕，按下去之後上方會出現一條提示列，這時<u>點月曆上的日期就是在挑要貼上的日子，可以一次連點很多天</u>（被選到的會有虛線框），最後按「貼上到 N 天」就會一次建立好，適合固定團、每週活動這種重複的安排。另外事件分類（副本／團本、遊戲活動…）從寫死改成<u>可以自己管理</u>：分類欄位旁邊的 ⚙ 可以改名稱、改顏色、新增或刪除分類，連原本內建的六個也能改。改了顏色之後，已經用那個分類的事件會立刻跟著換色；刪掉分類不會刪掉事件，那些事件只會變成灰色的「未分類」。分類設定會一起存進備份。</li>
           <li><strong>倒數列可以自己新增倒數了</strong>：上方那排倒數卡片原本只有各清單的重置倒數，現在最後面多了一顆「＋ 新增倒數」，可以自己加想追蹤的時間點。兩種類型：<u>單次</u>（倒數到某個日期時間，例如版本更新、活動結束）跟<u>重複</u>（每天或每週固定時間，例如固定團）。自訂的倒數會用<u>細長條橫列</u>顯示，跟上面那排方形的重置倒數卡片明顯區隔，而且橫向空間夠，日期時間不會被截掉。這些自訂倒數自成一組，標題列點一下就能<u>整組收合</u>起來（收合狀態會記住）；收合時標題列還是會顯示「最近的那一個」剩多久，不會完全看不到。倒數會自動依剩餘時間排序，快到的排前面，已到期的沉到最後。另外行事曆的事件旁邊多了一顆 📌，點下去就會把那個事件釘到倒數列，不用重新輸入一次；在倒數列按 × 只是取消釘選，不會刪掉行事曆的事件。倒數歸零後會顯示「已到期」並變色停在那裡，不會自動消失，要清掉自己按 ×。自訂倒數也會一起進備份。</li>
         </ul>
       </div>
@@ -1666,7 +1679,10 @@
       <p><strong>批次操作</strong>：籌備任務、友好部族這類多項目的組別，上方有「全部勾選」「全部清空」，「全部清空」一樣會先確認。</p>
       <p><strong>每日組別的一週檢視／補勾過去的日子</strong>：日隨、籌備任務、友好部族這種每天重置的組別，下方有一排本週七天的迷你完成度，點任一天可以展開看那天各項目的明細，用 ◀ ▶ 可以切換到同一個月的其他週。展開後的明細是<u>可以直接勾的</u>——忘記勾的那天回頭補登就好，計數類項目也能補調數字，右邊還有「整天勾選／整天清空」。可以補到本月月初（◀ 到月初就會停），未來的日期不能勾。</p>
       <p><strong>自訂清單</strong>：清單最下面的「＋ 新增自訂清單」可以開一個跟日隨、籌備任務同級的全新清單，內容完全由你決定。重置方式有三種：每天固定時間重置、每週固定某天重置（兩種都只支援整點）、或「不自動重置」——後者不會倒數、也不算進「本輪進度」，適合當長期待辦，要清空時自己按「全部清空」。自訂清單的名稱可以隨時在卡片上直接改，也可以按「刪除這個清單」整個移除（裡面的勾選紀錄會一起刪掉，無法復原）。按 footer 的「還原預設清單」不會動到你自己建的清單。</p>
-      <p><strong>行事曆</strong>：右上角「📅 行事曆」會開一個月曆彈窗，可以新增事件並填寫日期、時間（不填就是整天）、事件種類（副本／團本、遊戲活動、生產採集、交易／市場、約團／聚會、其他，各有顏色）跟備註。月曆<u>佔滿整個視窗寬度</u>；點任一天之後，月曆會<u>滑向左邊縮小</u>，那天的清單與填寫欄位從右側<u>推出來</u>（不是蓋在月曆上，所以整個月的格子都還看得到），按側欄的 × 關掉，月曆就會再展開回滿版，不用往下捲。月曆格子裡只顯示<u>事件名稱</u>（放時間會把名稱擠掉），時間放在滑鼠提示與側欄清單裡，每格最多顯示 4 筆，超過會標示「還有 N 項」。事件可以用 ✎ 編輯、× 刪除。月曆上「今天」的日期是實心圓形標記加淡色底、「目前點選的那天」整格會填上底色再加一圈粗外框，滑鼠移過去的格子也會即時變色，三種狀態一眼就分得出來。每個事件都可以<u>設提醒</u>：勾「時間到時跳瀏覽器通知」並選擇提前多久（準時／5分／15分／30分／1小時／1天前），時間到之前就會通知你，不需要先釘選到倒數列。行事曆是所有角色共用的，內容會一起存進「匯出備份」。提醒的限制跟站上其他通知一樣——需要獨立分頁開啟、允許通知權限、分頁保持在前景。</p>
+      <p><strong>行事曆</strong>：右上角「📅 行事曆」會開一個月曆彈窗，可以新增事件並填寫日期、時間（不填就是整天）、分類（各有顏色）跟備註。月曆<u>佔滿整個視窗寬度</u>；點任一天之後，月曆會<u>滑向左邊縮小</u>，那天的清單與填寫欄位從右側<u>推出來</u>（不是蓋在月曆上，所以整個月的格子都還看得到），按側欄的 × 關掉，月曆就會再展開回滿版。月曆格子裡只顯示<u>事件名稱</u>（放時間會把名稱擠掉），時間放在滑鼠提示與側欄清單裡，每格最多顯示 4 筆，超過會標示「還有 N 項」。「今天」是實心圓形標記加淡色底、「目前點選的那天」整格填色加粗框，滑鼠移過去也會變色。行事曆是所有角色共用的，內容會一起存進「匯出備份」。</p>
+      <p><strong>行事曆・重複事件</strong>：新增事件時可以在「重複」欄位選<u>每週指定星期幾</u>（可複選，附平日／週末／每天快捷鍵）或<u>每隔幾天</u>，再挑一個「重複到」的結束日期，就會把整段期間的事件一次建好（單一系列最多 400 筆）。同一組的事件在清單上會有 🔁 標記——<u>不限用「重複」建立的</u>，只要行事曆上有多個<u>同名</u>事件（例如複製貼上做出來的）就算同一組。<u>編輯或刪除</u>其中任何一項時，會問你要套用到<u>只這一項</u>／<u>這一項與之後的</u>／<u>全部（含之前的）</u>；其中改日期只會套用在你正在編輯的那一項，其他項保留各自原本的日期。重複方式是在新增時決定的，之後想改請整組刪掉重建。</p>
+      <p><strong>行事曆・分類、複製、多選與分享</strong>：<u>分類</u>可以自己管理，分類欄位旁的 ⚙ 能改名稱、改顏色、新增或刪除，內建的六個也能改；改顏色後既有事件會立刻跟著換色，刪掉分類不會刪事件，那些事件會變成灰色的「未分類」。<u>複製貼上</u>：事件旁的 ⧉ 可以複製整個事件（含時間、分類、備註、提醒），複製後點月曆上的日期就是在挑要貼上的日子，可以一次連點多天，按「貼上到 N 天」一次建立。<u>多選與分享</u>：右上角「☑ 多選」進入多選模式，點事件單獨選、點日期空白處選那天全部（多選模式會顯示每天的全部事件），選好可以一次刪除，或按「匯出選取的」產生一段文字傳給朋友；對方按「📥 匯入」貼上就能加進他的行事曆，時間、分類（含顏色）、備註、提醒都會帶過去。匯入是<u>加入</u>不是覆蓋。<u>重複的判定</u>是名稱、日期、時間、分類<u>全部相同</u>才算——同名同日但分類不同的會照樣匯入。真的遇到重複時會跳出選項讓你決定：略過重複的／重複的自動改名後也匯入（例如「休 (2)」）／全部照原樣匯入。分類則是先比對名稱，對方的「潛水」會自動對到你自己的「潛水」，不會多出一個同名的分類。分享檔只含你選的事件與它們用到的分類，不含勾選紀錄或其他個人資料。</p>
+      <p><strong>行事曆・事件提醒</strong>：每個事件都可以勾「時間到時跳瀏覽器通知」並自己填提前多久（數字＋分鐘／小時／天，填 0 就是時間到才提醒），不需要先釘選到倒數列就會通知。提醒的限制跟站上其他通知一樣——需要獨立分頁開啟、允許通知權限、分頁保持在前景。</p>
       <p><strong>暫時隱藏群組</strong>：標題旁邊的 ▾ 可以把整組收起來（還是會計入進度）；頂部「▾ 全部」可以一次收合或展開所有組別。</p>
       <p><strong>不需要的組別直接關閉</strong>：footer 的「顯示的組別」可以把整個不玩的內容（例如已經不刷的籌備任務）關掉，關掉後倒數卡片、清單卡片、提醒都不會出現，也不會算進「本輪進度」，跟暫時收合不同，這是真的不追蹤了；隨時可以再打開，設定不會遺失。</p>
       <p><strong>自訂倒數</strong>：頁面上方那排倒數卡片，除了各清單的重置倒數之外，最後面的「＋ 新增倒數」可以自己加想追蹤的時間點。自訂的倒數會顯示成<u>細長條橫列</u>（跟上面方形的重置卡片區隔開來，橫向空間也放得下完整的日期時間），並且自成一組：點標題列「▾ 自訂倒數」就能整組收合，收合狀態會記住，而且收合時標題列仍會顯示「最近的那一個」還剩多久。清單會自動依剩餘時間排序，快到的在前面，已到期的沉到最後。三種類型：<u>單次</u>是倒數到某個指定的日期時間（版本更新、活動結束這類）；<u>每週指定星期幾</u>可以複選（例如一、三、五），並附「平日」「週末」「每天」「清除」四顆快捷鍵；<u>每隔幾天</u>可以自己填間隔與起算日（例如每 3 天）。重複型到了時間會自動跳下一輪。倒數歸零後會顯示「已到期」並變色停在原地，不會自動消失，要清掉自己按 ×，卡片上的 ✎ 可以修改。另外行事曆裡每個事件旁邊有一顆 📌，點下去就會把那個事件釘到倒數列，不用重複輸入；釘上去的倒數在倒數列按 ✎ 會<u>直接跳到行事曆</u>並帶出那個事件開始編輯（資料只有一份，不會有兩邊不同步的問題），按 × 則只是<u>取消釘選</u>，行事曆裡的事件不會被刪掉。倒數多的時候會排成<u>兩欄</u>（左上→右上→左下→右下），只剩一條時自動佔滿整行。<u>可以設提醒</u>：新增或編輯時勾「時間到時跳瀏覽器通知」，並自己填提前多久提醒（數字＋分鐘／小時／天，填 0 就是時間到才提醒），有設的倒數卡片上會顯示 🔔；重複型的每一輪都會提醒。提醒的限制跟站上其他通知一樣——需要獨立分頁開啟、允許通知權限、分頁保持在前景。行事曆的事件也可以各自設提醒，設定在行事曆的填寫欄位裡，而且<u>不需要釘選</u>就會通知。<u>分組</u>：新增倒數時可以指定分組，選「＋ 新增分組…」就能當場開一個（例如「潛水艇」「飛空艇」）；同一組會收在一起、可以各自收合，組名可改可刪（刪除分組不會刪掉裡面的倒數，只會變回「未分組」）。沒建立任何分組時就維持單純的列表。自訂倒數是所有角色共用的，也會一起存進「匯出備份」。</p>
@@ -1933,6 +1949,29 @@
             <button type="button" id="calCatManageBtn" class="cc-mini-btn" title="管理分類（名稱與顏色）">⚙</button>
           </span>
           <textarea id="calEvNote" class="cal-form-full" maxlength="500" placeholder="備註（選填）：集合地點、隊伍成員、要帶什麼…"></textarea>
+          <div class="cal-form-full cal-repeat-box" id="calRepeatBox">
+            <label class="cal-notify-label" for="calEvRepeat">重複</label>
+            <select id="calEvRepeat">
+              <option value="none">不重複</option>
+              <option value="weekly">每週指定星期幾</option>
+              <option value="interval">每隔幾天</option>
+            </select>
+            <div id="calRepeatWeekRow" hidden>
+              <div class="wd-chips" id="calEvWeekdays"></div>
+              <div class="wd-presets">
+                <button type="button" class="bulk-btn" data-cal-wd-preset="1,2,3,4,5">平日</button>
+                <button type="button" class="bulk-btn" data-cal-wd-preset="0,6">週末</button>
+                <button type="button" class="bulk-btn" data-cal-wd-preset="0,1,2,3,4,5,6">每天</button>
+                <button type="button" class="bulk-btn" data-cal-wd-preset="">清除</button>
+              </div>
+            </div>
+            <span class="inline-field" id="calRepeatIntervalRow" hidden>
+              每隔 <input type="number" id="calEvInterval" min="1" max="365" value="7"> 天
+            </span>
+            <span class="inline-field" id="calRepeatUntilRow" hidden>
+              重複到 <input type="date" id="calEvUntil">
+            </span>
+          </div>
           <label class="cal-form-full cal-notify-label"><input type="checkbox" id="calEvNotify"> 時間到時跳瀏覽器通知</label>
           <span class="inline-field cal-form-full" id="calLeadRow" hidden>
             <span class="cal-lead-caption">提前</span>
@@ -1952,6 +1991,17 @@
     </div>
     <div class="modal-actions">
       <button type="button" id="closeCalendarBtn">關閉</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="scopeModal" hidden>
+  <div class="modal-box">
+    <h3 id="scopeTitle">這是重複事件</h3>
+    <p class="modal-hint" id="scopeHint"></p>
+    <div class="scope-actions" id="scopeActions"></div>
+    <div class="modal-actions">
+      <button type="button" id="scopeCancelBtn">取消</button>
     </div>
   </div>
 </div>
@@ -4112,6 +4162,47 @@
   var calEvTime = document.getElementById("calEvTime");
   var calEvCat = document.getElementById("calEvCat");
   var calEvNote = document.getElementById("calEvNote");
+  var calRepeatBox = document.getElementById("calRepeatBox");
+  var calEvRepeat = document.getElementById("calEvRepeat");
+  var calRepeatWeekRow = document.getElementById("calRepeatWeekRow");
+  var calEvWeekdaysEl = document.getElementById("calEvWeekdays");
+  var calRepeatIntervalRow = document.getElementById("calRepeatIntervalRow");
+  var calEvInterval = document.getElementById("calEvInterval");
+  var calRepeatUntilRow = document.getElementById("calRepeatUntilRow");
+  var calEvUntil = document.getElementById("calEvUntil");
+
+  calEvWeekdaysEl.innerHTML = [1, 2, 3, 4, 5, 6, 0].map(function (n) {
+    return '<button type="button" class="wd-chip" data-cal-wd="' + n + '">' + weekdayLabel(n) + '</button>';
+  }).join("");
+  calEvWeekdaysEl.querySelectorAll("[data-cal-wd]").forEach(function (btn) {
+    btn.addEventListener("click", function () { btn.classList.toggle("on"); });
+  });
+  document.querySelectorAll("[data-cal-wd-preset]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var want = btn.getAttribute("data-cal-wd-preset").split(",").filter(function (s) { return s !== ""; });
+      calEvWeekdaysEl.querySelectorAll("[data-cal-wd]").forEach(function (chip) {
+        chip.classList.toggle("on", want.indexOf(chip.getAttribute("data-cal-wd")) !== -1);
+      });
+    });
+  });
+  function readCalWeekdays() {
+    return Array.prototype.slice.call(calEvWeekdaysEl.querySelectorAll(".wd-chip.on"))
+      .map(function (c) { return Number(c.getAttribute("data-cal-wd")); });
+  }
+  function syncCalRepeatFields() {
+    var k = calEvRepeat.value;
+    calRepeatWeekRow.hidden = k !== "weekly";
+    calRepeatIntervalRow.hidden = k !== "interval";
+    calRepeatUntilRow.hidden = k === "none";
+    if (k !== "none" && !calEvUntil.value) {
+      // default the horizon to three months out — long enough to be useful, short enough
+      // that nobody accidentally creates hundreds of records
+      var base = dateKeyToShifted(calEvDate.value || calSelectedKey);
+      if (base) calEvUntil.value = taipeiDateKey(new Date(base.getTime() + 90 * 86400000));
+    }
+  }
+  calEvRepeat.addEventListener("change", syncCalRepeatFields);
+
   var calEvNotify = document.getElementById("calEvNotify");
   var calLeadRow = document.getElementById("calLeadRow");
   var calEvLeadValue = document.getElementById("calEvLeadValue");
@@ -4141,6 +4232,12 @@
     calEvNotify.checked = false;
     setLeadFields(0, calEvLeadValue, calEvLeadUnit);
     calLeadRow.hidden = true;
+    calEvRepeat.value = "none";
+    calEvUntil.value = "";
+    calEvInterval.value = "7";
+    calEvWeekdaysEl.querySelectorAll(".wd-chip").forEach(function (c) { c.classList.remove("on"); });
+    calRepeatBox.hidden = false;   // repeat can only be set when creating; hidden while editing
+    syncCalRepeatFields();
     calEvDate.value = calSelectedKey || "";
     calSaveBtn.textContent = "新增事件";
     calCancelEditBtn.hidden = true;
@@ -4245,6 +4342,7 @@
         '<span class="cal-ev-time">' + (ev.time || "整天") + '</span>' +
         '<span class="cal-ev-main"><span class="cal-ev-title-row">' +
         '<span class="cal-ev-title">' + escapeHtml(ev.title) + '</span>' +
+        (relatedEvents(ev).length > 1 ? '<span class="cal-ev-repeat" title="行事曆上有多個同名事件，編輯或刪除時可以選擇套用範圍">🔁</span>' : "") +
         '<span class="cal-ev-cat" style="background:' + cat.color + '">' + escapeHtml(cat.name) + '</span>' +
         '</span>' + (ev.note ? '<div class="cal-ev-note">' + escapeHtml(ev.note) + '</div>' : "") + '</span>' +
         '<span class="cal-ev-actions">' +
@@ -4259,12 +4357,23 @@
       btn.addEventListener("click", function () {
         var id = btn.getAttribute("data-cal-del");
         var ev = calendarEvents.find(function (e) { return e.id === id; });
-        showConfirm("確定要刪除「" + (ev ? ev.title : "") + "」嗎？", function () {
-          calendarEvents = calendarEvents.filter(function (e) { return e.id !== id; });
+        if (!ev) return;
+        function doDelete(scope) {
+          var ids = {};
+          scopeTargets(ev, scope).forEach(function (e) { ids[e.id] = true; });
+          var n = Object.keys(ids).length;
+          calendarEvents = calendarEvents.filter(function (e) { return !ids[e.id]; });
           saveCalendar();
           calResetForm();
           renderCalendar();
-        });
+          render();
+          showToast("已刪除 " + n + " 個事件");
+        }
+        if (relatedEvents(ev).length > 1) {
+          showScopeChoice("要刪除哪些？", scopeHintFor(ev) + "要刪除哪些？", doDelete);
+        } else {
+          showConfirm("確定要刪除「" + ev.title + "」嗎？", function () { doDelete("one"); });
+        }
       });
     });
     listEl.querySelectorAll("[data-cal-copy]").forEach(function (btn) {
@@ -4312,6 +4421,7 @@
         calEvNotify.checked = !!ev.notify;
         setLeadFields(ev.lead, calEvLeadValue, calEvLeadUnit);
         calLeadRow.hidden = !ev.notify;
+        calRepeatBox.hidden = true;   // recurrence is fixed at creation time
         calSaveBtn.textContent = "儲存修改";
         calCancelEditBtn.hidden = false;
         calEvTitle.focus();
@@ -4339,6 +4449,7 @@
         calEvNotify.checked = !!ev.notify;
         setLeadFields(ev.lead, calEvLeadValue, calEvLeadUnit);
         calLeadRow.hidden = !ev.notify;
+    calRepeatBox.hidden = true;
     calSaveBtn.textContent = "儲存修改";
     calCancelEditBtn.hidden = false;
     calEvTitle.focus();
@@ -4403,6 +4514,106 @@
     renderCalendar();
   });
 
+  // ---- recurring events ----
+  // Occurrences are materialised as real records sharing a `seriesId`, rather than kept as a
+  // rule expanded at render time. That makes the three edit scopes exact, simple filters
+  // (this one / same series from this date on / whole series) with no hidden override state.
+  var SERIES_MAX = 400;   // safety cap: "every day for five years" shouldn't be possible by accident
+
+  function dateKeyToShifted(key) {
+    var p = String(key || "").split("-");
+    if (p.length !== 3) return null;
+    return makeShifted(Number(p[0]), Number(p[1]) - 1, Number(p[2]), 0, 0, 0);
+  }
+
+  function generateSeriesDates(startKey, rep) {
+    var start = dateKeyToShifted(startKey);
+    var until = dateKeyToShifted(rep.until);
+    if (!start || !until || until.getTime() < start.getTime()) return [startKey];
+    var out = [];
+    if (rep.kind === "weekly") {
+      var days = rep.weekdays || [];
+      if (!days.length) return [startKey];
+      for (var t = start.getTime(); t <= until.getTime() && out.length < SERIES_MAX; t += 86400000) {
+        var d = new Date(t);
+        if (days.indexOf(d.getUTCDay()) !== -1) out.push(taipeiDateKey(d));
+      }
+    } else {
+      var step = Math.max(1, Number(rep.intervalDays) || 1) * 86400000;
+      for (var t2 = start.getTime(); t2 <= until.getTime() && out.length < SERIES_MAX; t2 += step) {
+        out.push(taipeiDateKey(new Date(t2)));
+      }
+    }
+    return out.length ? out : [startKey];
+  }
+
+  function seriesMembers(seriesId) {
+    if (!seriesId) return [];
+    return calendarEvents.filter(function (ev) { return ev.seriesId === seriesId; });
+  }
+
+  // What counts as "the same event" for the scope chooser.
+  // Grouping by seriesId alone was too narrow: events made with copy-paste (or added one by
+  // one) have no series, yet the user quite reasonably thinks of same-named ones as one set.
+  // So: same name OR same series — the union covers both, and also keeps a renamed member
+  // attached to the series it came from.
+  function relatedEvents(ev) {
+    return calendarEvents.filter(function (x) {
+      if (ev.seriesId && x.seriesId === ev.seriesId) return true;
+      return x.title === ev.title;
+    });
+  }
+
+  // ---- "this one / this and later / all" chooser ----
+  // generic "pick one of these" dialog; the buttons are supplied by the caller
+  var scopeModal = document.getElementById("scopeModal");
+  var scopeActions = document.getElementById("scopeActions");
+  var pendingScopeCb = null;
+  function showChoice(title, hint, options, cb) {
+    document.getElementById("scopeTitle").textContent = title;
+    document.getElementById("scopeHint").textContent = hint;
+    pendingScopeCb = cb;
+    scopeActions.innerHTML = options.map(function (o) {
+      return '<button type="button" data-choice="' + escapeAttr(o.value) + '">' + escapeHtml(o.label) + '</button>';
+    }).join("");
+    scopeActions.querySelectorAll("[data-choice]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var v = btn.getAttribute("data-choice");
+        var fn = pendingScopeCb;
+        closeScopeModal();
+        if (fn) fn(v);
+      });
+    });
+    scopeModal.hidden = false;
+  }
+  function closeScopeModal() { scopeModal.hidden = true; pendingScopeCb = null; }
+  document.getElementById("scopeCancelBtn").addEventListener("click", closeScopeModal);
+  scopeModal.addEventListener("click", function (e) { if (e.target === scopeModal) closeScopeModal(); });
+
+  function showScopeChoice(title, hint, cb) {
+    showChoice(title, hint, [
+      { value: "one", label: "只套用這一項" },
+      { value: "future", label: "這一項與之後的" },
+      { value: "all", label: "全部（含之前的）" }
+    ], cb);
+  }
+
+  // which records a scope covers, relative to one member of the series
+  function scopeTargets(ev, scope) {
+    if (scope === "one") return [ev];
+    var mates = relatedEvents(ev);
+    if (scope === "all") return mates;
+    return mates.filter(function (x) { return x.date >= ev.date; });
+  }
+
+  // wording that matches how the group was actually formed, so the dialog isn't misleading
+  function scopeHintFor(ev) {
+    var n = relatedEvents(ev).length;
+    return seriesMembers(ev.seriesId).length > 1
+      ? "「" + ev.title + "」共有 " + n + " 項（重複事件）。"
+      : "行事曆上有 " + n + " 個叫「" + ev.title + "」的事件。";
+  }
+
   // ---- multi-select delete ----
   var calSelectMode = false;
   var calSelectedEvents = [];
@@ -4465,7 +4676,7 @@
     document.getElementById("calShareTitle").textContent = isExport ? "匯出選取的事件" : "匯入別人分享的事件";
     document.getElementById("calShareHint").textContent = isExport
       ? "複製下面整段內容傳給對方，對方在行事曆按「📥 匯入」貼上就能加進他的行事曆。只包含你選取的事件與它們用到的分類，不含其他任何資料。"
-      : "把對方給你的整段內容貼到下面，再按「確認匯入」。事件會「加入」你現有的行事曆，不會蓋掉原本的內容；重複的事件會自動略過。";
+      : "把對方給你的整段內容貼到下面，再按「確認匯入」。事件會「加入」你現有的行事曆，不會蓋掉原本的內容。名稱、日期、時間、分類全部相同才算重複，遇到重複時會問你要怎麼處理。";
     calShareText.readOnly = isExport;
     document.getElementById("calShareCopyBtn").hidden = !isExport;
     document.getElementById("calShareImportBtn").hidden = isExport;
@@ -4503,9 +4714,12 @@
       exportedAt: new Date().toISOString(),
       categories: calCategories.filter(function (c) { return usedCatIds[c.id]; }),
       // ids are dropped on purpose — the receiving side mints its own
+      // seriesId travels so a shared repeating event stays deletable as a group on the
+      // other side; the importer remaps it to fresh ids to avoid clashing with theirs
       events: picked.map(function (ev) {
         return { title: ev.title, date: ev.date, time: ev.time || "", cat: ev.cat,
-          note: ev.note || "", notify: !!ev.notify, lead: Number(ev.lead) || 0 };
+          note: ev.note || "", notify: !!ev.notify, lead: Number(ev.lead) || 0,
+          seriesId: ev.seriesId || "" };
       })
     }, null, 2);
     openCalShare("export");
@@ -4522,37 +4736,82 @@
       showToast("這不是行事曆分享檔（如果是整站備份，請改用下面的「匯入備份」）");
       return;
     }
-    // add any category the sender used that we don't have; never overwrite the user's own
+    // ---- categories ----
+    // Match by id first, then by name. Matching on name matters because two people can end
+    // up with a "潛水" category that has different random ids — without it the import would
+    // silently create a second category with the same name and a different colour.
+    var catRemap = {};
     if (Array.isArray(parsed.categories)) {
       parsed.categories.forEach(function (c) {
         if (!c || !c.id) return;
-        if (!calCategories.some(function (x) { return x.id === c.id; })) {
-          calCategories.push({ id: c.id, name: c.name || "未命名", color: c.color || "#6b7280" });
-        }
+        if (calCategories.some(function (x) { return x.id === c.id; })) return;   // already ours
+        var byName = calCategories.find(function (x) { return x.name === c.name; });
+        if (byName) { catRemap[c.id] = byName.id; return; }                        // same name -> reuse
+        calCategories.push({ id: c.id, name: c.name || "未命名", color: c.color || "#6b7280" });
       });
       saveCalCategories();
       fillCalCatSelect();
     }
-    var added = 0, skipped = 0;
-    parsed.events.forEach(function (ev) {
-      if (!ev || !ev.title || !ev.date) { skipped++; return; }
-      // importing the same package twice shouldn't double everything up
-      var dup = calendarEvents.some(function (x) {
-        return x.title === ev.title && x.date === ev.date && (x.time || "") === (ev.time || "");
+    function mappedCat(id) { return catRemap[id] || id || ""; }
+
+    // ---- split into new vs already-present ----
+    // The duplicate test includes the category on purpose: "休" filed under 休假 and "休"
+    // under 副本 are different things to the user, and skipping the second one lost data.
+    var incoming = parsed.events.filter(function (ev) { return ev && ev.title && ev.date; });
+    var invalid = parsed.events.length - incoming.length;
+    var dupes = [], fresh = [];
+    incoming.forEach(function (ev) {
+      var isDup = calendarEvents.some(function (x) {
+        return x.title === ev.title && x.date === ev.date &&
+          (x.time || "") === (ev.time || "") && (x.cat || "") === mappedCat(ev.cat);
       });
-      if (dup) { skipped++; return; }
+      (isDup ? dupes : fresh).push(ev);
+    });
+
+    function uniqueTitle(base) {
+      var n = 2, name = base + " (2)";
+      while (calendarEvents.some(function (x) { return x.title === name; })) { n++; name = base + " (" + n + ")"; }
+      return name;
+    }
+
+    var seriesRemap = {};   // sender's seriesId -> a fresh one on this side
+    function addEvent(ev, title) {
+      if (ev.seriesId && !seriesRemap[ev.seriesId]) {
+        seriesRemap[ev.seriesId] = "ser_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+      }
       calendarEvents.push({
         id: "ev_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-        title: ev.title, date: ev.date, time: ev.time || "", cat: ev.cat || "",
+        seriesId: ev.seriesId ? seriesRemap[ev.seriesId] : undefined,
+        title: title || ev.title, date: ev.date, time: ev.time || "", cat: mappedCat(ev.cat),
         note: ev.note || "", notify: !!ev.notify, lead: Number(ev.lead) || 0
       });
-      added++;
-    });
-    saveCalendar();
-    calShareModal.hidden = true;
-    renderCalendar();
-    render();
-    showToast("已匯入 " + added + " 個事件" + (skipped ? "（略過 " + skipped + " 個重複或無效的）" : ""));
+    }
+
+    function finishImport(dupMode) {
+      fresh.forEach(function (ev) { addEvent(ev); });
+      var renamed = 0;
+      if (dupMode === "keep") dupes.forEach(function (ev) { addEvent(ev); });
+      if (dupMode === "rename") dupes.forEach(function (ev) { addEvent(ev, uniqueTitle(ev.title)); renamed++; });
+      saveCalCategories();
+      saveCalendar();
+      calShareModal.hidden = true;
+      renderCalendar();
+      render();
+      var msg = "已匯入 " + (fresh.length + (dupMode === "skip" ? 0 : dupes.length)) + " 個事件";
+      if (dupMode === "skip" && dupes.length) msg += "（略過 " + dupes.length + " 個重複的）";
+      if (renamed) msg += "（其中 " + renamed + " 個已改名）";
+      if (invalid) msg += "（" + invalid + " 個格式不正確）";
+      showToast(msg);
+    }
+
+    if (!dupes.length) { finishImport("skip"); return; }
+    showChoice("有 " + dupes.length + " 個事件跟現有的重複",
+      "「重複」是指名稱、日期、時間、分類都一樣。要怎麼處理這些？（另外 " + fresh.length + " 個沒有重複的一定會匯入）",
+      [
+        { value: "skip", label: "略過重複的，只匯入其他 " + fresh.length + " 個" },
+        { value: "rename", label: "重複的自動改名後也匯入（例如「休 (2)」）" },
+        { value: "keep", label: "全部照原樣匯入（會有同名同日的兩筆）" }
+      ], finishImport);
   });
 
   // ---- copy an event, then paste it onto any number of days ----
@@ -4642,27 +4901,78 @@
       notify: calEvNotify.checked,
       lead: calEvNotify.checked ? readLeadFields(calEvLeadValue, calEvLeadUnit) : 0
     };
-    if (calEditingId) {
-      var editingId = calEditingId;
-      calendarEvents = calendarEvents.map(function (ev) {
-        if (ev.id !== editingId) return ev;
-        // keep pinned: it isn't a form field, so rebuilding the object from scratch would silently unpin
-        return {
-          id: ev.id, title: fields.title, date: fields.date, time: fields.time,
-          cat: fields.cat, note: fields.note, notify: fields.notify, lead: fields.lead,
-          pinned: !!ev.pinned
-        };
-      });
-      showToast("已更新事件");
-    } else {
-      fields.id = "ev_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-      calendarEvents.push(fields);
-      showToast("已新增事件");
+    function finishSave(msg) {
+      saveCalendar();
+      calGoTo(date);
+      calResetForm();
+      renderCalendar();
+      render();
+      showToast(msg);
     }
-    saveCalendar();
-    calGoTo(date);
-    calResetForm();
-    renderCalendar();
+
+    function newEventId() {
+      return "ev_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    }
+
+    // apply the edited fields to one record, preserving what the form doesn't own
+    function applyFields(ev, useDate) {
+      return {
+        id: ev.id, seriesId: ev.seriesId,
+        title: fields.title, date: useDate ? fields.date : ev.date, time: fields.time,
+        cat: fields.cat, note: fields.note, notify: fields.notify, lead: fields.lead,
+        pinned: !!ev.pinned
+      };
+    }
+
+    if (calEditingId) {
+      var target = calendarEvents.find(function (e) { return e.id === calEditingId; });
+      if (!target) { calResetForm(); return; }
+      var mates = relatedEvents(target);
+
+      function applyEdit(scope) {
+        var ids = {};
+        scopeTargets(target, scope).forEach(function (e) { ids[e.id] = true; });
+        calendarEvents = calendarEvents.map(function (ev) {
+          if (!ids[ev.id]) return ev;
+          // only the edited occurrence takes the date from the form; the others keep their own
+          return applyFields(ev, ev.id === target.id);
+        });
+        finishSave(scope === "one" ? "已更新這個事件" : "已更新 " + Object.keys(ids).length + " 個事件");
+      }
+
+      if (mates.length > 1) {
+        showScopeChoice("要套用到哪些？",
+          scopeHintFor(target) + "要把這次的修改套用到哪些？（日期只會套用在你正在編輯的這一項，其他項會保留各自原本的日期）",
+          applyEdit);
+      } else {
+        applyEdit("one");
+      }
+      return;
+    }
+
+    // ---- new event ----
+    var repKind = calEvRepeat.value;
+    if (repKind === "none") {
+      fields.id = newEventId();
+      calendarEvents.push(fields);
+      finishSave("已新增事件");
+      return;
+    }
+
+    var rep = { kind: repKind, until: calEvUntil.value, weekdays: readCalWeekdays(), intervalDays: Number(calEvInterval.value) || 1 };
+    if (!rep.until) { calEvUntil.focus(); showToast("請選擇重複到哪一天"); return; }
+    if (repKind === "weekly" && !rep.weekdays.length) { showToast("請至少選一個星期幾"); return; }
+
+    var dates = generateSeriesDates(date, rep);
+    var seriesId = "ser_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    dates.forEach(function (d) {
+      calendarEvents.push({
+        id: newEventId(), seriesId: seriesId,
+        title: fields.title, date: d, time: fields.time, cat: fields.cat,
+        note: fields.note, notify: fields.notify, lead: fields.lead
+      });
+    });
+    finishSave("已新增 " + dates.length + " 個重複事件" + (dates.length >= SERIES_MAX ? "（已達 " + SERIES_MAX + " 筆上限）" : ""));
   });
 
   var exportModal = document.getElementById("exportModal");
@@ -5529,7 +5839,7 @@
 
   // 手動維護：每次修改網站程式碼時手動更新這個時間點，不要用 new Date() 抓「現在」——
   // 那樣不管有沒有真的改版，每次載入頁面都會顯示成剛更新過，等於騙人。
-  var LAST_UPDATED_TEXT = "2026/08/03 (週一) 02:36";
+  var LAST_UPDATED_TEXT = "2026/08/03 (週一) 03:15";
   var lastUpdatedEl = document.getElementById("lastUpdatedLine");
   if (lastUpdatedEl) lastUpdatedEl.textContent = "最後更新：" + LAST_UPDATED_TEXT;
 
