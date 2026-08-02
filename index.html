@@ -990,6 +990,60 @@
   }
   .cal-drawer-close:hover { opacity: 1; color: var(--bad); }
   .cal-hint { font-size: 11.5px; color: var(--ink-dim); opacity: 0.8; }
+  .cal-paste-bar {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap; flex-shrink: 0;
+    background: rgba(169, 118, 44, 0.14); border: 1px solid var(--accent); color: var(--accent-ink);
+    clip-path: var(--chamfer-sm); padding: 7px 12px; margin-bottom: 10px; font-size: 12.5px;
+  }
+  .cal-paste-bar[hidden] { display: none; }
+  .cal-paste-actions { display: flex; gap: 6px; margin-left: auto; }
+  .cal-paste-actions button {
+    clip-path: var(--chamfer-sm); padding: 4px 12px; font-size: 12px; font-weight: 600;
+    border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+    transition: border-color 0.15s ease;
+  }
+  .cal-paste-actions button:hover:not(:disabled) { border-color: var(--crystal); }
+  #calPasteConfirmBtn { background: var(--accent); border-color: var(--accent); color: #fff; }
+  #calPasteConfirmBtn:disabled { opacity: 0.45; }
+  .cal-cell.is-paste-target {
+    border-color: var(--accent); border-style: dashed;
+    box-shadow: 0 0 0 2px var(--accent) inset; background: var(--cal-selected-fill);
+  }
+  .cal-select-bar { background: rgba(44, 125, 118, 0.14); border-color: var(--crystal); color: var(--crystal-ink); }
+  #calSelectDeleteBtn { background: var(--bad); border-color: var(--bad); color: #fff; }
+  #calSelectExportBtn { background: var(--crystal); border-color: var(--crystal); color: #fff; }
+  #calSelectDeleteBtn:disabled, #calSelectExportBtn:disabled { opacity: 0.45; }
+  .cal-ev.is-picked { outline: 2px solid var(--ink); outline-offset: -2px; font-weight: 700; }
+  .cal-ev[data-ev-pick] { cursor: pointer; }
+  .cal-ev-copy {
+    width: 20px; height: 20px; font-size: 12px; opacity: 0.5; border: none; background: none;
+    color: var(--ink-dim); padding: 0; transition: opacity 0.15s ease, color 0.15s ease;
+  }
+  .cal-ev-copy:hover { opacity: 1; color: var(--crystal-ink); }
+  .cat-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+  .cat-row { display: flex; align-items: center; gap: 8px; }
+  .cat-row input[type="color"] {
+    width: 34px; height: 28px; padding: 0; border: 1px solid var(--line); border-radius: 6px;
+    background: none; flex-shrink: 0;
+  }
+  .cat-row .cat-name {
+    flex: 1; min-width: 0; background: var(--panel-2); border: 1px solid var(--line);
+    border-radius: 6px; color: var(--ink); padding: 5px 9px; font-size: 13px; font-family: inherit;
+  }
+  .cat-add-row { display: flex; align-items: center; gap: 8px; padding-top: 10px; border-top: 1px solid var(--line); }
+  .cat-add-row input[type="color"] {
+    width: 34px; height: 30px; padding: 0; border: 1px solid var(--line); border-radius: 6px;
+    background: none; flex-shrink: 0;
+  }
+  .cat-add-row input[type="text"] {
+    flex: 1; min-width: 0; background: var(--panel-2); border: 1px solid var(--line);
+    border-radius: 6px; color: var(--ink); padding: 6px 9px; font-size: 13px; font-family: inherit;
+  }
+  .cat-add-row button {
+    background: var(--crystal); color: #fff; border: none; clip-path: var(--chamfer-sm);
+    padding: 6px 14px; font-size: 13px; font-weight: 600; flex-shrink: 0; transition: filter 0.15s ease;
+  }
+  .cat-add-row button:hover { filter: brightness(1.12); }
   .cal-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; flex-shrink: 0; }
   .cal-head .cal-nav { margin-left: auto; }
   .cal-title {
@@ -1584,8 +1638,8 @@
       <div class="diy-notify-body">
         <p class="last-updated" id="lastUpdatedLine">最後更新：載入中…</p>
         <ul id="changelogList">
-          <li><strong>自訂倒數的重複方式與提醒時間自由度大幅提高</strong>：重複類型從原本只有「每天」「每週某一天」，改成<u>每週可以複選星期幾</u>（例如週一、三、五一起選），並附「平日」「週末」「每天」「清除」四顆快捷鍵；另外新增<u>「每隔幾天」</u>類型，可以自己填間隔天數與起算日（例如每 3 天）。提醒時間也從固定選項改成<u>自己填數字＋選單位</u>（分鐘前／小時前／天前），想提前 45 分鐘或 2 天都可以，填 0 就是時間到才提醒。行事曆事件的提醒時間同樣改成可以自己填。原本設定好的倒數不受影響，會照舊運作。</li>
-          <li><strong>自訂倒數可以分組，行事曆事件也能設提醒</strong>：新增倒數時可以指定「分組」，下拉選單裡選「＋ 新增分組…」就能當場開一個新的（例如「潛水艇」「飛空艇」），同一組的倒數會收在一起，每一組都能各自收合，組名可以改、也可以刪除（刪除分組不會刪掉裡面的倒數，只會變回「未分組」）。沒有建立任何分組時維持原本的單純列表，不會多出東西。另外<u>行事曆的事件也可以設提醒了</u>：新增或編輯事件時勾「時間到時跳瀏覽器通知」並自己填提前多久（數字＋分鐘／小時／天），就會在時間到之前通知你，不需要先釘選到倒數列。</li>
+          <li><strong>行事曆新增多選刪除，還可以把選取的事件分享給別人</strong>：按行事曆右上角的「☑ 多選」進入多選模式，<u>點事件可以單獨選取、點日期空白處會一次選取那天全部</u>，被選到的會打勾並加粗（多選模式下每天的事件會全部顯示，不會被「還有 N 項」藏起來）。選好之後可以<u>一次刪除</u>，或是<u>匯出成一段文字</u>傳給朋友——對方按「📥 匯入」貼上就能加進他自己的行事曆，會連事件的時間、分類（含顏色）、備註、提醒設定一起帶過去。匯入是「加入」不是覆蓋，不會動到對方原本的行事曆，重複的事件也會自動略過。分享檔只包含你選取的那些事件，不含勾選紀錄或其他任何個人資料。</li>
+          <li><strong>行事曆可以複製事件貼到多天，分類的名稱與顏色也能自己改</strong>：事件旁邊多了一顆 ⧉ 複製鈕，按下去之後上方會出現一條提示列，這時<u>點月曆上的日期就是在挑要貼上的日子，可以一次連點很多天</u>（被選到的會有虛線框），最後按「貼上到 N 天」就會一次建立好，適合固定團、每週活動這種重複的安排。另外事件分類（副本／團本、遊戲活動…）從寫死改成<u>可以自己管理</u>：分類欄位旁邊的 ⚙ 可以改名稱、改顏色、新增或刪除分類，連原本內建的六個也能改。改了顏色之後，已經用那個分類的事件會立刻跟著換色；刪掉分類不會刪掉事件，那些事件只會變成灰色的「未分類」。分類設定會一起存進備份。</li>
           <li><strong>倒數列可以自己新增倒數了</strong>：上方那排倒數卡片原本只有各清單的重置倒數，現在最後面多了一顆「＋ 新增倒數」，可以自己加想追蹤的時間點。兩種類型：<u>單次</u>（倒數到某個日期時間，例如版本更新、活動結束）跟<u>重複</u>（每天或每週固定時間，例如固定團）。自訂的倒數會用<u>細長條橫列</u>顯示，跟上面那排方形的重置倒數卡片明顯區隔，而且橫向空間夠，日期時間不會被截掉。這些自訂倒數自成一組，標題列點一下就能<u>整組收合</u>起來（收合狀態會記住）；收合時標題列還是會顯示「最近的那一個」剩多久，不會完全看不到。倒數會自動依剩餘時間排序，快到的排前面，已到期的沉到最後。另外行事曆的事件旁邊多了一顆 📌，點下去就會把那個事件釘到倒數列，不用重新輸入一次；在倒數列按 × 只是取消釘選，不會刪掉行事曆的事件。倒數歸零後會顯示「已到期」並變色停在那裡，不會自動消失，要清掉自己按 ×。自訂倒數也會一起進備份。</li>
         </ul>
       </div>
@@ -1620,7 +1674,7 @@
       <p><strong>提醒設定</strong>：每組可以「+ 新增提醒」設定幾點幾分跳瀏覽器通知，週間性質的組可以選星期幾重複，也可以指定「特定日期」讓提醒只跳一次；點提醒標籤本身可以直接改時間，不用刪掉重建。footer 的「所有提醒總覽」集中列出目前設定的所有提醒，可以直接在那邊刪除。<u>瀏覽器提醒有限制</u>：只有獨立分頁開著（不能是嵌在 claude.ai 對話裡）、而且分頁要保持在前景，切到其他分頁/視窗可能會被瀏覽器暫停檢查而跳不出來。真正不管有沒有開網頁都會準時到的提醒，請用 Discord 排程（如果你有設定的話）。</p>
       <p><strong>新功能公告</strong>：有比較大的更新時，一進網站會自動跳一個公告視窗，說明新功能在哪裡、能做什麼。看完勾「不要再顯示這則公告」再關閉就不會再跳。之後若有新的公告還是會再跳一次（記住的是「哪一則公告看過了」，不是單純的看過／沒看過），所以不用擔心關掉之後就錯過後續更新。</p>
       <p><strong>全部完成的小驚喜</strong>：本輪事項（不含友好部族的累計進度）全部完成的瞬間，會跳出一個小彈窗，隨機顯示一句 FF14 風味的祝福。</p>
-      <p><strong>資料保存與備份</strong>：所有勾選狀態、清單設定都只存在「這個瀏覽器」的本機儲存空間，換裝置、換瀏覽器、清瀏覽器資料都會遺失。請定期用「匯出備份」複製一份 JSON 存起來，之後可以用「匯入備份」貼回來完整還原（含過去每一天的勾選紀錄，所以日隨的「本週紀錄與完成度」也會一起回來）。備份是<u>整個網站的完整快照</u>：<strong>所有角色</strong>的清單設定（含你自己建的自訂清單）與勾選紀錄，加上行事曆、工具箱、鬧鐘、便利貼內容、小工具排序、主題設定、擲骰名單。匯入會覆蓋這個瀏覽器上的全部內容，所以換裝置、換瀏覽器或清過快取之後匯入都能完整還原。匯入成功時的提示會告訴你「幾個角色、還原了幾筆勾選紀錄」，如果顯示 0 筆，代表是備份檔本身就沒存到紀錄，要回原本那台裝置重新匯出一次。以前匯出的舊格式備份也還是可以匯入（只是舊格式本來就只存了一個角色）。也可以開啟「太久沒備份」提醒，自訂超過幾天沒匯出就提示你。</p>
+      <p><strong>資料保存與備份</strong>：所有勾選狀態、清單設定都只存在「這個瀏覽器」的本機儲存空間，換裝置、換瀏覽器、清瀏覽器資料都會遺失。請定期用「匯出備份」複製一份 JSON 存起來，之後可以用「匯入備份」貼回來完整還原（含過去每一天的勾選紀錄，所以日隨的「本週紀錄與完成度」也會一起回來）。備份是<u>整個網站的完整快照</u>：<strong>所有角色</strong>的清單設定（含你自己建的自訂清單）與勾選紀錄，加上行事曆（含自訂的事件分類）、自訂倒數與其分組、工具箱、鬧鐘、便利貼內容、小工具排序、主題設定、擲骰名單。匯入會覆蓋這個瀏覽器上的全部內容，所以換裝置、換瀏覽器或清過快取之後匯入都能完整還原。匯入成功時的提示會告訴你「幾個角色、還原了幾筆勾選紀錄」，如果顯示 0 筆，代表是備份檔本身就沒存到紀錄，要回原本那台裝置重新匯出一次。以前匯出的舊格式備份也還是可以匯入（只是舊格式本來就只存了一個角色）。也可以開啟「太久沒備份」提醒，自訂超過幾天沒匯出就提示你。</p>
       <p><strong>主題</strong>：右上角「🌓」可以在自動（跟隨系統）、淺色、深色之間切換，選擇會記住。</p>
       <p><strong>今日運勢</strong>：清單下方的小卡片，按「抽今日運勢」隨機抽一句大吉～凶的籤詩，一天只能抽一次，抽過會記住結果到隔天重置。</p>
       <p><strong>解答之書</strong>：按「翻開解答之書」隨時能翻，給你一句模稜兩可的答案，沒有次數限制，純粹好玩。</p>
@@ -1736,9 +1790,35 @@
     <p class="modal-hint">簡單說明一下各在哪裡、能做什麼。標「新」的是這一批剛加的。</p>
     <ul class="announce-list">
       <li class="announce-item">
+        <span class="announce-icon">📅</span>
+        <div class="announce-body">
+          <div class="announce-title">行事曆大升級 <span class="announce-new">新</span></div>
+          <span class="announce-where">位置：畫面右上角的「📅 行事曆」按鈕</span>
+          <p class="announce-desc">
+            ・<strong>複製貼上</strong>：事件旁的 ⧉ 複製之後，點月曆上的日期就是在挑要貼上的日子，可以一次連點很多天，按「貼上到 N 天」一次建好，固定團、每週活動不用重複輸入。<br>
+            ・<strong>多選刪除</strong>：右上角「☑ 多選」進入多選，點事件單獨選、點日期空白處選整天，可以一次刪掉。<br>
+            ・<strong>分享給朋友</strong>：多選之後按「匯出選取的」會產生一段文字，傳給朋友，對方按「📥 匯入」貼上就進他的行事曆了，時間、分類、備註、提醒都會一起過去。匯入是<u>加入</u>不會蓋掉他原本的東西，重複的會自動略過。<br>
+            ・<strong>分類可以自己改</strong>：分類欄位旁的 ⚙ 可以改名稱、改顏色、新增或刪除，內建的六個也能改。<br>
+            ・<strong>事件可以設提醒</strong>：勾「時間到時跳瀏覽器通知」並自己填提前多久。
+          </p>
+        </div>
+      </li>
+      <li class="announce-item">
+        <span class="announce-icon">⏳</span>
+        <div class="announce-body">
+          <div class="announce-title">自訂倒數大升級 <span class="announce-new">新</span></div>
+          <span class="announce-where">位置：頁面上方那排倒數卡片，最後面的「＋ 新增倒數」</span>
+          <p class="announce-desc">
+            ・<strong>可以設提醒</strong>：勾起來就會在時間到之前跳通知，提前多久自己填（數字＋分鐘／小時／天），填 0 就是準時提醒。<br>
+            ・<strong>重複方式更自由</strong>：每週可以<u>複選星期幾</u>（例如一、三、五），附「平日」「週末」「每天」快捷鍵；也可以設「每隔幾天」自己填間隔。<br>
+            ・<strong>可以分組</strong>：新增倒數時選「＋ 新增分組…」就能開一個（例如潛水艇、飛空艇），同組收在一起、可各自收合，組名可改可刪。
+          </p>
+        </div>
+      </li>
+      <li class="announce-item">
         <span class="announce-icon">🧭</span>
         <div class="announce-body">
-          <div class="announce-title">左側頁面導覽、一鍵到頂／到底 <span class="announce-new">新</span></div>
+          <div class="announce-title">左側頁面導覽、一鍵到頂／到底</div>
           <span class="announce-where">位置：畫面左邊那一排</span>
           <p class="announce-desc">點清單名稱（例如「友好部族」「小工具」）就會直接捲到那一區，不用自己慢慢滑。上面還有 <strong>⤒ 回到最上面</strong>、<strong>⤓ 移到最下面</strong>兩顆按鈕。按 ☰ 可以把它收合成小標籤，收合狀態會記住。導覽的項目會跟著「顯示的組別」與你自己新增的自訂清單自動更新。（視窗比較窄時預設是收著的，手機上不顯示。）</p>
         </div>
@@ -1746,25 +1826,9 @@
       <li class="announce-item">
         <span class="announce-icon">📝</span>
         <div class="announce-body">
-          <div class="announce-title">便利貼可以自己調大小了 <span class="announce-new">新</span></div>
+          <div class="announce-title">便利貼可以自己調大小</div>
           <span class="announce-where">位置：右下角便利貼的<strong>左上角</strong></span>
           <p class="announce-desc">左上角有一個小小的直角把手，拖曳就能調整便利貼大小。放左上角是因為便利貼固定在畫面右下角，本來就是往左上方變大的，把手放在那一角拖起來方向才對。調好的大小會記住，在把手上<strong>點兩下</strong>可以還原成預設大小。</p>
-        </div>
-      </li>
-      <li class="announce-item">
-        <span class="announce-icon">⏳</span>
-        <div class="announce-body">
-          <div class="announce-title">自訂倒數</div>
-          <span class="announce-where">位置：頁面上方那排倒數卡片，最後面的「＋ 新增倒數」</span>
-          <p class="announce-desc">除了各清單的重置倒數，現在可以加自己想追蹤的時間點。兩種類型：<strong>單次</strong>（倒數到某個日期時間，例如版本更新、活動結束）跟<strong>重複</strong>（每天或每週固定時間，到了自動跳下一輪，例如固定團）。行事曆的事件旁邊有一顆 📌，點下去就能把那個事件釘到倒數列，不用重打一次。自訂倒數自成一組，點標題可以整組收合，收合時還是看得到最近的那一個。</p>
-        </div>
-      </li>
-      <li class="announce-item">
-        <span class="announce-icon">📅</span>
-        <div class="announce-body">
-          <div class="announce-title">行事曆</div>
-          <span class="announce-where">位置：畫面右上角的「📅 行事曆」按鈕</span>
-          <p class="announce-desc">可以新增事件，填日期、時間（不填就是整天）、事件種類（副本／團本、遊戲活動、生產採集、交易／市場、約團／聚會、其他，各有顏色）跟備註。月曆佔滿整個視窗，點任一天，月曆會滑向左邊縮小、填寫欄位從右邊推出來，關掉再展開回去。今天的日期是實心圓標記，目前點選的那天整格會填色。行事曆所有角色共用，也會進備份。</p>
         </div>
       </li>
       <li class="announce-item">
@@ -1828,9 +1892,26 @@
       <span class="cal-title" id="calTitle">—</span>
       <span class="cal-hint">點任一天可以新增或編輯事件</span>
       <span class="cal-nav">
+        <button type="button" id="calSelectModeBtn" title="多選事件，可以一次刪除或匯出分享">☑ 多選</button>
+        <button type="button" id="calImportBtn" title="把別人分享的事件匯入你的行事曆">📥 匯入</button>
         <button type="button" id="calPrevBtn" title="上個月">◀</button>
         <button type="button" id="calTodayBtn">今天</button>
         <button type="button" id="calNextBtn" title="下個月">▶</button>
+      </span>
+    </div>
+    <div class="cal-paste-bar" id="calPasteBar" hidden>
+      <span id="calPasteText">已複製事件</span>
+      <span class="cal-paste-actions">
+        <button type="button" id="calPasteConfirmBtn">貼上</button>
+        <button type="button" id="calPasteCancelBtn">取消</button>
+      </span>
+    </div>
+    <div class="cal-paste-bar cal-select-bar" id="calSelectBar" hidden>
+      <span id="calSelectText">多選刪除：點事件可以單獨選取，點日期空白處會選取那天全部</span>
+      <span class="cal-paste-actions">
+        <button type="button" id="calSelectExportBtn">匯出選取的</button>
+        <button type="button" id="calSelectDeleteBtn">刪除選取的</button>
+        <button type="button" id="calSelectCancelBtn">結束多選</button>
       </span>
     </div>
     <div class="cal-layout" id="calLayout">
@@ -1847,7 +1928,10 @@
           <input type="text" id="calEvTitle" class="cal-form-full" maxlength="60" placeholder="事件名稱，例如：絕神兵首戰">
           <input type="date" id="calEvDate">
           <input type="time" id="calEvTime" title="時間（選填，不填就是整天）">
-          <select id="calEvCat" class="cal-form-full"></select>
+          <span class="inline-field cal-form-full">
+            <select id="calEvCat"></select>
+            <button type="button" id="calCatManageBtn" class="cc-mini-btn" title="管理分類（名稱與顏色）">⚙</button>
+          </span>
           <textarea id="calEvNote" class="cal-form-full" maxlength="500" placeholder="備註（選填）：集合地點、隊伍成員、要帶什麼…"></textarea>
           <label class="cal-form-full cal-notify-label"><input type="checkbox" id="calEvNotify"> 時間到時跳瀏覽器通知</label>
           <span class="inline-field cal-form-full" id="calLeadRow" hidden>
@@ -1868,6 +1952,35 @@
     </div>
     <div class="modal-actions">
       <button type="button" id="closeCalendarBtn">關閉</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="calShareModal" hidden>
+  <div class="modal-box">
+    <h3 id="calShareTitle">匯出選取的事件</h3>
+    <p class="modal-hint" id="calShareHint"></p>
+    <textarea id="calShareText"></textarea>
+    <div class="modal-actions">
+      <button type="button" id="calShareCopyBtn">複製到剪貼簿</button>
+      <button type="button" id="calShareImportBtn">確認匯入</button>
+      <button type="button" id="calShareCloseBtn">關閉</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="calCatModal" hidden>
+  <div class="modal-box">
+    <h3>管理事件分類</h3>
+    <p class="modal-hint">名稱跟顏色都可以改，也可以新增或刪除。改完之後，已經用這個分類的事件會跟著換色。刪掉分類不會刪掉事件，那些事件會顯示成「未分類」的灰色。</p>
+    <div class="cat-list" id="calCatList"></div>
+    <div class="cat-add-row">
+      <input type="color" id="calCatNewColor" value="#2c7d76" title="顏色">
+      <input type="text" id="calCatNewName" maxlength="12" placeholder="新分類名稱">
+      <button type="button" id="calCatAddBtn">新增</button>
+    </div>
+    <div class="modal-actions">
+      <button type="button" id="closeCalCatBtn">完成</button>
     </div>
   </div>
 </div>
@@ -1975,7 +2088,9 @@
   // groups that never reset store their progress under one fixed period instead of a timestamp,
   // the same trick "sticky" already uses for flag items
   var MANUAL_PERIOD = "manual";
-  var CAL_CATEGORIES = [
+  var CAL_CAT_KEY = "ff14weekly.calCategories.v1";
+  // seed values only — once the user edits them the stored list wins
+  var DEFAULT_CAL_CATEGORIES = [
     { id: "raid", name: "副本／團本", color: "#7c5cd6" },
     { id: "event", name: "遊戲活動", color: "#d98324" },
     { id: "craft", name: "生產採集", color: "#3d7a41" },
@@ -1983,9 +2098,22 @@
     { id: "social", name: "約團／聚會", color: "#2c7d76" },
     { id: "other", name: "其他", color: "#6b7280" }
   ];
+  var CAL_CAT_FALLBACK = { id: "", name: "未分類", color: "#6b7280" };
+
+  function loadCalCategories() {
+    try {
+      var raw = JSON.parse(localStorage.getItem(CAL_CAT_KEY));
+      if (Array.isArray(raw) && raw.length) return raw;
+    } catch (e) {}
+    return JSON.parse(JSON.stringify(DEFAULT_CAL_CATEGORIES));
+  }
+  function saveCalCategories() { localStorage.setItem(CAL_CAT_KEY, JSON.stringify(calCategories)); }
+  var calCategories = loadCalCategories();
+
   function calCategory(id) {
-    for (var i = 0; i < CAL_CATEGORIES.length; i++) if (CAL_CATEGORIES[i].id === id) return CAL_CATEGORIES[i];
-    return CAL_CATEGORIES[CAL_CATEGORIES.length - 1];
+    for (var i = 0; i < calCategories.length; i++) if (calCategories[i].id === id) return calCategories[i];
+    // a deleted category shouldn't make its old events disappear — show them neutrally
+    return CAL_CAT_FALLBACK;
   }
 
   var DEFAULT_CONFIG = {
@@ -2522,6 +2650,7 @@
       toolbox: toolboxLinks,
       alarms: alarms,
       calendar: calendarEvents,
+      calCategories: calCategories,
       countdowns: countdowns,
       countdownGroups: countdownGroups,
       toolOrder: toolOrder,
@@ -2539,6 +2668,7 @@
     if (Array.isArray(s.toolbox)) { toolboxLinks = s.toolbox; saveToolbox(); renderToolbox(); }
     if (Array.isArray(s.alarms)) { alarms = s.alarms; saveAlarms(); renderAlarms(); }
     if (Array.isArray(s.calendar)) { calendarEvents = s.calendar; saveCalendar(); }
+    if (Array.isArray(s.calCategories) && s.calCategories.length) { calCategories = s.calCategories; saveCalCategories(); }
     if (Array.isArray(s.countdowns)) { countdowns = s.countdowns; saveCountdowns(); }
     if (Array.isArray(s.countdownGroups)) { countdownGroups = s.countdownGroups; saveCountdownGroups(); }
     if (Array.isArray(s.toolOrder)) { toolOrder = s.toolOrder; saveToolOrder(); applyToolOrder(); }
@@ -3990,7 +4120,15 @@
   var calSaveBtn = document.getElementById("calSaveBtn");
   var calCancelEditBtn = document.getElementById("calCancelEditBtn");
 
-  calEvCat.innerHTML = CAL_CATEGORIES.map(function (c) {
+  function fillCalCatSelect() {
+    var keep = calEvCat.value;
+    calEvCat.innerHTML = calCategories.map(function (c) {
+      return '<option value="' + escapeAttr(c.id) + '">' + escapeHtml(c.name) + '</option>';
+    }).join("");
+    if (calCategories.some(function (c) { return c.id === keep; })) calEvCat.value = keep;
+  }
+
+  calEvCat.innerHTML = calCategories.map(function (c) {
     return '<option value="' + c.id + '">' + escapeHtml(c.name) + '</option>';
   }).join("");
 
@@ -3999,7 +4137,7 @@
     calEvTitle.value = "";
     calEvTime.value = "";
     calEvNote.value = "";
-    calEvCat.value = CAL_CATEGORIES[0].id;
+    calEvCat.value = calCategories.length ? calCategories[0].id : "";
     calEvNotify.checked = false;
     setLeadFields(0, calEvLeadValue, calEvLeadUnit);
     calLeadRow.hidden = true;
@@ -4023,24 +4161,65 @@
       var d = new Date(start.getTime() + i * 86400000);
       var key = taipeiDateKey(d);
       var evs = calEventsOn(key);
-      var chips = evs.slice(0, 4).map(function (ev) {
+      // in select mode every event must be reachable, so the usual 4-item cap is lifted
+      var shown = calSelectMode ? evs : evs.slice(0, 4);
+      var chips = shown.map(function (ev) {
         var cat = calCategory(ev.cat);
         // the cell is only ~90px wide, so showing the time here ate the whole title.
         // title is what identifies the event; the time still shows in the tooltip and the day list.
         var tip = (ev.time ? ev.time + " " : "") + ev.title;
-        return '<span class="cal-ev" style="background:' + cat.color + '" title="' + escapeAttr(tip) + '">' + escapeHtml(ev.title) + '</span>';
+        var picked = calSelectMode && calSelectedEvents.indexOf(ev.id) !== -1;
+        return '<span class="cal-ev' + (picked ? " is-picked" : "") + '" style="background:' + cat.color + '"' +
+          (calSelectMode ? ' data-ev-pick="' + escapeAttr(ev.id) + '"' : '') +
+          ' title="' + escapeAttr(tip) + '">' + (picked ? "✓ " : "") + escapeHtml(ev.title) + '</span>';
       }).join("");
-      var more = evs.length > 4 ? '<span class="cal-more">還有 ' + (evs.length - 4) + ' 項</span>' : "";
+      var more = (!calSelectMode && evs.length > 4) ? '<span class="cal-more">還有 ' + (evs.length - 4) + ' 項</span>' : "";
       var cls = "cal-cell" + (d.getUTCMonth() !== calViewM ? " is-other" : "") +
-        (key === todayKey ? " is-today" : "") + (key === calSelectedKey ? " is-selected" : "");
+        (key === todayKey ? " is-today" : "") +
+        (!calClipboard && key === calSelectedKey ? " is-selected" : "") +
+        (calClipboard && calPasteSelection.indexOf(key) !== -1 ? " is-paste-target" : "");
       html += '<button type="button" class="' + cls + '" data-cal-day="' + key + '">' +
         '<span class="cal-daynum">' + d.getUTCDate() + '</span>' + chips + more + '</button>';
     }
     var grid = document.getElementById("calGrid");
     grid.innerHTML = html;
+    grid.querySelectorAll("[data-ev-pick]").forEach(function (chip) {
+      chip.addEventListener("click", function (e) {
+        // don't let the click fall through to the day cell, which would select the whole day
+        e.stopPropagation();
+        var id = chip.getAttribute("data-ev-pick");
+        var at = calSelectedEvents.indexOf(id);
+        if (at === -1) calSelectedEvents.push(id); else calSelectedEvents.splice(at, 1);
+        updateSelectBar();
+        renderCalendar();
+      });
+    });
     grid.querySelectorAll("[data-cal-day]").forEach(function (cell) {
       cell.addEventListener("click", function () {
-        calSelectedKey = cell.getAttribute("data-cal-day");
+        var key = cell.getAttribute("data-cal-day");
+        if (calSelectMode) {
+          // clicking the cell background takes or drops that whole day
+          var dayIds = calEventsOn(key).map(function (e) { return e.id; });
+          if (!dayIds.length) return;
+          var allPicked = dayIds.every(function (id) { return calSelectedEvents.indexOf(id) !== -1; });
+          dayIds.forEach(function (id) {
+            var at = calSelectedEvents.indexOf(id);
+            if (allPicked) { if (at !== -1) calSelectedEvents.splice(at, 1); }
+            else if (at === -1) calSelectedEvents.push(id);
+          });
+          updateSelectBar();
+          renderCalendar();
+          return;
+        }
+        if (calClipboard) {
+          // paste mode: clicking days picks targets instead of opening the editor
+          var at = calPasteSelection.indexOf(key);
+          if (at === -1) calPasteSelection.push(key); else calPasteSelection.splice(at, 1);
+          updatePasteBar();
+          renderCalendar();
+          return;
+        }
+        calSelectedKey = key;
         calDrawerOpen = true;
         calResetForm();
         renderCalendar();
@@ -4069,6 +4248,7 @@
         '<span class="cal-ev-cat" style="background:' + cat.color + '">' + escapeHtml(cat.name) + '</span>' +
         '</span>' + (ev.note ? '<div class="cal-ev-note">' + escapeHtml(ev.note) + '</div>' : "") + '</span>' +
         '<span class="cal-ev-actions">' +
+        '<button type="button" class="cal-ev-copy" data-cal-copy="' + ev.id + '" title="複製這個事件，再點選要貼上的日期">⧉</button>' +
         '<button type="button" class="cal-ev-pin' + (ev.pinned ? " on" : "") + '" data-cal-pin="' + ev.id + '" title="' + (ev.pinned ? "取消釘選（從上方倒數列移除）" : "釘選到上方的倒數列") + '">📌</button>' +
         '<button type="button" class="cal-ev-edit" data-cal-edit="' + ev.id + '" title="編輯這個事件">✎</button>' +
         '<button type="button" class="del-btn" data-cal-del="' + ev.id + '" title="刪除這個事件">×</button>' +
@@ -4085,6 +4265,21 @@
           calResetForm();
           renderCalendar();
         });
+      });
+    });
+    listEl.querySelectorAll("[data-cal-copy]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var ev = calendarEvents.find(function (e) { return e.id === btn.getAttribute("data-cal-copy"); });
+        if (!ev) return;
+        calClipboard = {
+          title: ev.title, time: ev.time || "", cat: ev.cat, note: ev.note || "",
+          notify: !!ev.notify, lead: Number(ev.lead) || 0
+        };
+        calPasteSelection = [];
+        calDrawerOpen = false;   // get the panel out of the way so the whole month is clickable
+        updatePasteBar();
+        renderCalendar();
+        showToast("已複製「" + ev.title + "」，接著點選要貼上的日期");
       });
     });
     listEl.querySelectorAll("[data-cal-pin]").forEach(function (btn) {
@@ -4149,6 +4344,254 @@
     calEvTitle.focus();
   }
 
+  // ---- category management ----
+  var calCatModal = document.getElementById("calCatModal");
+  function renderCalCatList() {
+    var el = document.getElementById("calCatList");
+    el.innerHTML = calCategories.map(function (c) {
+      return '<div class="cat-row" data-cat-id="' + escapeAttr(c.id) + '">' +
+        '<input type="color" class="cat-color" value="' + escapeAttr(c.color) + '" title="顏色">' +
+        '<input type="text" class="cat-name" maxlength="12" value="' + escapeAttr(c.name) + '">' +
+        '<button type="button" class="del-btn cat-del" title="刪除這個分類">×</button>' +
+        '</div>';
+    }).join("") || '<p class="modal-hint">目前沒有任何分類，用下面的欄位新增一個。</p>';
+
+    function catOf(node) {
+      var id = node.closest(".cat-row").getAttribute("data-cat-id");
+      return calCategories.find(function (c) { return c.id === id; });
+    }
+    el.querySelectorAll(".cat-color").forEach(function (input) {
+      input.addEventListener("change", function () {
+        var c = catOf(input); if (!c) return;
+        c.color = input.value; saveCalCategories(); renderCalendar(); render();
+      });
+    });
+    el.querySelectorAll(".cat-name").forEach(function (input) {
+      input.addEventListener("change", function () {
+        var c = catOf(input); if (!c) return;
+        var v = input.value.trim();
+        if (!v) { input.value = c.name; return; }
+        c.name = v; saveCalCategories(); fillCalCatSelect(); renderCalendar();
+      });
+    });
+    el.querySelectorAll(".cat-del").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var c = catOf(btn); if (!c) return;
+        showConfirm("確定要刪除分類「" + c.name + "」嗎？用到它的事件不會被刪除，只會變成灰色的「未分類」。", function () {
+          calCategories = calCategories.filter(function (x) { return x.id !== c.id; });
+          saveCalCategories(); fillCalCatSelect(); renderCalCatList(); renderCalendar(); render();
+        });
+      });
+    });
+  }
+  document.getElementById("calCatManageBtn").addEventListener("click", function () {
+    renderCalCatList();
+    calCatModal.hidden = false;
+  });
+  document.getElementById("closeCalCatBtn").addEventListener("click", function () { calCatModal.hidden = true; });
+  calCatModal.addEventListener("click", function (e) { if (e.target === calCatModal) calCatModal.hidden = true; });
+  document.getElementById("calCatAddBtn").addEventListener("click", function () {
+    var nameEl = document.getElementById("calCatNewName");
+    var colorEl = document.getElementById("calCatNewColor");
+    var name = nameEl.value.trim();
+    if (!name) { nameEl.focus(); showToast("請輸入分類名稱"); return; }
+    calCategories.push({ id: "cat_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), name: name, color: colorEl.value });
+    saveCalCategories();
+    nameEl.value = "";
+    fillCalCatSelect();
+    renderCalCatList();
+    renderCalendar();
+  });
+
+  // ---- multi-select delete ----
+  var calSelectMode = false;
+  var calSelectedEvents = [];
+  var calSelectBar = document.getElementById("calSelectBar");
+
+  function updateSelectBar() {
+    calSelectBar.hidden = !calSelectMode;
+    if (!calSelectMode) return;
+    var n = calSelectedEvents.length;
+    document.getElementById("calSelectText").textContent = n
+      ? "已選取 " + n + " 個事件"
+      : "多選刪除：點事件可以單獨選取，點日期空白處會選取那天全部";
+    var delBtn = document.getElementById("calSelectDeleteBtn");
+    delBtn.textContent = "刪除選取的 " + n + " 個";
+    delBtn.disabled = !n;
+    var expBtn = document.getElementById("calSelectExportBtn");
+    expBtn.textContent = "匯出選取的 " + n + " 個";
+    expBtn.disabled = !n;
+  }
+  function exitSelectMode() {
+    calSelectMode = false;
+    calSelectedEvents = [];
+    updateSelectBar();
+    renderCalendar();
+  }
+  document.getElementById("calSelectModeBtn").addEventListener("click", function () {
+    calSelectMode = !calSelectMode;
+    calSelectedEvents = [];
+    if (calSelectMode) {
+      // the two modes fight over what a click on a day means, so only one can be active
+      calClipboard = null; calPasteSelection = []; updatePasteBar();
+      calDrawerOpen = false;
+    }
+    updateSelectBar();
+    renderCalendar();
+  });
+  document.getElementById("calSelectCancelBtn").addEventListener("click", exitSelectMode);
+  document.getElementById("calSelectDeleteBtn").addEventListener("click", function () {
+    var n = calSelectedEvents.length;
+    if (!n) return;
+    showConfirm("確定要刪除選取的 " + n + " 個事件嗎？此動作無法復原。", function () {
+      calendarEvents = calendarEvents.filter(function (ev) { return calSelectedEvents.indexOf(ev.id) === -1; });
+      saveCalendar();
+      exitSelectMode();
+      render();
+      showToast("已刪除 " + n + " 個事件");
+    });
+  });
+
+  // ---- share events with someone else ----
+  // A calendar-only package, deliberately separate from the whole-site backup: it must be
+  // safe to hand to another person, so it carries nothing but the chosen events and the
+  // categories they use.
+  var CAL_SHARE_TYPE = "ff14weekly-calendar";
+  var calShareModal = document.getElementById("calShareModal");
+  var calShareText = document.getElementById("calShareText");
+
+  function openCalShare(mode) {
+    var isExport = mode === "export";
+    document.getElementById("calShareTitle").textContent = isExport ? "匯出選取的事件" : "匯入別人分享的事件";
+    document.getElementById("calShareHint").textContent = isExport
+      ? "複製下面整段內容傳給對方，對方在行事曆按「📥 匯入」貼上就能加進他的行事曆。只包含你選取的事件與它們用到的分類，不含其他任何資料。"
+      : "把對方給你的整段內容貼到下面，再按「確認匯入」。事件會「加入」你現有的行事曆，不會蓋掉原本的內容；重複的事件會自動略過。";
+    calShareText.readOnly = isExport;
+    document.getElementById("calShareCopyBtn").hidden = !isExport;
+    document.getElementById("calShareImportBtn").hidden = isExport;
+    calShareModal.hidden = false;
+    if (isExport) { calShareText.focus(); calShareText.select(); }
+    else { calShareText.value = ""; calShareText.focus(); }
+  }
+
+  document.getElementById("calShareCloseBtn").addEventListener("click", function () { calShareModal.hidden = true; });
+  calShareModal.addEventListener("click", function (e) { if (e.target === calShareModal) calShareModal.hidden = true; });
+  document.getElementById("calShareCopyBtn").addEventListener("click", function () {
+    calShareText.select();
+    var done = false;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(calShareText.value)
+        .then(function () { showToast("已複製到剪貼簿"); })
+        .catch(function () {
+          try { done = document.execCommand("copy"); } catch (e) {}
+          showToast(done ? "已複製到剪貼簿" : "複製失敗，已幫你選取內容，請手動 Ctrl+C");
+        });
+    } else {
+      try { done = document.execCommand("copy"); } catch (e) {}
+      showToast(done ? "已複製到剪貼簿" : "複製失敗，已幫你選取內容，請手動 Ctrl+C");
+    }
+  });
+
+  document.getElementById("calSelectExportBtn").addEventListener("click", function () {
+    var picked = calendarEvents.filter(function (ev) { return calSelectedEvents.indexOf(ev.id) !== -1; });
+    if (!picked.length) return;
+    var usedCatIds = {};
+    picked.forEach(function (ev) { if (ev.cat) usedCatIds[ev.cat] = true; });
+    calShareText.value = JSON.stringify({
+      type: CAL_SHARE_TYPE,
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      categories: calCategories.filter(function (c) { return usedCatIds[c.id]; }),
+      // ids are dropped on purpose — the receiving side mints its own
+      events: picked.map(function (ev) {
+        return { title: ev.title, date: ev.date, time: ev.time || "", cat: ev.cat,
+          note: ev.note || "", notify: !!ev.notify, lead: Number(ev.lead) || 0 };
+      })
+    }, null, 2);
+    openCalShare("export");
+  });
+
+  document.getElementById("calImportBtn").addEventListener("click", function () { openCalShare("import"); });
+
+  document.getElementById("calShareImportBtn").addEventListener("click", function () {
+    var parsed;
+    try { parsed = JSON.parse(calShareText.value); } catch (e) {
+      showToast("匯入失敗：內容格式不正確"); return;
+    }
+    if (!parsed || parsed.type !== CAL_SHARE_TYPE || !Array.isArray(parsed.events)) {
+      showToast("這不是行事曆分享檔（如果是整站備份，請改用下面的「匯入備份」）");
+      return;
+    }
+    // add any category the sender used that we don't have; never overwrite the user's own
+    if (Array.isArray(parsed.categories)) {
+      parsed.categories.forEach(function (c) {
+        if (!c || !c.id) return;
+        if (!calCategories.some(function (x) { return x.id === c.id; })) {
+          calCategories.push({ id: c.id, name: c.name || "未命名", color: c.color || "#6b7280" });
+        }
+      });
+      saveCalCategories();
+      fillCalCatSelect();
+    }
+    var added = 0, skipped = 0;
+    parsed.events.forEach(function (ev) {
+      if (!ev || !ev.title || !ev.date) { skipped++; return; }
+      // importing the same package twice shouldn't double everything up
+      var dup = calendarEvents.some(function (x) {
+        return x.title === ev.title && x.date === ev.date && (x.time || "") === (ev.time || "");
+      });
+      if (dup) { skipped++; return; }
+      calendarEvents.push({
+        id: "ev_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        title: ev.title, date: ev.date, time: ev.time || "", cat: ev.cat || "",
+        note: ev.note || "", notify: !!ev.notify, lead: Number(ev.lead) || 0
+      });
+      added++;
+    });
+    saveCalendar();
+    calShareModal.hidden = true;
+    renderCalendar();
+    render();
+    showToast("已匯入 " + added + " 個事件" + (skipped ? "（略過 " + skipped + " 個重複或無效的）" : ""));
+  });
+
+  // ---- copy an event, then paste it onto any number of days ----
+  var calClipboard = null;
+  var calPasteSelection = [];
+  var calPasteBar = document.getElementById("calPasteBar");
+
+  function updatePasteBar() {
+    calPasteBar.hidden = !calClipboard;
+    if (!calClipboard) return;
+    document.getElementById("calPasteText").textContent =
+      "已複製「" + calClipboard.title + "」——點選要貼上的日期（可以連點多天）";
+    document.getElementById("calPasteConfirmBtn").textContent = "貼上到 " + calPasteSelection.length + " 天";
+    document.getElementById("calPasteConfirmBtn").disabled = !calPasteSelection.length;
+  }
+  function clearCalPaste() {
+    calClipboard = null;
+    calPasteSelection = [];
+    updatePasteBar();
+    renderCalendar();
+  }
+  document.getElementById("calPasteCancelBtn").addEventListener("click", clearCalPaste);
+  document.getElementById("calPasteConfirmBtn").addEventListener("click", function () {
+    if (!calClipboard || !calPasteSelection.length) return;
+    var n = calPasteSelection.length;
+    calPasteSelection.forEach(function (dateKey) {
+      calendarEvents.push({
+        id: "ev_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        title: calClipboard.title, date: dateKey, time: calClipboard.time,
+        cat: calClipboard.cat, note: calClipboard.note,
+        notify: !!calClipboard.notify, lead: Number(calClipboard.lead) || 0
+      });
+    });
+    saveCalendar();
+    clearCalPaste();
+    render();
+    showToast("已貼上到 " + n + " 天");
+  });
+
   function calGoTo(dateKey) {
     calSelectedKey = dateKey;
     calViewY = Number(dateKey.slice(0, 4));
@@ -4157,6 +4600,8 @@
 
   document.getElementById("calendarBtn").addEventListener("click", function () {
     calGoTo(calSelectedKey || taipeiDateKey(taipeiShift(new Date())));
+    calClipboard = null; calPasteSelection = []; updatePasteBar();
+    calSelectMode = false; calSelectedEvents = []; updateSelectBar();
     calDrawerOpen = false;
     calResetForm();
     calendarModal.hidden = false;
@@ -5084,7 +5529,7 @@
 
   // 手動維護：每次修改網站程式碼時手動更新這個時間點，不要用 new Date() 抓「現在」——
   // 那樣不管有沒有真的改版，每次載入頁面都會顯示成剛更新過，等於騙人。
-  var LAST_UPDATED_TEXT = "2026/08/03 (週一) 00:34";
+  var LAST_UPDATED_TEXT = "2026/08/03 (週一) 02:36";
   var lastUpdatedEl = document.getElementById("lastUpdatedLine");
   if (lastUpdatedEl) lastUpdatedEl.textContent = "最後更新：" + LAST_UPDATED_TEXT;
 
@@ -5268,7 +5713,7 @@
   // they ticked "don't show again" on the previous one.
   var ANNOUNCE_KEY = "ff14weekly.announceDismissed.v1";
   // bumped so everyone sees the new round once, even if they dismissed the previous announcement
-  var ANNOUNCE_ID = "2026-08-02-pagenav-stickyresize";
+  var ANNOUNCE_ID = "2026-08-03-calendar-countdown-upgrade";
   var announceModal = document.getElementById("announceModal");
   var announceDontShow = document.getElementById("announceDontShow");
   function closeAnnounce() {
