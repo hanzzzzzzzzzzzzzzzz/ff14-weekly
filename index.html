@@ -1128,6 +1128,21 @@
     display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink-dim);
   }
   .cal-notify-label { padding: 2px 0; }
+  .cal-lead-caption { font-size: 12.5px; color: var(--ink-dim); flex-shrink: 0; }
+  /* number + unit on one line, like a calendar app's reminder field */
+  .inline-field { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--ink-dim); }
+  .inline-field input[type="number"] { width: 76px; flex: none; }
+  .inline-field select { width: auto; flex: none; }
+  .wd-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+  .wd-chip {
+    min-width: 36px; padding: 5px 0; font-size: 12.5px; font-weight: 600;
+    background: var(--panel-2); border: 1px solid var(--line); color: var(--ink-dim);
+    clip-path: var(--chamfer-sm);
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  .wd-chip:hover { border-color: var(--crystal); color: var(--crystal-ink); }
+  .wd-chip.on { background: var(--crystal); border-color: var(--crystal); color: #fff; }
+  .wd-presets { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
   .cd-row-name {
     font-size: 13px; font-weight: 700; color: var(--accent-ink);
     flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -1569,8 +1584,8 @@
       <div class="diy-notify-body">
         <p class="last-updated" id="lastUpdatedLine">最後更新：載入中…</p>
         <ul id="changelogList">
-          <li><strong>自訂倒數可以分組，行事曆事件也能設提醒</strong>：新增倒數時可以指定「分組」，下拉選單裡選「＋ 新增分組…」就能當場開一個新的（例如「潛水艇」「飛空艇」），同一組的倒數會收在一起，每一組都能各自收合，組名可以改、也可以刪除（刪除分組不會刪掉裡面的倒數，只會變回「未分組」）。沒有建立任何分組時維持原本的單純列表，不會多出東西。另外<u>行事曆的事件也可以設提醒了</u>：新增或編輯事件時勾「時間到時跳瀏覽器通知」並選擇提前多久，就會在時間到之前通知你，不需要先釘選到倒數列。</li>
-          <li><strong>自訂倒數可以設提醒了</strong>：新增或編輯自訂倒數時，勾「時間到時跳瀏覽器通知」就會在時間到的時候提醒你，還可以選擇<u>提前多久</u>提醒（準時／5分／15分／30分／1小時／1天前）——像固定團這種，提前 15 分鐘通知才有用。有設提醒的倒數，卡片上會顯示一個 🔔。重複型的倒數（每天／每週）每一輪都會提醒一次，不會只響一次就沒了。跟站上其他提醒一樣，需要用獨立分頁開啟本站、允許通知權限，分頁保持在前景才會準時跳出。</li>
+          <li><strong>自訂倒數的重複方式與提醒時間自由度大幅提高</strong>：重複類型從原本只有「每天」「每週某一天」，改成<u>每週可以複選星期幾</u>（例如週一、三、五一起選），並附「平日」「週末」「每天」「清除」四顆快捷鍵；另外新增<u>「每隔幾天」</u>類型，可以自己填間隔天數與起算日（例如每 3 天）。提醒時間也從固定選項改成<u>自己填數字＋選單位</u>（分鐘前／小時前／天前），想提前 45 分鐘或 2 天都可以，填 0 就是時間到才提醒。行事曆事件的提醒時間同樣改成可以自己填。原本設定好的倒數不受影響，會照舊運作。</li>
+          <li><strong>自訂倒數可以分組，行事曆事件也能設提醒</strong>：新增倒數時可以指定「分組」，下拉選單裡選「＋ 新增分組…」就能當場開一個新的（例如「潛水艇」「飛空艇」），同一組的倒數會收在一起，每一組都能各自收合，組名可以改、也可以刪除（刪除分組不會刪掉裡面的倒數，只會變回「未分組」）。沒有建立任何分組時維持原本的單純列表，不會多出東西。另外<u>行事曆的事件也可以設提醒了</u>：新增或編輯事件時勾「時間到時跳瀏覽器通知」並自己填提前多久（數字＋分鐘／小時／天），就會在時間到之前通知你，不需要先釘選到倒數列。</li>
           <li><strong>倒數列可以自己新增倒數了</strong>：上方那排倒數卡片原本只有各清單的重置倒數，現在最後面多了一顆「＋ 新增倒數」，可以自己加想追蹤的時間點。兩種類型：<u>單次</u>（倒數到某個日期時間，例如版本更新、活動結束）跟<u>重複</u>（每天或每週固定時間，例如固定團）。自訂的倒數會用<u>細長條橫列</u>顯示，跟上面那排方形的重置倒數卡片明顯區隔，而且橫向空間夠，日期時間不會被截掉。這些自訂倒數自成一組，標題列點一下就能<u>整組收合</u>起來（收合狀態會記住）；收合時標題列還是會顯示「最近的那一個」剩多久，不會完全看不到。倒數會自動依剩餘時間排序，快到的排前面，已到期的沉到最後。另外行事曆的事件旁邊多了一顆 📌，點下去就會把那個事件釘到倒數列，不用重新輸入一次；在倒數列按 × 只是取消釘選，不會刪掉行事曆的事件。倒數歸零後會顯示「已到期」並變色停在那裡，不會自動消失，要清掉自己按 ×。自訂倒數也會一起進備份。</li>
         </ul>
       </div>
@@ -1600,7 +1615,7 @@
       <p><strong>行事曆</strong>：右上角「📅 行事曆」會開一個月曆彈窗，可以新增事件並填寫日期、時間（不填就是整天）、事件種類（副本／團本、遊戲活動、生產採集、交易／市場、約團／聚會、其他，各有顏色）跟備註。月曆<u>佔滿整個視窗寬度</u>；點任一天之後，月曆會<u>滑向左邊縮小</u>，那天的清單與填寫欄位從右側<u>推出來</u>（不是蓋在月曆上，所以整個月的格子都還看得到），按側欄的 × 關掉，月曆就會再展開回滿版，不用往下捲。月曆格子裡只顯示<u>事件名稱</u>（放時間會把名稱擠掉），時間放在滑鼠提示與側欄清單裡，每格最多顯示 4 筆，超過會標示「還有 N 項」。事件可以用 ✎ 編輯、× 刪除。月曆上「今天」的日期是實心圓形標記加淡色底、「目前點選的那天」整格會填上底色再加一圈粗外框，滑鼠移過去的格子也會即時變色，三種狀態一眼就分得出來。每個事件都可以<u>設提醒</u>：勾「時間到時跳瀏覽器通知」並選擇提前多久（準時／5分／15分／30分／1小時／1天前），時間到之前就會通知你，不需要先釘選到倒數列。行事曆是所有角色共用的，內容會一起存進「匯出備份」。提醒的限制跟站上其他通知一樣——需要獨立分頁開啟、允許通知權限、分頁保持在前景。</p>
       <p><strong>暫時隱藏群組</strong>：標題旁邊的 ▾ 可以把整組收起來（還是會計入進度）；頂部「▾ 全部」可以一次收合或展開所有組別。</p>
       <p><strong>不需要的組別直接關閉</strong>：footer 的「顯示的組別」可以把整個不玩的內容（例如已經不刷的籌備任務）關掉，關掉後倒數卡片、清單卡片、提醒都不會出現，也不會算進「本輪進度」，跟暫時收合不同，這是真的不追蹤了；隨時可以再打開，設定不會遺失。</p>
-      <p><strong>自訂倒數</strong>：頁面上方那排倒數卡片，除了各清單的重置倒數之外，最後面的「＋ 新增倒數」可以自己加想追蹤的時間點。自訂的倒數會顯示成<u>細長條橫列</u>（跟上面方形的重置卡片區隔開來，橫向空間也放得下完整的日期時間），並且自成一組：點標題列「▾ 自訂倒數」就能整組收合，收合狀態會記住，而且收合時標題列仍會顯示「最近的那一個」還剩多久。清單會自動依剩餘時間排序，快到的在前面，已到期的沉到最後。兩種類型：<u>單次</u>是倒數到某個指定的日期時間（版本更新、活動結束這類），<u>重複</u>是每天或每週固定時間到了就自動跳下一輪（固定團這類）。倒數歸零後會顯示「已到期」並變色停在原地，不會自動消失，要清掉自己按 ×，卡片上的 ✎ 可以修改。另外行事曆裡每個事件旁邊有一顆 📌，點下去就會把那個事件釘到倒數列，不用重複輸入；釘上去的倒數在倒數列按 ✎ 會<u>直接跳到行事曆</u>並帶出那個事件開始編輯（資料只有一份，不會有兩邊不同步的問題），按 × 則只是<u>取消釘選</u>，行事曆裡的事件不會被刪掉。倒數多的時候會排成<u>兩欄</u>（左上→右上→左下→右下），只剩一條時自動佔滿整行。<u>可以設提醒</u>：新增或編輯時勾「時間到時跳瀏覽器通知」，並選擇提前多久提醒（準時／5分／15分／30分／1小時／1天前），有設的倒數卡片上會顯示 🔔；重複型的每一輪都會提醒。提醒的限制跟站上其他通知一樣——需要獨立分頁開啟、允許通知權限、分頁保持在前景。行事曆的事件也可以各自設提醒，設定在行事曆的填寫欄位裡，而且<u>不需要釘選</u>就會通知。<u>分組</u>：新增倒數時可以指定分組，選「＋ 新增分組…」就能當場開一個（例如「潛水艇」「飛空艇」）；同一組會收在一起、可以各自收合，組名可改可刪（刪除分組不會刪掉裡面的倒數，只會變回「未分組」）。沒建立任何分組時就維持單純的列表。自訂倒數是所有角色共用的，也會一起存進「匯出備份」。</p>
+      <p><strong>自訂倒數</strong>：頁面上方那排倒數卡片，除了各清單的重置倒數之外，最後面的「＋ 新增倒數」可以自己加想追蹤的時間點。自訂的倒數會顯示成<u>細長條橫列</u>（跟上面方形的重置卡片區隔開來，橫向空間也放得下完整的日期時間），並且自成一組：點標題列「▾ 自訂倒數」就能整組收合，收合狀態會記住，而且收合時標題列仍會顯示「最近的那一個」還剩多久。清單會自動依剩餘時間排序，快到的在前面，已到期的沉到最後。三種類型：<u>單次</u>是倒數到某個指定的日期時間（版本更新、活動結束這類）；<u>每週指定星期幾</u>可以複選（例如一、三、五），並附「平日」「週末」「每天」「清除」四顆快捷鍵；<u>每隔幾天</u>可以自己填間隔與起算日（例如每 3 天）。重複型到了時間會自動跳下一輪。倒數歸零後會顯示「已到期」並變色停在原地，不會自動消失，要清掉自己按 ×，卡片上的 ✎ 可以修改。另外行事曆裡每個事件旁邊有一顆 📌，點下去就會把那個事件釘到倒數列，不用重複輸入；釘上去的倒數在倒數列按 ✎ 會<u>直接跳到行事曆</u>並帶出那個事件開始編輯（資料只有一份，不會有兩邊不同步的問題），按 × 則只是<u>取消釘選</u>，行事曆裡的事件不會被刪掉。倒數多的時候會排成<u>兩欄</u>（左上→右上→左下→右下），只剩一條時自動佔滿整行。<u>可以設提醒</u>：新增或編輯時勾「時間到時跳瀏覽器通知」，並自己填提前多久提醒（數字＋分鐘／小時／天，填 0 就是時間到才提醒），有設的倒數卡片上會顯示 🔔；重複型的每一輪都會提醒。提醒的限制跟站上其他通知一樣——需要獨立分頁開啟、允許通知權限、分頁保持在前景。行事曆的事件也可以各自設提醒，設定在行事曆的填寫欄位裡，而且<u>不需要釘選</u>就會通知。<u>分組</u>：新增倒數時可以指定分組，選「＋ 新增分組…」就能當場開一個（例如「潛水艇」「飛空艇」）；同一組會收在一起、可以各自收合，組名可改可刪（刪除分組不會刪掉裡面的倒數，只會變回「未分組」）。沒建立任何分組時就維持單純的列表。自訂倒數是所有角色共用的，也會一起存進「匯出備份」。</p>
       <p><strong>自訂排列順序</strong>：每個組別卡片右上角的 ▲▼ 可以調整這些卡片在頁面上的先後順序，頂部倒數卡片也有對應的 ◀▶ 可以直接調整；小工具區塊裡的每張卡片（今日運勢＋解答之書合併成一張、擲骰器、工具箱、鬧鐘）右上角也有各自的 ▲▼，可以獨立調整順序。順序都會記住。</p>
       <p><strong>提醒設定</strong>：每組可以「+ 新增提醒」設定幾點幾分跳瀏覽器通知，週間性質的組可以選星期幾重複，也可以指定「特定日期」讓提醒只跳一次；點提醒標籤本身可以直接改時間，不用刪掉重建。footer 的「所有提醒總覽」集中列出目前設定的所有提醒，可以直接在那邊刪除。<u>瀏覽器提醒有限制</u>：只有獨立分頁開著（不能是嵌在 claude.ai 對話裡）、而且分頁要保持在前景，切到其他分頁/視窗可能會被瀏覽器暫停檢查而跳不出來。真正不管有沒有開網頁都會準時到的提醒，請用 Discord 排程（如果你有設定的話）。</p>
       <p><strong>新功能公告</strong>：有比較大的更新時，一進網站會自動跳一個公告視窗，說明新功能在哪裡、能做什麼。看完勾「不要再顯示這則公告」再關閉就不會再跳。之後若有新的公告還是會再跳一次（記住的是「哪一則公告看過了」，不是單純的看過／沒看過），所以不用擔心關掉之後就錯過後續更新。</p>
@@ -1658,17 +1673,27 @@
       <label for="cdKind">類型</label>
       <select id="cdKind">
         <option value="once">單次——倒數到某個日期時間</option>
-        <option value="daily">重複——每天固定時間</option>
-        <option value="weekly">重複——每週固定某天</option>
+        <option value="weekly">重複——每週指定星期幾（可複選）</option>
+        <option value="interval">重複——每隔幾天</option>
       </select>
     </div>
     <div class="field-row" id="cdDateRow">
-      <label for="cdDate">日期</label>
+      <label for="cdDate" id="cdDateLabel">日期</label>
       <input type="date" id="cdDate">
     </div>
+    <div class="field-row" id="cdIntervalRow" hidden>
+      <label for="cdInterval">每隔幾天重複一次</label>
+      <span class="inline-field"><input type="number" id="cdInterval" min="1" max="365" value="1"> 天</span>
+    </div>
     <div class="field-row" id="cdWeekdayRow" hidden>
-      <label for="cdWeekday">星期幾</label>
-      <select id="cdWeekday"></select>
+      <label>星期幾（可複選）</label>
+      <div class="wd-chips" id="cdWeekdays"></div>
+      <div class="wd-presets">
+        <button type="button" class="bulk-btn" data-wd-preset="1,2,3,4,5">平日</button>
+        <button type="button" class="bulk-btn" data-wd-preset="0,6">週末</button>
+        <button type="button" class="bulk-btn" data-wd-preset="0,1,2,3,4,5,6">每天</button>
+        <button type="button" class="bulk-btn" data-wd-preset="">清除</button>
+      </div>
     </div>
     <div class="field-row">
       <label for="cdTime">時間（台灣時間）</label>
@@ -1686,16 +1711,16 @@
       <label class="check-label"><input type="checkbox" id="cdNotify"> 時間到時跳瀏覽器通知</label>
     </div>
     <div class="field-row" id="cdLeadRow" hidden>
-      <label for="cdLead">提前多久提醒</label>
-      <select id="cdLead">
-        <option value="0">準時提醒</option>
-        <option value="5">5 分鐘前</option>
-        <option value="15">15 分鐘前</option>
-        <option value="30">30 分鐘前</option>
-        <option value="60">1 小時前</option>
-        <option value="1440">1 天前</option>
-      </select>
-      <p class="reminder-hint" style="margin:2px 0 0;">瀏覽器通知需要用獨立分頁開啟本站、允許通知權限，而且分頁要在前景才會準時跳出。</p>
+      <label for="cdLeadValue">提前多久提醒</label>
+      <span class="inline-field">
+        <input type="number" id="cdLeadValue" min="0" max="999" value="0">
+        <select id="cdLeadUnit">
+          <option value="1">分鐘前</option>
+          <option value="60">小時前</option>
+          <option value="1440">天前</option>
+        </select>
+      </span>
+      <p class="reminder-hint" style="margin:2px 0 0;">填 0 就是時間到才提醒。瀏覽器通知需要用獨立分頁開啟本站、允許通知權限，而且分頁要在前景才會準時跳出。</p>
     </div>
     <div class="modal-actions">
       <button type="button" id="confirmCountdownBtn">儲存</button>
@@ -1825,14 +1850,15 @@
           <select id="calEvCat" class="cal-form-full"></select>
           <textarea id="calEvNote" class="cal-form-full" maxlength="500" placeholder="備註（選填）：集合地點、隊伍成員、要帶什麼…"></textarea>
           <label class="cal-form-full cal-notify-label"><input type="checkbox" id="calEvNotify"> 時間到時跳瀏覽器通知</label>
-          <select id="calEvLead" title="提前多久提醒" hidden>
-            <option value="0">準時提醒</option>
-            <option value="5">5 分鐘前</option>
-            <option value="15">15 分鐘前</option>
-            <option value="30">30 分鐘前</option>
-            <option value="60">1 小時前</option>
-            <option value="1440">1 天前</option>
-          </select>
+          <span class="inline-field cal-form-full" id="calLeadRow" hidden>
+            <span class="cal-lead-caption">提前</span>
+            <input type="number" id="calEvLeadValue" min="0" max="999" value="0">
+            <select id="calEvLeadUnit">
+              <option value="1">分鐘前</option>
+              <option value="60">小時前</option>
+              <option value="1440">天前</option>
+            </select>
+          </span>
           <div class="cal-form-actions">
             <button type="button" id="calSaveBtn">新增事件</button>
             <button type="button" id="calCancelEditBtn" class="cal-form-cancel" hidden>取消編輯</button>
@@ -2301,6 +2327,18 @@
     localStorage.setItem(COUNTDOWN_NOTIFIED_KEY, JSON.stringify(countdownNotified));
   }
 
+  // weekly countdowns now hold a list of weekdays. Older ones stored a single `weekday`,
+  // so read through both shapes rather than migrating stored data.
+  function countdownWeekdays(cd) {
+    if (Array.isArray(cd.weekdays) && cd.weekdays.length) return cd.weekdays;
+    return typeof cd.weekday === "number" ? [cd.weekday] : [];
+  }
+
+  function countdownTimeToday(cd, shiftedNow) {
+    return makeShifted(shiftedNow.getUTCFullYear(), shiftedNow.getUTCMonth(), shiftedNow.getUTCDate(),
+      cd.hour || 0, cd.minute || 0, 0);
+  }
+
   function countdownNextAt(cd, shiftedNow) {
     if (cd.kind === "once") {
       var p = String(cd.date || "").split("-");
@@ -2308,14 +2346,52 @@
       var t = String(cd.time || "00:00").split(":");
       return makeShifted(Number(p[0]), Number(p[1]) - 1, Number(p[2]), Number(t[0]) || 0, Number(t[1]) || 0, 0);
     }
-    var d = makeShifted(shiftedNow.getUTCFullYear(), shiftedNow.getUTCMonth(), shiftedNow.getUTCDate(), cd.hour || 0, cd.minute || 0, 0);
+
+    var todayAt = countdownTimeToday(cd, shiftedNow);
+
     if (cd.kind === "weekly") {
-      d = new Date(d.getTime() + ((cd.weekday - d.getUTCDay() + 7) % 7) * 86400000);
+      var days = countdownWeekdays(cd);
+      if (!days.length) return null;
+      // walk forward a full week: i = 0 covers "today, if the time hasn't passed yet"
+      for (var i = 0; i < 8; i++) {
+        var d = new Date(todayAt.getTime() + i * 86400000);
+        if (days.indexOf(d.getUTCDay()) !== -1 && d.getTime() > shiftedNow.getTime()) return d;
+      }
+      return null;
     }
-    if (d.getTime() <= shiftedNow.getTime()) {
-      d = new Date(d.getTime() + (cd.kind === "weekly" ? 7 : 1) * 86400000);
+
+    if (cd.kind === "interval") {
+      var step = Math.max(1, Number(cd.intervalDays) || 1) * 86400000;
+      var sp = String(cd.date || "").split("-");
+      var start = sp.length === 3
+        ? makeShifted(Number(sp[0]), Number(sp[1]) - 1, Number(sp[2]), cd.hour || 0, cd.minute || 0, 0)
+        : todayAt;
+      if (start.getTime() > shiftedNow.getTime()) return start;
+      // jump straight to the next multiple instead of looping — the start date can be years back
+      var n = Math.floor((shiftedNow.getTime() - start.getTime()) / step) + 1;
+      return new Date(start.getTime() + n * step);
     }
-    return d;
+
+    // legacy "daily"
+    return todayAt.getTime() > shiftedNow.getTime() ? todayAt : new Date(todayAt.getTime() + 86400000);
+  }
+
+  function countdownPrevAt(cd, shiftedNow) {
+    if (cd.kind === "once") return null;
+    if (cd.kind === "weekly") {
+      var days = countdownWeekdays(cd);
+      if (!days.length) return null;
+      var todayAt = countdownTimeToday(cd, shiftedNow);
+      for (var i = 0; i < 8; i++) {
+        var d = new Date(todayAt.getTime() - i * 86400000);
+        if (days.indexOf(d.getUTCDay()) !== -1 && d.getTime() <= shiftedNow.getTime()) return d;
+      }
+      return null;
+    }
+    var next = countdownNextAt(cd, shiftedNow);
+    if (!next) return null;
+    var stepDays = cd.kind === "interval" ? Math.max(1, Number(cd.intervalDays) || 1) : 1;
+    return new Date(next.getTime() - stepDays * 86400000);
   }
 
   // Every occurrence worth alerting on. Repeats need the *previous* one too: for a
@@ -2324,10 +2400,9 @@
   // without the previous occurrence an on-time repeat alert could never fire.
   function countdownAlertOccurrences(cd, shiftedNow) {
     var next = countdownNextAt(cd, shiftedNow);
-    if (!next) return [];
-    if (cd.kind === "once") return [next];
-    var period = cd.kind === "weekly" ? 7 * 86400000 : 86400000;
-    return [new Date(next.getTime() - period), next];
+    if (cd.kind === "once") return next ? [next] : [];
+    var prev = countdownPrevAt(cd, shiftedNow);
+    return [prev, next].filter(function (d) { return !!d; });
   }
 
   function checkCountdownAlarms(shiftedNow) {
@@ -2358,9 +2433,25 @@
     if (changed) saveCountdownNotified();
   }
 
+  function weekdaysLabel(days) {
+    var s = days.slice().sort(function (a, b) { return a - b; }).join(",");
+    if (s === "0,1,2,3,4,5,6") return "每天";
+    if (s === "1,2,3,4,5") return "平日";
+    if (s === "0,6") return "週末";
+    return "每週" + days.slice().sort(function (a, b) { return a - b; }).map(weekdayLabel).join("、");
+  }
+
   function countdownSubLabel(cd) {
-    if (cd.kind === "weekly") return "每週" + weekdayLabel(cd.weekday) + " " + pad2(cd.hour) + ":" + pad2(cd.minute);
-    if (cd.kind === "daily") return "每天 " + pad2(cd.hour) + ":" + pad2(cd.minute);
+    var hhmm = pad2(cd.hour) + ":" + pad2(cd.minute);
+    if (cd.kind === "weekly") {
+      var days = countdownWeekdays(cd);
+      return (days.length ? weekdaysLabel(days) : "未選星期") + " " + hhmm;
+    }
+    if (cd.kind === "interval") {
+      var n = Math.max(1, Number(cd.intervalDays) || 1);
+      return (n === 1 ? "每天" : "每 " + n + " 天") + " " + hhmm;
+    }
+    if (cd.kind === "daily") return "每天 " + hhmm;
     return String(cd.date || "").replace(/-/g, "/") + (cd.time ? " " + cd.time : "");
   }
 
@@ -3703,16 +3794,54 @@
   var cdDateRow = document.getElementById("cdDateRow");
   var cdDate = document.getElementById("cdDate");
   var cdWeekdayRow = document.getElementById("cdWeekdayRow");
-  var cdWeekday = document.getElementById("cdWeekday");
+  var cdWeekdaysEl = document.getElementById("cdWeekdays");
+  var cdIntervalRow = document.getElementById("cdIntervalRow");
+  var cdInterval = document.getElementById("cdInterval");
+  var cdDateLabel = document.getElementById("cdDateLabel");
   var cdTime = document.getElementById("cdTime");
   var cdGroup = document.getElementById("cdGroup");
   var cdNewGroupRow = document.getElementById("cdNewGroupRow");
   var cdNewGroup = document.getElementById("cdNewGroup");
   var cdNotify = document.getElementById("cdNotify");
   var cdLeadRow = document.getElementById("cdLeadRow");
-  var cdLead = document.getElementById("cdLead");
+  var cdLeadValue = document.getElementById("cdLeadValue");
+  var cdLeadUnit = document.getElementById("cdLeadUnit");
   var editingCountdownId = null;
-  cdWeekday.innerHTML = weekdayOptionsHtml(3);
+
+  // "lead" is always stored in minutes; the form just splits it into a number and a unit
+  function setLeadFields(minutes, valueEl, unitEl) {
+    var m = Math.max(0, Number(minutes) || 0);
+    if (m && m % 1440 === 0) { valueEl.value = m / 1440; unitEl.value = "1440"; }
+    else if (m && m % 60 === 0) { valueEl.value = m / 60; unitEl.value = "60"; }
+    else { valueEl.value = m; unitEl.value = "1"; }
+  }
+  function readLeadFields(valueEl, unitEl) {
+    return Math.max(0, Number(valueEl.value) || 0) * (Number(unitEl.value) || 1);
+  }
+
+  cdWeekdaysEl.innerHTML = [1, 2, 3, 4, 5, 6, 0].map(function (n) {
+    return '<button type="button" class="wd-chip" data-wd="' + n + '">' + weekdayLabel(n) + '</button>';
+  }).join("");
+  cdWeekdaysEl.querySelectorAll("[data-wd]").forEach(function (btn) {
+    btn.addEventListener("click", function () { btn.classList.toggle("on"); });
+  });
+  document.querySelectorAll("[data-wd-preset]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var want = btn.getAttribute("data-wd-preset").split(",").filter(function (s) { return s !== ""; });
+      cdWeekdaysEl.querySelectorAll("[data-wd]").forEach(function (chip) {
+        chip.classList.toggle("on", want.indexOf(chip.getAttribute("data-wd")) !== -1);
+      });
+    });
+  });
+  function readCdWeekdays() {
+    return Array.prototype.slice.call(cdWeekdaysEl.querySelectorAll(".wd-chip.on"))
+      .map(function (c) { return Number(c.getAttribute("data-wd")); });
+  }
+  function setCdWeekdays(days) {
+    cdWeekdaysEl.querySelectorAll("[data-wd]").forEach(function (chip) {
+      chip.classList.toggle("on", days.indexOf(Number(chip.getAttribute("data-wd"))) !== -1);
+    });
+  }
 
   function fillCountdownGroupSelect(selected) {
     var opts = '<option value="">（不分組）</option>' +
@@ -3725,8 +3854,12 @@
   }
 
   function syncCountdownFields() {
-    cdDateRow.hidden = cdKind.value !== "once";
-    cdWeekdayRow.hidden = cdKind.value !== "weekly";
+    var k = cdKind.value;
+    // the date field doubles as the anchor for interval repeats, so it stays visible for those
+    cdDateRow.hidden = k === "weekly";
+    cdDateLabel.textContent = k === "interval" ? "從哪一天開始算" : "日期";
+    cdIntervalRow.hidden = k !== "interval";
+    cdWeekdayRow.hidden = k !== "weekly";
     cdLeadRow.hidden = !cdNotify.checked;
     cdNewGroupRow.hidden = cdGroup.value !== "__new__";
   }
@@ -3741,20 +3874,24 @@
     if (cd) {
       cdName.value = cd.name;
       cdKind.value = cd.kind;
-      cdDate.value = cd.date || "";
-      cdWeekday.value = String(typeof cd.weekday === "number" ? cd.weekday : 3);
+      // legacy "daily" entries have no matching option any more — show them as 每隔 1 天
+      cdKind.value = cd.kind === "daily" ? "interval" : cd.kind;
+      cdDate.value = cd.date || taipeiDateKey(taipeiShift(new Date()));
+      cdInterval.value = String(Math.max(1, Number(cd.intervalDays) || 1));
+      setCdWeekdays(countdownWeekdays(cd));
       cdTime.value = cd.kind === "once" ? (cd.time || "20:00") : pad2(cd.hour) + ":" + pad2(cd.minute);
       cdNotify.checked = !!cd.notify;
-      cdLead.value = String(Number(cd.lead) || 0);
+      setLeadFields(cd.lead, cdLeadValue, cdLeadUnit);
       fillCountdownGroupSelect(cd.groupId || "");
     } else {
       cdName.value = "";
       cdKind.value = "once";
       cdDate.value = taipeiDateKey(taipeiShift(new Date()));
-      cdWeekday.value = "3";
+      cdInterval.value = "1";
+      setCdWeekdays([]);
       cdTime.value = "20:00";
       cdNotify.checked = false;
-      cdLead.value = "0";
+      setLeadFields(0, cdLeadValue, cdLeadUnit);
       fillCountdownGroupSelect("");
     }
     cdNewGroup.value = "";
@@ -3784,7 +3921,7 @@
       name: name, kind: kind,
       groupId: groupId || "",
       notify: cdNotify.checked,
-      lead: cdNotify.checked ? Number(cdLead.value) || 0 : 0
+      lead: cdNotify.checked ? readLeadFields(cdLeadValue, cdLeadUnit) : 0
     };
     if (kind === "once") {
       if (!cdDate.value) { cdDate.focus(); showToast("請選擇日期"); return; }
@@ -3793,7 +3930,15 @@
     } else {
       cd.hour = Number(parts[0]) || 0;
       cd.minute = Number(parts[1]) || 0;
-      if (kind === "weekly") cd.weekday = Number(cdWeekday.value);
+      if (kind === "weekly") {
+        var picked = readCdWeekdays();
+        if (!picked.length) { showToast("請至少選一個星期幾"); return; }
+        cd.weekdays = picked;
+      } else if (kind === "interval") {
+        cd.intervalDays = Math.max(1, Math.min(365, Number(cdInterval.value) || 1));
+        if (!cdDate.value) { cdDate.focus(); showToast("請選擇開始日期"); return; }
+        cd.date = cdDate.value;
+      }
     }
     if (editingCountdownId) {
       countdowns = countdowns.map(function (c) { return c.id === editingCountdownId ? cd : c; });
@@ -3838,8 +3983,10 @@
   var calEvCat = document.getElementById("calEvCat");
   var calEvNote = document.getElementById("calEvNote");
   var calEvNotify = document.getElementById("calEvNotify");
-  var calEvLead = document.getElementById("calEvLead");
-  calEvNotify.addEventListener("change", function () { calEvLead.hidden = !calEvNotify.checked; });
+  var calLeadRow = document.getElementById("calLeadRow");
+  var calEvLeadValue = document.getElementById("calEvLeadValue");
+  var calEvLeadUnit = document.getElementById("calEvLeadUnit");
+  calEvNotify.addEventListener("change", function () { calLeadRow.hidden = !calEvNotify.checked; });
   var calSaveBtn = document.getElementById("calSaveBtn");
   var calCancelEditBtn = document.getElementById("calCancelEditBtn");
 
@@ -3854,8 +4001,8 @@
     calEvNote.value = "";
     calEvCat.value = CAL_CATEGORIES[0].id;
     calEvNotify.checked = false;
-    calEvLead.value = "0";
-    calEvLead.hidden = true;
+    setLeadFields(0, calEvLeadValue, calEvLeadUnit);
+    calLeadRow.hidden = true;
     calEvDate.value = calSelectedKey || "";
     calSaveBtn.textContent = "新增事件";
     calCancelEditBtn.hidden = true;
@@ -3968,8 +4115,8 @@
         calEvCat.value = ev.cat;
         calEvNote.value = ev.note || "";
         calEvNotify.checked = !!ev.notify;
-        calEvLead.value = String(Number(ev.lead) || 0);
-        calEvLead.hidden = !ev.notify;
+        setLeadFields(ev.lead, calEvLeadValue, calEvLeadUnit);
+        calLeadRow.hidden = !ev.notify;
         calSaveBtn.textContent = "儲存修改";
         calCancelEditBtn.hidden = false;
         calEvTitle.focus();
@@ -3995,8 +4142,8 @@
     calEvCat.value = ev.cat;
     calEvNote.value = ev.note || "";
         calEvNotify.checked = !!ev.notify;
-        calEvLead.value = String(Number(ev.lead) || 0);
-        calEvLead.hidden = !ev.notify;
+        setLeadFields(ev.lead, calEvLeadValue, calEvLeadUnit);
+        calLeadRow.hidden = !ev.notify;
     calSaveBtn.textContent = "儲存修改";
     calCancelEditBtn.hidden = false;
     calEvTitle.focus();
@@ -4048,7 +4195,7 @@
     var fields = {
       title: title, date: date, time: calEvTime.value || "", cat: calEvCat.value, note: calEvNote.value.trim(),
       notify: calEvNotify.checked,
-      lead: calEvNotify.checked ? Number(calEvLead.value) || 0 : 0
+      lead: calEvNotify.checked ? readLeadFields(calEvLeadValue, calEvLeadUnit) : 0
     };
     if (calEditingId) {
       var editingId = calEditingId;
@@ -4937,7 +5084,7 @@
 
   // 手動維護：每次修改網站程式碼時手動更新這個時間點，不要用 new Date() 抓「現在」——
   // 那樣不管有沒有真的改版，每次載入頁面都會顯示成剛更新過，等於騙人。
-  var LAST_UPDATED_TEXT = "2026/08/02 (週日) 03:37";
+  var LAST_UPDATED_TEXT = "2026/08/03 (週一) 00:34";
   var lastUpdatedEl = document.getElementById("lastUpdatedLine");
   if (lastUpdatedEl) lastUpdatedEl.textContent = "最後更新：" + LAST_UPDATED_TEXT;
 
